@@ -11,6 +11,7 @@
                     <div class="card-body">
                         <table class="table">
                             <tbody>
+
                             <tr>
                                 <th scope="row">Request Id</th>
                                 <td>
@@ -63,8 +64,22 @@
                                 <th scope="row">Comment</th>
                                 <td>{{request.comment}}</td>
                             </tr>
-
-
+                            <tr>
+                                <th scope="row">Custos Key</th>
+                                <td>{{custosKey}}</td>
+                                <td>
+                                     <clipboard-copy-button variant="secondary" :text="custosKey">
+                                     </clipboard-copy-button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Custos Secret</th>
+                                <td>{{custosSecret}}</td>
+                                <td>
+                                     <clipboard-copy-button variant="secondary" :text="custosSecret">
+                                     </clipboard-copy-button>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -75,14 +90,21 @@
 </template>
 
 <script>
+    import ClipboardCopyButton from "../../components/ClipboardCopyButton";
+
     export default {
         props: {
             tenantRequestId: {
                 required: true
             }
         },
+        components: {
+            "clipboard-copy-button": ClipboardCopyButton
+        },
         data() {
             return {
+                custosKey: "342342345kjfgoudsfrtg",
+                custosSecret: "837459823jsdnfjhfd8gf",
                 request: {
                     client_name: "Test Client",
                     requester_email: "tmp@gmail.com",
