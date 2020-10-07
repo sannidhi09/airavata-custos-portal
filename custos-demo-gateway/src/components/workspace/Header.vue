@@ -9,7 +9,11 @@
             <div class="email">johndoe@iu.com</div>
         </div>
 
-        <b-dropdown right class="ml-2" text="">
+
+        <b-dropdown right class="ml-2" text="" no-caret toggle-class="user-avatar-button">
+            <template slot="button-content">
+                <b-icon icon="person-fill"></b-icon>
+            </template>
             <b-dropdown-item href="#" disabled>Profile</b-dropdown-item>
             <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
         </b-dropdown>
@@ -54,7 +58,7 @@
     }
 </script>
 
-<style scoped>
+<style>
     .header {
         display: flex;
     }
@@ -97,6 +101,15 @@
         line-height: 1.07;
         text-align: right;
         color: #203a43;
+    }
+
+    .user-avatar-button {
+        border-radius: 30px;
+        width: 35px;
+        height: 35px;
+        padding: 0px;
+        line-height: 0px;
+        font-size: 15px;
     }
 
 </style>
