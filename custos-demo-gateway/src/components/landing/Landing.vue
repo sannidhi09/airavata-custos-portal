@@ -1,51 +1,51 @@
 <template>
     <div class="landing">
 
-        <div class="row">
+        <div class="d-md-inline-flex">
 
-            <div class="column">
-                <h2>Welcome to Custos Explorer</h2>
-                <p>SignUp and explore capabilities</p>
-                <img src="./../../assets/custos_home.png">
+            <div class="p-2 flex-fill">
+                <h2>Welcome to Custos</h2>
+                <p class="h2-sub">Sign up and start authenticating</p>
+                <img class="w-100" src="./../../assets/custos_home.png">
             </div>
-            <div class="column">
-                <div class="login">
-                    <div class="exlogin">
-                        <p>Login with your existing organization</p>
-                        <b-button variant="primary" v-on:click="this.loadAuthURL">Login with Institution</b-button>
-                    </div>
-                    <div class="locallogin">
-                        <p>Login with Custos Explorer (Not registered ?
-                            <router-link to="/register">Create Account</router-link>
-                            )
-                        </p>
 
-                        <div class="logininput">
-                            <b-form-input v-model="username" placeholder="Username"></b-form-input>
+            <form v-on:submit="this.login" class="p-2" style="width: 300px;">
+                <p class="h3-sub mb-5">
+                    Not registered ?
+                    <router-link to="/register">Create Account</router-link>
+                </p>
 
-                        </div>
-                        <div class="logininput">
-                            <b-form-input type="password" v-model="password" placeholder="Password"></b-form-input>
-                        </div>
-                        <div class="logininput">
-                            <b-button variant="primary" v-on:click="this.login" :disabled="this.loginDisabled">
-                                <div v-if="this.loginDisabled">
-                                    <b-spinner small></b-spinner>
-                                </div>
-                                Login
-                            </b-button>
-                        </div>
-                    </div>
-                    <div>
-                        <b-alert v-model="this.loginError" variant="danger" dismissible @dismissed="this.callDismissed">
-                            Invalid Username or Password
-                        </b-alert>
-                    </div>
+                <h3>Login with Custos Explorer</h3>
 
 
+                <div class="m-1">
+                    <label class="form-input-label" for="form-input-username">Username</label>
+                    <b-form-input id="form-input-username" v-model="username" placeholder="Username"></b-form-input>
                 </div>
 
-            </div>
+                <div class="m-1">
+                    <label class="form-input-label" for="form-input-password">Password</label>
+                    <b-form-input id="form-input-password" type="password" v-model="password"
+                                  placeholder="Password"></b-form-input>
+                </div>
+
+                <div class="mt-4 d-inline-flex w-100">
+                    <b-button class="primary-btn" variant="warning" v-on:click="this.login" type="submit"
+                              :disabled="this.loginDisabled">
+                        Login
+                        <b-spinner small v-if="this.loginDisabled"></b-spinner>
+                    </b-button>
+                    <p class="ml-2 mr-2"> or </p>
+                    <b-button class="primary-btn" variant="warning" v-on:click="this.loadAuthURL">Login with
+                        Institution
+                    </b-button>
+                </div>
+
+                <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
+                    Invalid Username or Password
+                </div>
+            </form>
+
         </div>
 
     </div>
@@ -154,76 +154,61 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     h2 {
-        margin: 40px 0 0;
-        font-size: xx-large;
-        font-family: "Arial";;
+        text-align: left;
+        font-family: Avenir;
+        font-size: 40px;
+        font-weight: 900;
+        color: #203a43;
     }
 
-    p {
-        font-size: medium;
-        font-family: "Arial";
+    .h2-sub {
+        font-family: Avenir-Roman;
+        font-size: 25px;
+        text-align: left;
+        color: #203a43;
     }
 
-    ul {
-        list-style-type: none;
-        padding: 0;
+    h3 {
+        font-family: Avenir;
+        font-size: 28px;
+        font-weight: 900;
+        text-align: left;
+        color: #203a43;
     }
 
-    li {
-        display: inline-block;
-        margin: 0 10px;
+    .h3-sub {
+        font-family: Avenir-Roman;
+        font-size: 20px;
+        text-align: left;
+        color: #203a43;
     }
 
-    a {
-        color: #42b983;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    /* Create two equal columns that floats next to each other */
-    .column {
+    .form-input-label {
+        font-family: Avenir;
+        font-weight: 900;
+        text-align: left;
         float: left;
-        width: 50%;
-        padding: 10px;
-        height: 300px; /* Should be removed. Only for demonstration */
+        color: #203a43;
     }
 
-    /* Clear floats after the columns */
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
+    .primary-btn {
+        background-color: #ea6a0a;
+
+        font-family: Avenir;
+        font-size: 14px;
+        font-weight: 900;
+        text-align: left;
+        color: #ffffff;
     }
 
-    .login {
-        height: 10%;
-        position: relative;
-        top: 50%;
-        z-index: 2;
-        width: 60%;
-        left: 20%;
+    .primary-btn:hover {
+        background-color: #da640b;
     }
 
-    .exlogin {
-        background-color: whitesmoke;
-        box-sizing: border-box;
-        margin-top: 20%;
+    .form-error-message {
+        font-family: Avenir;
+        font-size: 14px;
+        font-weight: 900;
+        text-align: left;
     }
-
-    .locallogin {
-        background-color: whitesmoke;
-        box-sizing: border-box;
-        position: relative;
-        margin-top: 7%;
-    }
-
-    .logininput {
-        width: 60%;
-        position: relative;
-        left: 20%;
-        margin-top: 4%;
-    }
-
 </style>
