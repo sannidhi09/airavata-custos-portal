@@ -1,23 +1,48 @@
 <template>
-    <div class="header p-3">
-        <div class="custos-logo">
-            <div class="custos-logo-icon"></div>
-            <div class="custos-logo-text pl-2">Custos</div>
+    <div>
+        <div class="header p-3">
+            <div class="custos-logo">
+                <div class="custos-logo-icon"></div>
+                <div class="custos-logo-text pl-2">Custos</div>
+            </div>
+            <div class="user-details">
+                <div class="username">John Doe</div>
+                <div class="email">johndoe@iu.com</div>
+            </div>
+
+
+            <b-dropdown right class="ml-2" text="" no-caret toggle-class="user-avatar-button">
+                <template slot="button-content">
+                    <b-icon icon="person-fill"></b-icon>
+                </template>
+                <b-dropdown-item href="#" disabled>Profile</b-dropdown-item>
+                <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
+            </b-dropdown>
+
         </div>
-        <div class="user-details">
-            <div class="username">John Doe</div>
-            <div class="email">johndoe@iu.com</div>
+        <div class="navigation text-left">
+            <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">
+                <b-icon icon="house-door-fill"></b-icon>
+            </b-button>
+            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/users')">
+                Users
+            </b-button>
+            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/groups')">
+                Groups
+            </b-button>
+            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
+                Community Accounts
+            </b-button>
+            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">
+                Secrets
+            </b-button>
+            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/sharings')">
+                Sharing
+            </b-button>
+            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/logs')">
+                Logs
+            </b-button>
         </div>
-
-
-        <b-dropdown right class="ml-2" text="" no-caret toggle-class="user-avatar-button">
-            <template slot="button-content">
-                <b-icon icon="person-fill"></b-icon>
-            </template>
-            <b-dropdown-item href="#" disabled>Profile</b-dropdown-item>
-            <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
-        </b-dropdown>
-
     </div>
 </template>
 
@@ -111,5 +136,22 @@
         line-height: 0px;
         font-size: 15px;
     }
+
+    .navigation {
+        background-color: #CDDC39;
+    }
+
+    .navigation a {
+        font-family: Avenir;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: left;
+        color: #203a43;
+    }
+
+    .navigation a:hover {
+        color: #203a43;
+    }
+
 
 </style>
