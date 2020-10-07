@@ -2,9 +2,6 @@
     <div>
         <Header/>
         <div class="p-3">
-            <div class="logout">
-                <b-button href="#" v-on:click="logout">Logout</b-button>
-            </div>
             <div class="grouping">
                 <b-card-group deck>
                     <b-card :img-src="require('../../assets/users.png')"
