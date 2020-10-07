@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="row">
+        <Header/>
+        <div class="row p-3">
             <div class="column">
                 <div class="sharingtable">
                     <div v-if="this.permissionTypesLoading" class="d-flex justify-content-center mb-3">
@@ -272,7 +273,8 @@
             <div class="column">
                 <div class="permissionChecker">
                     <div class="addGr">
-                        <b-button variant="outline-primary" v-on:click="checkPermissions">Evaluate Permissions</b-button>
+                        <b-button variant="outline-primary" v-on:click="checkPermissions">Evaluate Permissions
+                        </b-button>
                     </div>
                 </div>
             </div>
@@ -323,16 +325,16 @@
                     </b-button>
                 </div>
                 <div v-if="!this.evaluating">
-                <div v-if="evalutionResult" class="groupform">
-                    <p class="textCls"> Evalution Status: True </p>
-                    <p>User has permission</p>
+                    <div v-if="evalutionResult" class="groupform">
+                        <p class="textCls"> Evalution Status: True </p>
+                        <p>User has permission</p>
 
-                </div>
-                <div v-if="!evalutionResult" class="groupform">
-                    <p class="textClsWrng"> Evalution Status: False </p>
-                    <p>User does not have permission</p>
+                    </div>
+                    <div v-if="!evalutionResult" class="groupform">
+                        <p class="textClsWrng"> Evalution Status: False </p>
+                        <p>User does not have permission</p>
 
-                </div>
+                    </div>
                 </div>
             </b-modal>
         </div>
@@ -341,9 +343,11 @@
 
 <script>
     import config from "@/config";
+    import Header from "@/components/workspace/Header";
 
     export default {
         name: "Sharing",
+        components: {Header},
         data: function () {
             return {
                 fields: ['id', 'name', 'description'],
@@ -392,9 +396,9 @@
                 selectedShOwType: null,
                 evalutionResult: false,
                 permissionTypesLoading: false,
-                entityTypesLoading:false,
-                entitiesLoading:false,
-                sharingsLoading:false,
+                entityTypesLoading: false,
+                entitiesLoading: false,
+                sharingsLoading: false,
                 evaluating: false,
 
 
@@ -403,7 +407,7 @@
 
         methods: {
             async addPrType() {
-                this.permissionTypesLoading =true
+                this.permissionTypesLoading = true
                 let data = {
                     client_id: this.custosId,
                     client_sec: this.custosSec,
@@ -427,7 +431,7 @@
             },
 
             async deletePRType() {
-                this.permissionTypesLoading =true
+                this.permissionTypesLoading = true
                 let data = {
                     client_id: this.custosId,
                     client_sec: this.custosSec,
@@ -513,7 +517,7 @@
                 }
 
                 this.entities = await this.$store.dispatch('sharing/createEntity', data)
-                this.entitiesLoading =  false
+                this.entitiesLoading = false
                 this.enId = null
                 this.enName = null
                 this.enDesc = null
