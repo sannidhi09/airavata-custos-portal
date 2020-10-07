@@ -1,5 +1,5 @@
 <template>
-    <div class="landing">
+    <div class="landing mt-5">
 
         <div class="d-md-inline-flex">
 
