@@ -15,10 +15,16 @@ const state = getDefaultState()
 const actions = {
 
     async createGroup({commit}, data) {
-        let resp = await group_management.createGroup(data)
-        let group = resp.data.groups[0];
-        commit('SET_GROUP', group)
-        return group
+        try {
+            let resp = await group_management.createGroup(data)
+            if (resp.data != null) {
+                let group = resp.data.groups[0];
+                commit('SET_GROUP', group)
+                return group
+            }
+        } catch (exception) {
+            return false
+        }
     },
 
     async loadAllGroups({commit}, data) {
@@ -93,7 +99,20 @@ const actions = {
     },
 
     // eslint-disable-next-line no-unused-vars
-    async reset({commit}, data){
+    async getAllGroupsOfUser({commit}, data) {
+        let response = await group_management.getAllGroupsOfUser(data)
+        return response.data.groups
+    },
+
+
+    // eslint-disable-next-line no-unused-vars
+    async getAllParentGroups({commit}, data) {
+        let response = await group_management.getAllParentGroupsOfGroup(data)
+        return response.data.groups
+    },
+
+    // eslint-disable-next-line no-unused-vars
+    async reset({commit}, data) {
         commit('RESET')
         return true
     }

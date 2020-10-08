@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="gotoWork">
+            <b-button href="#" v-on:click="goToWorkspace">Go to Workspace</b-button>
+        </div>
         <div class="secrettable">
             <div v-if="this.secretsLoading" class="d-flex justify-content-center mb-3">
                 <b-spinner variant="primary" label="Text Centered"></b-spinner>
@@ -294,7 +297,11 @@
                     accessible_tokens: accessible_token
                 }
                 return await this.$store.dispatch('secret/getAllCredentials', data)
-            }
+            },
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
         },
 
 
@@ -350,6 +357,10 @@
 
     .secformItem {
         margin-top: 3%;
+    }
+
+    .gotoWork {
+        margin-left: 70%;
     }
 
 </style>

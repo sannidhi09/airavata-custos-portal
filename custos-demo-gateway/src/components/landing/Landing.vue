@@ -54,6 +54,7 @@
 <script>
 
     import config from "@/config";
+    import store from "@/store";
 
     export default {
         name: 'Landing',
@@ -132,11 +133,19 @@
             }
         },
 
-        mounted() {
+        async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
             this.redirectURI = config.value('redirectURI')
             this.tokenEndpoint = "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
+            let data = {
+                client_id: this.custosId,
+                client_sec: this.custosSec
+            }
+            if (await store.dispatch('identity/isAuthenticated', data) == true) {
+
+                await this.$router.push('workspace')
+            }
 
         },
 

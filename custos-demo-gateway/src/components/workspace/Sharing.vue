@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="gotoWork">
+            <b-button href="#" v-on:click="goToWorkspace">Go to Workspace</b-button>
+        </div>
         <div class="row">
             <div class="column">
                 <div class="sharingtable">
@@ -12,7 +15,7 @@
                              @row-selected="onPrTySelected" caption-top>
                         <template v-slot:table-caption>Permissions</template>
                     </b-table>
-                    <div class="addGr">
+                    <div v-if="this.isAdminUser" class="addGr">
                         <b-button variant="outline-primary" v-on:click="onNewPrTyAdd">Add Permission Type</b-button>
                     </div>
                 </div>
@@ -26,7 +29,7 @@
                              @row-selected="onEnTySelected" caption-top>
                         <template v-slot:table-caption>Entity Types</template>
                     </b-table>
-                    <div class="addGr">
+                    <div v-if="this.isAdminUser" class="addGr">
                         <b-button variant="outline-primary" v-on:click="onNewEnTyAdd">Add Entity Type</b-button>
                     </div>
                 </div>
@@ -255,13 +258,13 @@
                             </div>
 
                             <div v-if="defaultSharingType == 'GROUPS'" class="groupformItem">
-                                <p>Group Id</p>
-                                <b-form-select v-model="defaultOwner">
+                                <p>Group Name</p>
+                                <b-form-select v-model="defaultGroupName">
                                     <option v-for="(selectOption, indexOpt) in groups"
                                             :key="indexOpt"
                                             :value="selectOption"
                                     >
-                                        {{ selectOption }}
+                                        {{ selectOption.name }}
                                     </option>
                                 </b-form-select>
                             </div>
@@ -269,7 +272,7 @@
                     </b-modal>
                 </div>
             </div>
-            <div class="column">
+            <div v-if="this.isAdminUser" class="column">
                 <div class="permissionChecker">
                     <div class="addGr">
                         <b-button variant="outline-primary" v-on:click="checkPermissions">Evaluate Permissions</b-button>
@@ -396,6 +399,7 @@
                 entitiesLoading:false,
                 sharingsLoading:false,
                 evaluating: false,
+                defaultGroupName: null
 
 
             }
@@ -575,6 +579,9 @@
                         this.sharings = await this.loadSharings()
                     }
                 } else {
+                    console.log(this.defaultGroupName)
+                    data.body.owner_id = [this.defaultGroupName.id]
+                    console.log(data)
                     let response = await this.$store.dispatch('sharing/shareEntityWithGroups', data)
                     if (response) {
                         this.sharings = await this.loadSharings()
@@ -693,17 +700,22 @@
             async loadGroups() {
                 let data = {
                     client_id: this.custosId,
-                    client_sec: this.custosSec
+                    client_sec: this.custosSec,
+                    username: this.currentUserName
                 }
-                let response = await this.$store.dispatch('group/loadAllGroups', data)
-
-                let grs = [];
-                if (Array.isArray(response) && response.length > 0) {
-                    response.forEach(obj => {
-                        grs.push(obj.id)
+                if (this.isAdminUser) {
+                     return  await this.$store.dispatch('group/loadAllGroups', data)
+                } else {
+                    let grs = []
+                    grs = await this.$store.dispatch('group/getAllGroupsOfUser', data)
+                    let groups = []
+                    grs.forEach(gr => {
+                        gr.ownerId = gr.owner_id
+                        groups.push(gr)
                     })
+                    return  groups
                 }
-                return grs
+
             },
 
 
@@ -768,7 +780,11 @@
                     }
                 }
                 return shars
-            }
+            },
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
         },
 
         async mounted() {
@@ -886,6 +902,10 @@
     .evaluater {
         margin-left: 40%;
         color: #42b983;
+    }
+
+    .gotoWork {
+        margin-left: 70%;
     }
 
 
