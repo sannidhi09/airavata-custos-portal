@@ -1,129 +1,122 @@
 <template>
     <div>
-        <Header/>
-        <div class="row p-3">
-
-            <div class="column">
-                <div v-if="!this.updatingProfile" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <div class="profile">
-                    <div class="profItem">
-                        <p>Username</p>
-                        <b-form-input
-                                id="input-1"
-                                v-model="currentUserName"
-                                type="email"
-                                disabled
-                        ></b-form-input>
-                    </div>
-                    <div class="profItem">
-                        <p>Status</p>
-                        <b-form-input
-                                id="input-4"
-                                v-model="status"
-                                required
-                                disabled
-                        ></b-form-input>
-                    </div>
-
-                    <div class="profItem">
-                        <p>First Name</p>
-                        <b-form-input
-                                id="input-2"
-                                v-model="first_name"
-                                required
-                        ></b-form-input>
-                    </div>
-
-                    <div class="profItem">
-                        <p>Last Name</p>
-                        <b-form-input
-                                id="input-3"
-                                v-model="last_name"
-                                required
-                        ></b-form-input>
-                    </div>
-
-                    <div class="profItem">
-                        <p>Email</p>
-                        <b-form-input
-                                id="input-3"
-                                v-model="email"
-                                required
-                        ></b-form-input>
-                    </div>
-                </div>
-
-                <div class="updateProfCls">
-                    <b-button variant="outline-primary" v-on:click="updateProfile">Update Profile</b-button>
-                </div>
-
+        <div class="column">
+            <div v-if="!this.updatingProfile" class="d-flex justify-content-center mb-3">
+                <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
-            <div class="column">
-                <div>
-                    <b-table striped hover responsive :items="roles"
-                             ref="selectableTable"
-                             select-mode="single"
-                             caption-top>
-                        <template v-slot:table-caption>My Roles</template>
-                    </b-table>
+            <div class="profile">
+                <div class="profItem">
+                    <p>Username</p>
+                    <b-form-input
+                            id="input-1"
+                            v-model="currentUserName"
+                            type="email"
+                            disabled
+                    ></b-form-input>
+                </div>
+                <div class="profItem">
+                    <p>Status</p>
+                    <b-form-input
+                            id="input-4"
+                            v-model="status"
+                            required
+                            disabled
+                    ></b-form-input>
+                </div>
+
+                <div class="profItem">
+                    <p>First Name</p>
+                    <b-form-input
+                            id="input-2"
+                            v-model="first_name"
+                            required
+                    ></b-form-input>
+                </div>
+
+                <div class="profItem">
+                    <p>Last Name</p>
+                    <b-form-input
+                            id="input-3"
+                            v-model="last_name"
+                            required
+                    ></b-form-input>
+                </div>
+
+                <div class="profItem">
+                    <p>Email</p>
+                    <b-form-input
+                            id="input-3"
+                            v-model="email"
+                            required
+                    ></b-form-input>
                 </div>
             </div>
-            <div class="column">
-                <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <b-table striped hover responsive :items="attributes"
-                         ref="selectableTable"
-                         select-mode="single"
-                         @row-selected="onAtrSelected"
-                         caption-top
-                >
-                    <template v-slot:table-caption>My Attributes</template>
-                </b-table>
-                <!--            <dev class="addAtrCls">-->
-                <!--                <b-button variant="outline-primary" v-on:click="addAttribute">Add Attributes</b-button>-->
-                <!--            </dev>-->
 
+            <div class="updateProfCls">
+                <b-button variant="outline-primary" v-on:click="updateProfile">Update Profile</b-button>
             </div>
-            <b-modal ref="atrModel" scrollable title="Add Attribute" ok-title="Add" @ok="addAtrOkPressed">
-                <div class="userform">
-                    <div class="userformItem">
-                        <p>Key</p>
-                        <b-form-input v-model="newKey"></b-form-input>
-                    </div>
-                    <div class="userformItem">
-                        <p>Value</p>
-                        <b-form-input v-model="newValue"></b-form-input>
-                    </div>
-                </div>
-            </b-modal>
-            <b-modal ref="selectModel" scrollable title="Delete Attribute" cancel-title="Delete"
-                     @cancel="removeAtrOKPressed">
-                <div class="userform">
-                    <div class="userformItem">
-                        <p>Key</p>
-                        <b-form-input v-model="selectedKey" disabled></b-form-input>
-                    </div>
-                    <div class="userformItem">
-                        <p>Value</p>
-                        <b-form-input v-model="selectedValue" disabled></b-form-input>
-                    </div>
-                </div>
-            </b-modal>
 
         </div>
+        <div class="column">
+            <div>
+                <b-table striped hover responsive :items="roles"
+                         ref="selectableTable"
+                         select-mode="single"
+                         caption-top>
+                    <template v-slot:table-caption>My Roles</template>
+                </b-table>
+            </div>
+        </div>
+        <div class="column">
+            <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
+                <b-spinner variant="primary" label="Text Centered"></b-spinner>
+            </div>
+            <b-table striped hover responsive :items="attributes"
+                     ref="selectableTable"
+                     select-mode="single"
+                     @row-selected="onAtrSelected"
+                     caption-top
+            >
+                <template v-slot:table-caption>My Attributes</template>
+            </b-table>
+            <!--            <dev class="addAtrCls">-->
+            <!--                <b-button variant="outline-primary" v-on:click="addAttribute">Add Attributes</b-button>-->
+            <!--            </dev>-->
+
+        </div>
+        <b-modal ref="atrModel" scrollable title="Add Attribute" ok-title="Add" @ok="addAtrOkPressed">
+            <div class="userform">
+                <div class="userformItem">
+                    <p>Key</p>
+                    <b-form-input v-model="newKey"></b-form-input>
+                </div>
+                <div class="userformItem">
+                    <p>Value</p>
+                    <b-form-input v-model="newValue"></b-form-input>
+                </div>
+            </div>
+        </b-modal>
+        <b-modal ref="selectModel" scrollable title="Delete Attribute" cancel-title="Delete"
+                 @cancel="removeAtrOKPressed">
+            <div class="userform">
+                <div class="userformItem">
+                    <p>Key</p>
+                    <b-form-input v-model="selectedKey" disabled></b-form-input>
+                </div>
+                <div class="userformItem">
+                    <p>Value</p>
+                    <b-form-input v-model="selectedValue" disabled></b-form-input>
+                </div>
+            </div>
+        </b-modal>
     </div>
 </template>
 
 <script>
     import config from "@/config";
-    import Header from "./Header";
 
     export default {
         name: "Profile",
-        components: {Header},
         data: function () {
             return {
                 user: null,

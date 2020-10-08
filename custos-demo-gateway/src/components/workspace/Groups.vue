@@ -1,74 +1,128 @@
 <template>
     <div>
-        <Header/>
-        <div class="p-3">
-            <div class="grouptable">
-                <div>
-                    <b-alert v-model="groupError" variant="danger" dismissible
-                             @dismissed="callDismissed">
-                        Group name not available
-                    </b-alert>
-                </div>
-                <div v-if="this.groupsLoading" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <b-table striped hover responsive :items="groupItems" :fields="fields" selectable
-                         ref="selectableTable"
-                         select-mode="single"
-                         @row-selected="onRowSelected" caption-top>
-                    <template v-slot:table-caption>Groups</template>
-                </b-table>
-                <div class="addGr">
-                    <b-button variant="outline-primary" v-on:click="addGr">Add Group</b-button>
-                </div>
-            </div>
-
+        <div class="grouptable">
             <div>
-                <b-modal ref="groupmodel" scrollable title="Group Profile" ok-title="Update">
+                <b-alert v-model="groupError" variant="danger" dismissible
+                         @dismissed="callDismissed">
+                    Group name not available
+                </b-alert>
+            </div>
+            <div v-if="this.groupsLoading" class="d-flex justify-content-center mb-3">
+                <b-spinner variant="primary" label="Text Centered"></b-spinner>
+            </div>
+            <b-table striped hover responsive :items="groupItems" :fields="fields" selectable
+                     ref="selectableTable"
+                     select-mode="single"
+                     @row-selected="onRowSelected" caption-top>
+                <template v-slot:table-caption>Groups</template>
+            </b-table>
+            <div class="addGr">
+                <b-button variant="outline-primary" v-on:click="addGr">Add Group</b-button>
+            </div>
+        </div>
+
+        <div>
+            <b-modal ref="groupmodel" scrollable title="Group Profile" ok-title="Update">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Id</p>
+                        <b-form-input v-model="selectedId" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Name</p>
+                        <b-form-input v-model="selectedName" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="selectedDescription"></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>OwnerId</p>
+                        <b-form-input v-model="selectedOwnerId" disabled></b-form-input>
+                    </div>
+                    <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
+                        <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Members</p>
+                        <b-table striped hover responsive :items="members" selectable select-mode="single"
+                                 @row-selected="onMemberShipSelected">
+                        </b-table>
+                    </div>
+
+                    <div class="w-100">
+                        <b-button class="addmemberbtn" variant="outline-primary" v-on:click="addMemberShip">Add
+                            Member
+                        </b-button>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Child Groups</p>
+                        <b-table striped hover responsive :items="childGroupMembers" :fields="memberGroupsFields"
+                                 selectable select-mode="single"
+                                 @row-selected="onGroupMemberShipSelected">
+                        </b-table>
+                    </div>
+                    <div class="w-100">
+                        <b-button class="addmemberbtn" variant="outline-primary" v-on:click="addChildGroup">Add
+                            Child
+                            Group
+                        </b-button>
+                    </div>
+
+                </div>
+                <template v-slot:modal-footer>
+                    <div class="w-100">
+                        <b-button
+                                variant="primary"
+                                size="sm"
+                                class="grBtnDel"
+                                v-on:click="removeGroupProfile"
+                                @click="show=false"
+                        >
+                            Delete
+                        </b-button>
+                        <b-button
+                                variant="primary"
+                                size="sm"
+                                class="grBtnCl"
+                                v-on:click="closeGroupProfile"
+                                @click="show=false"
+
+                        >
+                            Close
+                        </b-button>
+                        <b-button
+                                variant="primary"
+                                size="sm"
+                                class="grBtnUp"
+                                v-on:click="updateGroupProfile"
+                                @click="show=false"
+
+                        >
+                            Update
+                        </b-button>
+                    </div>
+                </template>
+            </b-modal>
+        </div>
+        <div>
+            <div>
+                <b-modal ref="membershipModel" title="Update Membership" ok-title="Update">
                     <div class="groupform">
                         <div class="groupformItem">
-                            <p>Id</p>
-                            <b-form-input v-model="selectedId" disabled></b-form-input>
+                            <p>Owner Id</p>
+                            <b-form-input v-model="selectedMembershipUsername" disabled></b-form-input>
                         </div>
                         <div class="groupformItem">
-                            <p>Name</p>
-                            <b-form-input v-model="selectedName" disabled></b-form-input>
-                        </div>
-                        <div class="groupformItem">
-                            <p>Description</p>
-                            <b-form-input v-model="selectedDescription"></b-form-input>
-                        </div>
-                        <div class="groupformItem">
-                            <p>OwnerId</p>
-                            <b-form-input v-model="selectedOwnerId" disabled></b-form-input>
-                        </div>
-                        <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
-                            <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                        </div>
-                        <div class="groupformItem">
-                            <p>Members</p>
-                            <b-table striped hover responsive :items="members" selectable select-mode="single"
-                                     @row-selected="onMemberShipSelected">
-                            </b-table>
-                        </div>
-
-                        <div class="w-100">
-                            <b-button class="addmemberbtn" variant="outline-primary" v-on:click="addMemberShip">Add
-                                Member
-                            </b-button>
-                        </div>
-                        <div class="groupformItem">
-                            <p>Child Groups</p>
-                            <b-table striped hover responsive :items="childGroupMembers" :fields="memberGroupsFields"
-                                     selectable select-mode="single"
-                                     @row-selected="onGroupMemberShipSelected">
-                            </b-table>
-                        </div>
-                        <div class="w-100">
-                            <b-button class="addmemberbtn" variant="outline-primary" v-on:click="addChildGroup">Add
-                                Child
-                                Group
-                            </b-button>
+                            <p>Type</p>
+                            <b-form-select v-model="selectedMembershipType">
+                                <option v-for="(selectOption, indexOpt) in memberTypes"
+                                        :key="indexOpt"
+                                        :value="selectOption"
+                                >
+                                    {{ selectOption }}
+                                </option>
+                            </b-form-select>
                         </div>
 
                     </div>
@@ -77,17 +131,17 @@
                             <b-button
                                     variant="primary"
                                     size="sm"
-                                    class="grBtnDel"
-                                    v-on:click="removeGroupProfile"
+                                    class="memBtnDel"
+                                    v-on:click="removeMembership"
                                     @click="show=false"
                             >
-                                Delete
+                                Remove Membership
                             </b-button>
                             <b-button
                                     variant="primary"
                                     size="sm"
-                                    class="grBtnCl"
-                                    v-on:click="closeGroupProfile"
+                                    class="memBtnCl"
+                                    v-on:click="closeMembershipModel"
                                     @click="show=false"
 
                             >
@@ -96,8 +150,8 @@
                             <b-button
                                     variant="primary"
                                     size="sm"
-                                    class="grBtnUp"
-                                    v-on:click="updateGroupProfile"
+                                    class="memBtnUp"
+                                    v-on:click="updateMembership"
                                     @click="show=false"
 
                             >
@@ -108,147 +162,86 @@
                 </b-modal>
             </div>
             <div>
-                <div>
-                    <b-modal ref="membershipModel" title="Update Membership" ok-title="Update">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Owner Id</p>
-                                <b-form-input v-model="selectedMembershipUsername" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Type</p>
-                                <b-form-select v-model="selectedMembershipType">
-                                    <option v-for="(selectOption, indexOpt) in memberTypes"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-
-                        </div>
-                        <template v-slot:modal-footer>
-                            <div class="w-100">
-                                <b-button
-                                        variant="primary"
-                                        size="sm"
-                                        class="memBtnDel"
-                                        v-on:click="removeMembership"
-                                        @click="show=false"
-                                >
-                                    Remove Membership
-                                </b-button>
-                                <b-button
-                                        variant="primary"
-                                        size="sm"
-                                        class="memBtnCl"
-                                        v-on:click="closeMembershipModel"
-                                        @click="show=false"
-
-                                >
-                                    Close
-                                </b-button>
-                                <b-button
-                                        variant="primary"
-                                        size="sm"
-                                        class="memBtnUp"
-                                        v-on:click="updateMembership"
-                                        @click="show=false"
-
-                                >
-                                    Update
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
-                </div>
-                <div>
-                    <b-modal ref="addMembershipModel" title="Add Membership" ok-title="Add"
-                             @ok="addMembershipOKPressed">
-                        <div class="groupform">
-                            <div v-if="selectedChildType==='User'" class="groupformItem">
-                                <p>Username</p>
-                                <b-form-select v-model="selectedNewUsername">
-                                    <option v-for="(selectOption, indexOpt) in usernames"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-                            <div v-if="selectedChildType==='User'" class="groupformItem">
-                                <p>Type</p>
-                                <b-form-select v-model="selectedNewMemType">
-                                    <option v-for="(selectOption, indexOpt) in memberTypes"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                </div>
-                <div>
-                    <b-modal ref="addGrModel" title="Add Group" ok-title="Add" @ok="addGroupOKPressed">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="selectedNewGrName"></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Description</p>
-                                <b-form-input v-model="selectedNewGrDesc"></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                    <b-modal ref="viewGrMembership" title="Group" cancel-title="Delete" @cancel="removeGroupMembership">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="selectedGrName"></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Id</p>
-                                <b-form-input v-model="selectedGrId"></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                    <b-modal ref="addGrMembershipModel" title="Add Group Membership" ok-title="Add"
-                             @ok="addChildGroupOkPressed">
-                        <div class="groupform">
-                            <p>Select Group Id</p>
-                            <b-form-select v-model="addingGr">
-                                <option v-for="(selectOption, indexOpt) in feasibleGroupMembers"
+                <b-modal ref="addMembershipModel" title="Add Membership" ok-title="Add"
+                         @ok="addMembershipOKPressed">
+                    <div class="groupform">
+                        <div v-if="selectedChildType==='User'" class="groupformItem">
+                            <p>Username</p>
+                            <b-form-select v-model="selectedNewUsername">
+                                <option v-for="(selectOption, indexOpt) in usernames"
                                         :key="indexOpt"
                                         :value="selectOption"
                                 >
-                                    {{ selectOption.name }}
+                                    {{ selectOption }}
                                 </option>
                             </b-form-select>
                         </div>
-                    </b-modal>
-                </div>
+                        <div v-if="selectedChildType==='User'" class="groupformItem">
+                            <p>Type</p>
+                            <b-form-select v-model="selectedNewMemType">
+                                <option v-for="(selectOption, indexOpt) in memberTypes"
+                                        :key="indexOpt"
+                                        :value="selectOption"
+                                >
+                                    {{ selectOption }}
+                                </option>
+                            </b-form-select>
+                        </div>
+
+                    </div>
+                </b-modal>
+            </div>
+            <div>
+                <b-modal ref="addGrModel" title="Add Group" ok-title="Add" @ok="addGroupOKPressed">
+                    <div class="groupform">
+                        <div class="groupformItem">
+                            <p>Name</p>
+                            <b-form-input v-model="selectedNewGrName"></b-form-input>
+                        </div>
+                        <div class="groupformItem">
+                            <p>Description</p>
+                            <b-form-input v-model="selectedNewGrDesc"></b-form-input>
+                        </div>
+
+                    </div>
+                </b-modal>
+                <b-modal ref="viewGrMembership" title="Group" cancel-title="Delete" @cancel="removeGroupMembership">
+                    <div class="groupform">
+                        <div class="groupformItem">
+                            <p>Name</p>
+                            <b-form-input v-model="selectedGrName"></b-form-input>
+                        </div>
+                        <div class="groupformItem">
+                            <p>Id</p>
+                            <b-form-input v-model="selectedGrId"></b-form-input>
+                        </div>
+
+                    </div>
+                </b-modal>
+                <b-modal ref="addGrMembershipModel" title="Add Group Membership" ok-title="Add"
+                         @ok="addChildGroupOkPressed">
+                    <div class="groupform">
+                        <p>Select Group Id</p>
+                        <b-form-select v-model="addingGr">
+                            <option v-for="(selectOption, indexOpt) in feasibleGroupMembers"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption.name }}
+                            </option>
+                        </b-form-select>
+                    </div>
+                </b-modal>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
-
     import config from "@/config";
-    import Header from "@/components/workspace/Header";
 
     export default {
         name: "Groups",
-        components: {Header},
         data: function () {
             return {
                 fields: ['name', 'id', 'description', 'ownerId'],

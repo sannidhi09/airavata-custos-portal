@@ -1,196 +1,191 @@
 <template>
     <div>
-        <Header/>
-        <div class="p-3">
-            <div class="w-100">
-                <h2>Manage Users</h2>
-            </div>
-            <form class="userSearchBar mb-5" v-on:submit.prevent="searchResult">
-                <b-input-group>
-                    <b-form-input size="sm" v-model="searchUsername" placeholder="Search"></b-form-input>
-                    <b-input-group-append>
-                        <b-button size="sm" type="submit">
-                            <b-icon icon="search"></b-icon>
-                        </b-button>
-                    </b-input-group-append>
-                </b-input-group>
-            </form>
-            <div v-if="this.userloading" class="d-flex justify-content-center w-100">
-                <b-spinner variant="primary" label="Text Centered"></b-spinner>
-            </div>
-            <div class="usertable w-100">
+        <div class="w-100">
+            <h2>Manage Users</h2>
+        </div>
+        <form class="userSearchBar mb-5" v-on:submit.prevent="searchResult">
+            <b-input-group>
+                <b-form-input size="sm" v-model="searchUsername" placeholder="Search"></b-form-input>
+                <b-input-group-append>
+                    <b-button size="sm" type="submit">
+                        <b-icon icon="search"></b-icon>
+                    </b-button>
+                </b-input-group-append>
+            </b-input-group>
+        </form>
+        <div v-if="this.userloading" class="d-flex justify-content-center w-100">
+            <b-spinner variant="primary" label="Text Centered"></b-spinner>
+        </div>
+        <div class="usertable w-100">
 
-                <b-table striped hover responsive :items="items" :fields="fields" selectable small
-                         ref="selectableTable"
-                         select-mode="single"
-                         :per-page="perPage"
-                         :current-page="currentPage"
-                         @row-selected="onRowSelected" caption-top>
+            <b-table striped hover responsive :items="items" :fields="fields" selectable small
+                     ref="selectableTable"
+                     select-mode="single"
+                     :per-page="perPage"
+                     :current-page="currentPage"
+                     @row-selected="onRowSelected" caption-top>
 
-                    <template v-slot:cell(status)="data">
-                        <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
-                        <b-badge v-if="data.value == 'INACTIVE'" variant="danger">Inactive</b-badge>
-                        <b-badge v-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
-                    </template>
+                <template v-slot:cell(status)="data">
+                    <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
+                    <b-badge v-if="data.value == 'INACTIVE'" variant="danger">Inactive</b-badge>
+                    <b-badge v-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
+                </template>
 
-                </b-table>
-
-                <div>
-                    <b-pagination
-                            size="sm"
-                            class="float-right"
-                            v-model="currentPage"
-                            :total-rows="rows"
-                            :per-page="perPage"
-                            aria-controls="my-table"
-                    ></b-pagination>
-                </div>
-            </div>
+            </b-table>
 
             <div>
-                <b-modal ref="usermodel" scrollable title="User Profile" ok-title="Update" @ok="this.updateUserProfile">
-                    <div class="userform">
-                        <div class="userformItem">
-                            <p>Username</p>
-                            <b-form-input v-model="selectedUsername" disabled></b-form-input>
-                        </div>
-                        <div class="userformItem">
-                            <p>First Name</p>
-                            <b-form-input v-model="selectedFirstName"></b-form-input>
-                        </div>
-                        <div class="userformItem">
-                            <p>Last Name</p>
-                            <b-form-input v-model="selectedLastName"></b-form-input>
-                        </div>
-                        <div class="userformItem">
-                            <p>Email</p>
-                            <b-form-input v-model="selectedEmail"></b-form-input>
-                        </div>
-                        <div class="userformItem">
-                            <p>Status</p>
-                            <b-form-select v-model="selectedStatus">
-                                <option v-for="(selectOption, indexOpt) in statusOptions"
-                                        :key="indexOpt"
-                                        :value="selectOption"
-                                >
-                                    {{ selectOption }}
-                                </option>
-                            </b-form-select>
-                        </div>
-                        <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
-                            <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                        </div>
-                        <div class="userformItem">
-                            <p>Attributes</p>
-                            <b-table striped hover responsive :items="selectedAttributes" selectable
-                                     select-mode="single"
-                                     @row-selected="onAtrSelected">
-                            </b-table>
-                            <dev class="addAtrCls">
-                                <b-button variant="outline-primary" v-on:click="addAttribute">Add Attributes</b-button>
-                            </dev>
-                        </div>
-                        <div class="userformItem">
-                            <p>Roles</p>
-                            <b-table striped hover responsive :items="selectedRoles" selectable select-mode="single"
-                                     @row-selected="onRoleSelected">
-                            </b-table>
-                            <dev class="addAtrCls">
-                                <b-button variant="outline-primary" v-on:click="addRole"
-                                          :disabled="this.isAdminUser==false">Add Role
-                                </b-button>
-                            </dev>
-                        </div>
-
-                    </div>
-                </b-modal>
-                <b-modal ref="atrModel" scrollable title="Add Attribute" ok-title="Add" @ok="addAtrOkPressed">
-                    <div class="userform">
-                        <div class="userformItem">
-                            <p>Key</p>
-                            <b-form-input v-model="newKey"></b-form-input>
-                        </div>
-                        <div class="userformItem">
-                            <p>Value</p>
-                            <b-form-input v-model="newValue"></b-form-input>
-                        </div>
-                    </div>
-                </b-modal>
-                <b-modal ref="atrModelSelected" scrollable title="Attribute" ok-title="Delete"
-                         @ok="addAtrDeletePressed">
-                    <div class="userform">
-                        <div class="userformItem">
-                            <p>Key</p>
-                            <b-form-input v-model="selectedKey" disabled></b-form-input>
-                        </div>
-                        <div class="userformItem">
-                            <p>Value</p>
-                            <b-form-input v-model="selectedValue" disabled></b-form-input>
-                        </div>
-                    </div>
-                </b-modal>
-                <b-modal ref="roleModel" scrollable title="Add  Role" ok-title="Add" @ok="addRoleOkPressed">
-                    <div class="userform">
-                        <div class="userformItem">
-                            <p>Scope</p>
-                            <b-form-select v-model="selectedScope">
-                                <option v-for="(selectOption, indexOpt) in scopes"
-                                        :key="indexOpt"
-                                        :value="selectOption"
-                                >
-                                    {{ selectOption }}
-                                </option>
-                            </b-form-select>
-                        </div>
-                        <div class="userformItem">
-                            <p>Role</p>
-                            <div v-if="selectedScope==='TENANT'">
-                                <b-form-select v-model="selectedRole">
-                                    <option v-for="(selectOption, indexOpt) in tenantroles"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-                            <div v-if="selectedScope==='CLIENT'">
-                                <b-form-select v-model="selectedRole">
-                                    <option v-for="(selectOption, indexOpt) in clientroles"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-                        </div>
-                    </div>
-                </b-modal>
-                <b-modal ref="roleModelSelected" scrollable title="Role" ok-title="Delete" @ok="deleteRoleOkPressed">
-                    <div class="userform">
-                        <div class="userformItem">
-                            <p>Role</p>
-                            <b-form-input v-model="rowSelectedRole" disabled></b-form-input>
-                        </div>
-                        <div class="userformItem">
-                            <p>Scope</p>
-                            <b-form-input v-model="rowSelectedScope" disabled></b-form-input>
-                        </div>
-                    </div>
-                </b-modal>
+                <b-pagination
+                        size="sm"
+                        class="float-right"
+                        v-model="currentPage"
+                        :total-rows="rows"
+                        :per-page="perPage"
+                        aria-controls="my-table"
+                ></b-pagination>
             </div>
+        </div>
+
+        <div>
+            <b-modal ref="usermodel" scrollable title="User Profile" ok-title="Update" @ok="this.updateUserProfile">
+                <div class="userform">
+                    <div class="userformItem">
+                        <p>Username</p>
+                        <b-form-input v-model="selectedUsername" disabled></b-form-input>
+                    </div>
+                    <div class="userformItem">
+                        <p>First Name</p>
+                        <b-form-input v-model="selectedFirstName"></b-form-input>
+                    </div>
+                    <div class="userformItem">
+                        <p>Last Name</p>
+                        <b-form-input v-model="selectedLastName"></b-form-input>
+                    </div>
+                    <div class="userformItem">
+                        <p>Email</p>
+                        <b-form-input v-model="selectedEmail"></b-form-input>
+                    </div>
+                    <div class="userformItem">
+                        <p>Status</p>
+                        <b-form-select v-model="selectedStatus">
+                            <option v-for="(selectOption, indexOpt) in statusOptions"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption }}
+                            </option>
+                        </b-form-select>
+                    </div>
+                    <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
+                        <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                    </div>
+                    <div class="userformItem">
+                        <p>Attributes</p>
+                        <b-table striped hover responsive :items="selectedAttributes" selectable
+                                 select-mode="single"
+                                 @row-selected="onAtrSelected">
+                        </b-table>
+                        <dev class="addAtrCls">
+                            <b-button variant="outline-primary" v-on:click="addAttribute">Add Attributes</b-button>
+                        </dev>
+                    </div>
+                    <div class="userformItem">
+                        <p>Roles</p>
+                        <b-table striped hover responsive :items="selectedRoles" selectable select-mode="single"
+                                 @row-selected="onRoleSelected">
+                        </b-table>
+                        <dev class="addAtrCls">
+                            <b-button variant="outline-primary" v-on:click="addRole"
+                                      :disabled="this.isAdminUser==false">Add Role
+                            </b-button>
+                        </dev>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="atrModel" scrollable title="Add Attribute" ok-title="Add" @ok="addAtrOkPressed">
+                <div class="userform">
+                    <div class="userformItem">
+                        <p>Key</p>
+                        <b-form-input v-model="newKey"></b-form-input>
+                    </div>
+                    <div class="userformItem">
+                        <p>Value</p>
+                        <b-form-input v-model="newValue"></b-form-input>
+                    </div>
+                </div>
+            </b-modal>
+            <b-modal ref="atrModelSelected" scrollable title="Attribute" ok-title="Delete"
+                     @ok="addAtrDeletePressed">
+                <div class="userform">
+                    <div class="userformItem">
+                        <p>Key</p>
+                        <b-form-input v-model="selectedKey" disabled></b-form-input>
+                    </div>
+                    <div class="userformItem">
+                        <p>Value</p>
+                        <b-form-input v-model="selectedValue" disabled></b-form-input>
+                    </div>
+                </div>
+            </b-modal>
+            <b-modal ref="roleModel" scrollable title="Add  Role" ok-title="Add" @ok="addRoleOkPressed">
+                <div class="userform">
+                    <div class="userformItem">
+                        <p>Scope</p>
+                        <b-form-select v-model="selectedScope">
+                            <option v-for="(selectOption, indexOpt) in scopes"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption }}
+                            </option>
+                        </b-form-select>
+                    </div>
+                    <div class="userformItem">
+                        <p>Role</p>
+                        <div v-if="selectedScope==='TENANT'">
+                            <b-form-select v-model="selectedRole">
+                                <option v-for="(selectOption, indexOpt) in tenantroles"
+                                        :key="indexOpt"
+                                        :value="selectOption"
+                                >
+                                    {{ selectOption }}
+                                </option>
+                            </b-form-select>
+                        </div>
+                        <div v-if="selectedScope==='CLIENT'">
+                            <b-form-select v-model="selectedRole">
+                                <option v-for="(selectOption, indexOpt) in clientroles"
+                                        :key="indexOpt"
+                                        :value="selectOption"
+                                >
+                                    {{ selectOption }}
+                                </option>
+                            </b-form-select>
+                        </div>
+                    </div>
+                </div>
+            </b-modal>
+            <b-modal ref="roleModelSelected" scrollable title="Role" ok-title="Delete" @ok="deleteRoleOkPressed">
+                <div class="userform">
+                    <div class="userformItem">
+                        <p>Role</p>
+                        <b-form-input v-model="rowSelectedRole" disabled></b-form-input>
+                    </div>
+                    <div class="userformItem">
+                        <p>Scope</p>
+                        <b-form-input v-model="rowSelectedScope" disabled></b-form-input>
+                    </div>
+                </div>
+            </b-modal>
         </div>
     </div>
 </template>
 
 <script>
     import config from "@/config";
-    import Header from "@/components/workspace/Header";
 
     export default {
         name: "Users",
-        components: {Header},
         data: function () {
             return {
                 fields: ['username', 'first_name', 'last_name', 'email', 'status'],
@@ -623,6 +618,7 @@
 
     .userSearchBar input.form-control:focus {
         outline: none;
+        box-shadow: none;
     }
 
     .userSearchBar button {

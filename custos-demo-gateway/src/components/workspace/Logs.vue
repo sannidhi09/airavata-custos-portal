@@ -1,50 +1,47 @@
 <template>
     <div>
-        <Header/>
-        <div class="p-3">
-            <div v-if="activateLogEnabling">
-                <b-form-checkbox v-model="checked" :disabled=isCheckedBtnDisabled v-on:change="enableLogging"
-                                 name="check-button" switch>
-                    Enable Logging
-                </b-form-checkbox>
+        <div v-if="activateLogEnabling">
+            <b-form-checkbox v-model="checked" :disabled=isCheckedBtnDisabled v-on:change="enableLogging"
+                             name="check-button" switch>
+                Enable Logging
+            </b-form-checkbox>
+        </div>
+        <div v-if="isLoggingEnabled">
+            <div class="logSearchBar">
+                <b-input-group>
+                    <template v-slot:prepend>
+                        <b-form-input disabled v-model="defaultSearchText">Search By</b-form-input>
+                        <b-dropdown :text="selectedService" variant="info" v-model="selectedService">
+                            <b-dropdown-item v-for="option in options"
+                                             :key="option.value"
+                                             :value="option.value"
+                                             @click=searchLogsWithFilter(option)>
+                                {{option.text}}
+                            </b-dropdown-item>
+
+                        </b-dropdown>
+
+                    </template>
+                </b-input-group>
             </div>
-            <div v-if="isLoggingEnabled">
-                <div class="logSearchBar">
-                    <b-input-group>
-                        <template v-slot:prepend>
-                            <b-form-input disabled v-model="defaultSearchText">Search By</b-form-input>
-                            <b-dropdown :text="selectedService" variant="info" v-model="selectedService">
-                                <b-dropdown-item v-for="option in options"
-                                                 :key="option.value"
-                                                 :value="option.value"
-                                                 @click=searchLogsWithFilter(option)>
-                                    {{option.text}}
-                                </b-dropdown-item>
 
-                            </b-dropdown>
+            <div class="grouptable">
+                <b-table striped hover responsive :items="logItems" :fields="fields" selectable
+                         ref="selectableTable"
+                         select-mode="single"
+                         :per-page="perPage"
+                         :current-page="currentPage"
+                         caption-top>
+                    <template v-slot:table-caption>Access Logs</template>
+                </b-table>
+                <div class="pgClass">
+                    <b-pagination
+                            v-model="currentPage"
+                            :total-rows="rows"
+                            :per-page="perPage"
+                            aria-controls="my-table"
 
-                        </template>
-                    </b-input-group>
-                </div>
-
-                <div class="grouptable">
-                    <b-table striped hover responsive :items="logItems" :fields="fields" selectable
-                             ref="selectableTable"
-                             select-mode="single"
-                             :per-page="perPage"
-                             :current-page="currentPage"
-                             caption-top>
-                        <template v-slot:table-caption>Access Logs</template>
-                    </b-table>
-                    <div class="pgClass">
-                        <b-pagination
-                                v-model="currentPage"
-                                :total-rows="rows"
-                                :per-page="perPage"
-                                aria-controls="my-table"
-
-                        ></b-pagination>
-                    </div>
+                    ></b-pagination>
                 </div>
             </div>
         </div>
@@ -53,11 +50,9 @@
 
 <script>
     import config from "@/config";
-    import Header from "@/components/workspace/Header";
 
     export default {
         name: "Logs",
-        components: {Header},
         data: function () {
             return {
                 defaultSearchText: 'Search By',

@@ -150,7 +150,7 @@
         color: #203a43;
     }
 
-    .user-avatar-button {
+    .header .user-avatar-button {
         border-radius: 30px;
         width: 35px;
         height: 35px;
@@ -177,5 +177,6 @@
 
     .navigation a:focus {
         outline: none;
+        box-shadow: none;
     }
 </style>

@@ -1,94 +1,89 @@
 <template>
     <div>
-        <Header/>
-        <div class="p-3">
-            <div class="secrettable">
-                <div v-if="this.secretsLoading" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <b-table striped hover responsive :items="secItems" :fields="fields" selectable
-                         select-mode="single"
-                         @row-selected="onRowSelected" caption-top>
-                    <template v-slot:table-caption>Secrets</template>
-                </b-table>
-                <div class="addSec">
-                    <b-button variant="outline-primary" v-on:click="addSec">Add Secret</b-button>
-                </div>
+        <div class="secrettable">
+            <div v-if="this.secretsLoading" class="d-flex justify-content-center mb-3">
+                <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
-            <div>
-                <b-modal ref="addSecmodel" scrollable title="Add Secret" ok-title="Add" @ok="addSecOKButtonPressed">
-                    <div class="secform">
-                        <div class="secFormItem">
-                            <p>Type</p>
-                            <b-form-select v-model="defaultMemType">
-                                <option v-for="(selectOption, indexOpt) in secretTypes"
-                                        :key="indexOpt"
-                                        :value="selectOption"
-                                >
-                                    {{ selectOption }}
-                                </option>
-                            </b-form-select>
-                        </div>
-                        <div class="secformItem">
-                            <p>Description</p>
-                            <b-form-input v-model="selectedDescription"></b-form-input>
-                        </div>
-                        <div v-if="defaultMemType==='Password'" class="secformItem">
-                            <p>Password</p>
-                            <b-form-input v-model="selectedPassword"></b-form-input>
-                        </div>
+            <b-table striped hover responsive :items="secItems" :fields="fields" selectable
+                     select-mode="single"
+                     @row-selected="onRowSelected" caption-top>
+                <template v-slot:table-caption>Secrets</template>
+            </b-table>
+            <div class="addSec">
+                <b-button variant="outline-primary" v-on:click="addSec">Add Secret</b-button>
+            </div>
+        </div>
+        <div>
+            <b-modal ref="addSecmodel" scrollable title="Add Secret" ok-title="Add" @ok="addSecOKButtonPressed">
+                <div class="secform">
+                    <div class="secFormItem">
+                        <p>Type</p>
+                        <b-form-select v-model="defaultMemType">
+                            <option v-for="(selectOption, indexOpt) in secretTypes"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption }}
+                            </option>
+                        </b-form-select>
+                    </div>
+                    <div class="secformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="selectedDescription"></b-form-input>
+                    </div>
+                    <div v-if="defaultMemType==='Password'" class="secformItem">
+                        <p>Password</p>
+                        <b-form-input v-model="selectedPassword"></b-form-input>
+                    </div>
+                </div>
+
+            </b-modal>
+        </div>
+        <div>
+            <b-modal ref="updateSecmodel" scrollable title="View Secret" cancel-title="Delete"
+                     @cancel="secDeleteButtonPressed" cancel-variant="outline-primary">
+                <div class="secform">
+                    <div class="secformItem">
+                        <p>Token</p>
+                        <b-form-input v-model="selectedExId" disabled></b-form-input>
+                    </div>
+                    <div class="secFormItem">
+                        <p>Type</p>
+                        <b-form-input v-model="selectedExType" disabled></b-form-input>
+                    </div>
+                    <div class="secformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="selectedExDescription" disabled></b-form-input>
+                    </div>
+                    <div class="secformItem">
+                        <p>Owner Id</p>
+                        <b-form-input v-model="selectedExOwnerId" disabled></b-form-input>
+                    </div>
+                    <div v-if="selectedExType ==='PASSWORD'" class="secformItem">
+                        <p>Password</p>
+                        <b-form-input v-model="selectedExPassword" disabled></b-form-input>
+                    </div>
+                    <div v-if="selectedExType ==='SSH'" class="secformItem">
+                        <p>Publick Key</p>
+                        <b-textarea v-model="selectedExPubKey" disabled></b-textarea>
+                    </div>
+                    <div v-if="selectedExType ==='SSH'" class="secformItem">
+                        <p>Private Key</p>
+                        <b-textarea v-model="selectedExPrivKey" disabled></b-textarea>
                     </div>
 
-                </b-modal>
-            </div>
-            <div>
-                <b-modal ref="updateSecmodel" scrollable title="View Secret" cancel-title="Delete"
-                         @cancel="secDeleteButtonPressed" cancel-variant="outline-primary">
-                    <div class="secform">
-                        <div class="secformItem">
-                            <p>Token</p>
-                            <b-form-input v-model="selectedExId" disabled></b-form-input>
-                        </div>
-                        <div class="secFormItem">
-                            <p>Type</p>
-                            <b-form-input v-model="selectedExType" disabled></b-form-input>
-                        </div>
-                        <div class="secformItem">
-                            <p>Description</p>
-                            <b-form-input v-model="selectedExDescription" disabled></b-form-input>
-                        </div>
-                        <div class="secformItem">
-                            <p>Owner Id</p>
-                            <b-form-input v-model="selectedExOwnerId" disabled></b-form-input>
-                        </div>
-                        <div v-if="selectedExType ==='PASSWORD'" class="secformItem">
-                            <p>Password</p>
-                            <b-form-input v-model="selectedExPassword" disabled></b-form-input>
-                        </div>
-                        <div v-if="selectedExType ==='SSH'" class="secformItem">
-                            <p>Publick Key</p>
-                            <b-textarea v-model="selectedExPubKey" disabled></b-textarea>
-                        </div>
-                        <div v-if="selectedExType ==='SSH'" class="secformItem">
-                            <p>Private Key</p>
-                            <b-textarea v-model="selectedExPrivKey" disabled></b-textarea>
-                        </div>
+                </div>
 
-                    </div>
-
-                </b-modal>
-            </div>
+            </b-modal>
         </div>
     </div>
 </template>
 
 <script>
     import config from "@/config";
-    import Header from "@/components/workspace/Header";
 
     export default {
         name: "Secrets",
-        components: {Header},
         data: function () {
             return {
                 fields: ['token', 'description', 'type', 'owner_id'],
