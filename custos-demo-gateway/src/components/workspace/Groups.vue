@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <Header/>
         <div class="p-3">
             <div class="grouptable">
@@ -721,9 +720,5 @@
     .addGr {
         margin-right: 0;
         position: relative;
-    }
-
-    .gotoWork {
-        margin-left: 70%;
     }
 </style>

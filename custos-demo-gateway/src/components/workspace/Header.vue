@@ -6,8 +6,8 @@
                 <div class="custos-logo-text pl-2">Custos</div>
             </div>
             <div class="user-details">
-                <div class="username">John Doe</div>
-                <div class="email">johndoe@iu.com</div>
+                <div class="username">{{this.user.first_name + " "+ this.user.last_name}}</div>
+                <div class="email">{{this.user.email}}</div>
             </div>
 
 
@@ -56,7 +56,9 @@
             return {
                 custosId: null,
                 custosSec: null,
-                isAdmin: false
+                isAdmin: false,
+                user: null,
+                currentUserName: null
             }
         },
         methods: {
@@ -79,6 +81,26 @@
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
             this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
+
+            this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
+            let data = {
+                offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                username: this.currentUserName
+            }
+            let resp = await this.$store.dispatch('user/users', data)
+            if (Array.isArray(resp) && resp.length > 0) {
+                resp.forEach(obj => {
+                    this.user = {
+                        username: obj.username,
+                        first_name: obj.first_name,
+                        last_name: obj.last_name,
+                        email: obj.email,
+                        status: obj.state,
+                        attributes: [],
+                        roles: []
+                    }
+                })
+            }
         }
     }
 </script>

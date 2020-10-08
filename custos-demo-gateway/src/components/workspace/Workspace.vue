@@ -1,112 +1,116 @@
 <template>
-    <dev>
-        <div class="loggeduser">
-            Welcome {{this.user.first_name + " "+ this.user.last_name}}
-        </div>
-
-        <div class="logout">
-                <b-button href="#" v-on:click="logout">Logout</b-button>
-        </div>
-        <div class="grouping">
-            <b-card-group deck>
-                <b-card :img-src="require('../../assets/users.png')"
-                        img-height="50%"
-                        style="max-width: 20rem;"
-                        class="mb-2"
-                        body-class="bcbody"
-                >
-                    <div v-if="this.isAdmin">
-                    <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/users')">
-                        Manage Users
-                    </b-button>
-                    </div>
-                    <div v-if="!this.isAdmin">
-                        <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/profile')">
-                            Manage Profile
+    <div>
+        <Header/>
+        <div class="p-3">
+            <div class="grouping">
+                <b-card-group deck>
+                    <b-card :img-src="require('../../assets/users.png')"
+                            img-height="50%"
+                            style="max-width: 20rem;"
+                            class="mb-2"
+                            body-class="bcbody"
+                    >
+                        <div v-if="this.isAdmin">
+                            <b-button href="#" variant="outline-primary"
+                                      v-on:click="loadRoute($event, '/workspace/users')">
+                                Manage Users
+                            </b-button>
+                        </div>
+                        <div v-if="!this.isAdmin">
+                            <b-button href="#" variant="outline-primary"
+                                      v-on:click="loadRoute($event, '/workspace/profile')">
+                                Manage Profile
+                            </b-button>
+                        </div>
+                    </b-card>
+                    <b-card :img-src="require('../../assets/groups_web.png')"
+                            img-height="50%"
+                            style="max-width: 20rem;"
+                            class="mb-2"
+                            body-class="bcbody"
+                    >
+                        <b-button href="#" variant="outline-primary"
+                                  v-on:click="loadRoute($event, '/workspace/groups')">
+                            Manage Groups
                         </b-button>
-                    </div>
-                </b-card>
-                <b-card :img-src="require('../../assets/groups_web.png')"
-                        img-height="50%"
-                        style="max-width: 20rem;"
-                        class="mb-2"
-                        body-class="bcbody"
-                >
-                    <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/groups')">
-                        Manage Groups
-                    </b-button>
-                </b-card>
-                <b-card :img-src="require('../../assets/credentials.png')"
-                        img-height="50%"
-                        style="max-width: 20rem;"
-                        class="mb-2"
-                        body-class="bcbody"
-                >
-                    <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/secrets')">
-                        Manage Secrets
-                    </b-button>
-                </b-card>
-            </b-card-group>
-        </div>
-        <div v-if="isAdmin" class="groupingbt">
-            <b-card-group deck>
-                <b-card :img-src="require('../../assets/sharings.png')"
-                        img-height="50%"
-                        style="max-width: 20rem;"
-                        class="mb-2"
-                        body-class="bcbody"
-                >
-                    <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/sharings')">
-                        Sharing
-                    </b-button>
-                </b-card>
+                    </b-card>
+                    <b-card :img-src="require('../../assets/credentials.png')"
+                            img-height="50%"
+                            style="max-width: 20rem;"
+                            class="mb-2"
+                            body-class="bcbody"
+                    >
+                        <b-button href="#" variant="outline-primary"
+                                  v-on:click="loadRoute($event, '/workspace/secrets')">
+                            Manage Secrets
+                        </b-button>
+                    </b-card>
+                </b-card-group>
+            </div>
+            <div v-if="isAdmin" class="groupingbt">
+                <b-card-group deck>
+                    <b-card :img-src="require('../../assets/sharings.png')"
+                            img-height="50%"
+                            style="max-width: 20rem;"
+                            class="mb-2"
+                            body-class="bcbody"
+                    >
+                        <b-button href="#" variant="outline-primary"
+                                  v-on:click="loadRoute($event, '/workspace/sharings')">
+                            Sharing
+                        </b-button>
+                    </b-card>
 
-                <b-card :img-src="require('../../assets/bots.png')"
-                        img-height="50%"
-                        style="max-width: 20rem;"
-                        class="mb-2"
-                        body-class="bcbody"
-                >
-                    <b-button href="#" variant="outline-primary" :disabled="!isAdmin"
-                              v-on:click="loadRoute($event, '/workspace/agents')">
-                        Community Accounts
-                    </b-button>
-                </b-card>
-                <b-card :img-src="require('../../assets/dblogs.png')"
-                        img-height="50%"
-                        style="max-width: 20rem;"
-                        class="mb-2"
-                        body-class="bcbody"
-                >
-                    <b-button href="#" variant="outline-primary" :disabled="!isAdmin"
-                              v-on:click="loadRoute($event, '/workspace/logs')">
-                        Logs
-                    </b-button>
-                </b-card>
-            </b-card-group>
+                    <b-card :img-src="require('../../assets/bots.png')"
+                            img-height="50%"
+                            style="max-width: 20rem;"
+                            class="mb-2"
+                            body-class="bcbody"
+                    >
+                        <b-button href="#" variant="outline-primary" :disabled="!isAdmin"
+                                  v-on:click="loadRoute($event, '/workspace/agents')">
+                            Community Accounts
+                        </b-button>
+                    </b-card>
+                    <b-card :img-src="require('../../assets/dblogs.png')"
+                            img-height="50%"
+                            style="max-width: 20rem;"
+                            class="mb-2"
+                            body-class="bcbody"
+                    >
+                        <b-button href="#" variant="outline-primary" :disabled="!isAdmin"
+                                  v-on:click="loadRoute($event, '/workspace/logs')">
+                            Logs
+                        </b-button>
+                    </b-card>
+                </b-card-group>
+            </div>
+            <div v-if="!isAdmin" class="groupingbtntA">
+                <b-card-group deck>
+                    <b-card :img-src="require('../../assets/sharings.png')"
+                            img-height="50%"
+                            style="max-width: 20rem;"
+                            class="mb-2"
+                            body-class="bcbody"
+                    >
+                        <b-button href="#" variant="outline-primary"
+                                  v-on:click="loadRoute($event, '/workspace/sharings')">
+                            Sharing
+                        </b-button>
+                    </b-card>
+                </b-card-group>
+            </div>
         </div>
-        <div v-if="!isAdmin" class="groupingbtntA">
-            <b-card-group deck>
-                <b-card :img-src="require('../../assets/sharings.png')"
-                        img-height="50%"
-                        style="max-width: 20rem;"
-                        class="mb-2"
-                        body-class="bcbody"
-                >
-                    <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/sharings')">
-                        Sharing
-                    </b-button>
-                </b-card>
-            </b-card-group>
-        </div>
-    </dev>
+    </div>
 </template>
 
 <script>
     import config from "@/config";
+    import Header from "./Header";
 
     export default {
         name: "Workspace",
+        components: {Header},
         data: function () {
             return {
                 custosId: null,
@@ -186,17 +190,15 @@
         margin-left: 70%;
     }
 
-    .loggeduser{
+    .loggeduser {
         font-size: x-large;
         color: blue;
     }
-    .groupingbtntA{
+
+    .groupingbtntA {
         position: relative;
         margin-left: 40%;
         width: 40%;
         margin-top: 5%;
     }
-
-
-
 </style>
