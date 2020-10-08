@@ -28,7 +28,7 @@ export default new Router({
                     client_id: process.env.VUE_APP_CLIENT_ID,
                     client_sec: process.env.VUE_APP_CLIENT_SEC
                 }
-                if (await store.dispatch('identity/isAuthenticated',data) == true) {
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
                     // You can use store variable here to access globalError or commit mutation
                     next(true)
                 } else {
@@ -46,7 +46,7 @@ export default new Router({
                     client_id: process.env.VUE_APP_CLIENT_ID,
                     client_sec: process.env.VUE_APP_CLIENT_SEC
                 }
-                if (await store.dispatch('identity/isAuthenticated',data) == true) {
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
                     // You can use store variable here to access globalError or commit mutation
                     next(true)
                 } else {
@@ -57,6 +57,24 @@ export default new Router({
                 import(/*webpackChunkName:"groups"*/  "./components/workspace/Groups")
         },
         {
+            path: "/workspace/profile",
+            name: "profile",
+            beforeEnter: async (to, from, next) => {
+                let data = {
+                    client_id: process.env.VUE_APP_CLIENT_ID,
+                    client_sec: process.env.VUE_APP_CLIENT_SEC
+                }
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
+                    // You can use store variable here to access globalError or commit mutation
+                    next(true)
+                } else {
+                    next('/')
+                }
+            },
+            component: () =>
+                import(/*webpackChunkName:"groups"*/  "./components/workspace/Profile")
+        },
+        {
             path: "/workspace/logs",
             name: "logs",
             beforeEnter: async (to, from, next) => {
@@ -64,7 +82,7 @@ export default new Router({
                     client_id: process.env.VUE_APP_CLIENT_ID,
                     client_sec: process.env.VUE_APP_CLIENT_SEC
                 }
-                if (await store.dispatch('identity/isAuthenticated',data) == true) {
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
                     // You can use store variable here to access globalError or commit mutation
                     next(true)
                 } else {
@@ -82,7 +100,7 @@ export default new Router({
                     client_id: process.env.VUE_APP_CLIENT_ID,
                     client_sec: process.env.VUE_APP_CLIENT_SEC
                 }
-                if (await store.dispatch('identity/isAuthenticated',data) == true) {
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
                     // You can use store variable here to access globalError or commit mutation
                     next(true)
                 } else {
@@ -100,7 +118,7 @@ export default new Router({
                     client_id: process.env.VUE_APP_CLIENT_ID,
                     client_sec: process.env.VUE_APP_CLIENT_SEC
                 }
-                if (await store.dispatch('identity/isAuthenticated',data) == true) {
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
                     // You can use store variable here to access globalError or commit mutation
                     next(true)
                 } else {
@@ -118,7 +136,7 @@ export default new Router({
                     client_id: process.env.VUE_APP_CLIENT_ID,
                     client_sec: process.env.VUE_APP_CLIENT_SEC
                 }
-                if (await store.dispatch('identity/isAuthenticated',data) == true) {
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
                     // You can use store variable here to access globalError or commit mutation
                     next(true)
                 } else {
@@ -136,7 +154,7 @@ export default new Router({
                     client_id: process.env.VUE_APP_CLIENT_ID,
                     client_sec: process.env.VUE_APP_CLIENT_SEC
                 }
-                if (await store.dispatch('identity/isAuthenticated',data) == true) {
+                if (await store.dispatch('identity/isAuthenticated', data) == true) {
                     // You can use store variable here to access globalError or commit mutation
                     next(true)
                 } else {
@@ -155,5 +173,6 @@ export default new Router({
 
     ]
 })
+
 
 

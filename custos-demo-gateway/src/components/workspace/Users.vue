@@ -1,5 +1,9 @@
 <template>
+
     <div>
+        <div class="gotoWork">
+            <b-button href="#" v-on:click="goToWorkspace">Go to Workspace</b-button>
+        </div>
         <div class="userSearchBar">
             <b-input-group prepend="Username" class="mt-3">
                 <b-form-input v-model="searchUsername"></b-form-input>
@@ -252,7 +256,7 @@
                     this.selectedStatus = this.selectedItem[0].status
                     this.selectedAttributes = this.selectedItem[0].attributes
                     this.selectedRoles = this.selectedItem[0].roles
-                    if (this.selectedUsername === this.currentUserName || this.isAdminUser) {
+                    if ((this.selectedUsername === this.currentUserName || this.isAdminUser) && this.selectedUsername != 'admin' ) {
                         this.$refs.usermodel.show()
                     }
                 }
@@ -482,6 +486,10 @@
                 return this.parseUsers(items, resp)
             },
 
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
             parseUsers(items, resp) {
                 if (Array.isArray(resp) && resp.length > 0) {
                     resp.forEach(obj => {
@@ -603,6 +611,10 @@
     .pgClass {
         margin-left: 70%;
         position: relative;
+    }
+
+    .gotoWork {
+        margin-left: 70%;
     }
 
 

@@ -1,7 +1,11 @@
 <template>
     <dev>
+        <div class="loggeduser">
+            Welcome {{this.user.first_name + " "+ this.user.last_name}}
+        </div>
+
         <div class="logout">
-            <b-button href="#" v-on:click="logout">Logout</b-button>
+                <b-button href="#" v-on:click="logout">Logout</b-button>
         </div>
         <div class="grouping">
             <b-card-group deck>
@@ -11,9 +15,16 @@
                         class="mb-2"
                         body-class="bcbody"
                 >
+                    <div v-if="this.isAdmin">
                     <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/users')">
                         Manage Users
                     </b-button>
+                    </div>
+                    <div v-if="!this.isAdmin">
+                        <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/profile')">
+                            Manage Profile
+                        </b-button>
+                    </div>
                 </b-card>
                 <b-card :img-src="require('../../assets/groups_web.png')"
                         img-height="50%"
@@ -37,7 +48,7 @@
                 </b-card>
             </b-card-group>
         </div>
-        <div class="groupingbt">
+        <div v-if="isAdmin" class="groupingbt">
             <b-card-group deck>
                 <b-card :img-src="require('../../assets/sharings.png')"
                         img-height="50%"
@@ -49,6 +60,7 @@
                         Sharing
                     </b-button>
                 </b-card>
+
                 <b-card :img-src="require('../../assets/bots.png')"
                         img-height="50%"
                         style="max-width: 20rem;"
@@ -66,8 +78,23 @@
                         class="mb-2"
                         body-class="bcbody"
                 >
-                    <b-button href="#" variant="outline-primary" :disabled="!isAdmin" v-on:click="loadRoute($event, '/workspace/logs')">
+                    <b-button href="#" variant="outline-primary" :disabled="!isAdmin"
+                              v-on:click="loadRoute($event, '/workspace/logs')">
                         Logs
+                    </b-button>
+                </b-card>
+            </b-card-group>
+        </div>
+        <div v-if="!isAdmin" class="groupingbtntA">
+            <b-card-group deck>
+                <b-card :img-src="require('../../assets/sharings.png')"
+                        img-height="50%"
+                        style="max-width: 20rem;"
+                        class="mb-2"
+                        body-class="bcbody"
+                >
+                    <b-button href="#" variant="outline-primary" v-on:click="loadRoute($event, '/workspace/sharings')">
+                        Sharing
                     </b-button>
                 </b-card>
             </b-card-group>
@@ -84,7 +111,9 @@
             return {
                 custosId: null,
                 custosSec: null,
-                isAdmin: false
+                isAdmin: false,
+                user: null,
+                currentUserName: null
             }
         },
         methods: {
@@ -110,6 +139,25 @@
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
             this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
+            this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
+            let data = {
+                offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                username: this.currentUserName
+            }
+            let resp = await this.$store.dispatch('user/users', data)
+            if (Array.isArray(resp) && resp.length > 0) {
+                resp.forEach(obj => {
+                    this.user = {
+                        username: obj.username,
+                        first_name: obj.first_name,
+                        last_name: obj.last_name,
+                        email: obj.email,
+                        status: obj.state,
+                        attributes: [],
+                        roles: []
+                    }
+                })
+            }
         }
     }
 </script>
@@ -137,5 +185,18 @@
     .logout {
         margin-left: 70%;
     }
+
+    .loggeduser{
+        font-size: x-large;
+        color: blue;
+    }
+    .groupingbtntA{
+        position: relative;
+        margin-left: 40%;
+        width: 40%;
+        margin-top: 5%;
+    }
+
+
 
 </style>

@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="gotoWork">
+            <b-button href="#" v-on:click="goToWorkspace">Go to Workspace</b-button>
+        </div>
         <div v-if="activateLogEnabling">
             <b-form-checkbox v-model="checked" :disabled=isCheckedBtnDisabled v-on:change="enableLogging"
                              name="check-button" switch>
@@ -160,7 +163,12 @@
                     this.isCheckedBtnDisabled = true
                     this.isLoggingEnabled = true
                 }
-            }
+            },
+
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
         },
         computed: {
             rows() {
@@ -217,6 +225,10 @@
     }
 
     .pgClass {
+        margin-left: 70%;
+    }
+
+    .gotoWork {
         margin-left: 70%;
     }
 
