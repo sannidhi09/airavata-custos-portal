@@ -96,6 +96,7 @@
 
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -262,7 +263,12 @@
                 } else {
                     await this.$store.dispatch('agent/deactivateAgent', data)
                 }
-            }
+            },
+
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
 
         },
 
@@ -296,5 +302,9 @@
         width: 30%;
         margin-left: 30%;
         margin-top: 3%;
+    }
+
+    .gotoWork {
+        margin-left: 70%;
     }
 </style>

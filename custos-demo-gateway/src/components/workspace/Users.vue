@@ -268,7 +268,7 @@
                     this.selectedStatus = this.selectedItem[0].status
                     this.selectedAttributes = this.selectedItem[0].attributes
                     this.selectedRoles = this.selectedItem[0].roles
-                    if (this.selectedUsername === this.currentUserName || this.isAdminUser) {
+                    if ((this.selectedUsername === this.currentUserName || this.isAdminUser) && this.selectedUsername != 'admin') {
                         this.$refs.usermodel.show()
                     }
                 }
@@ -498,6 +498,10 @@
                 return this.parseUsers(items, resp)
             },
 
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
             parseUsers(items, resp) {
                 if (Array.isArray(resp) && resp.length > 0) {
                     resp.forEach(obj => {
@@ -626,30 +630,4 @@
         color: black;
         border: none;
     }
-
-    /*.usertable {*/
-    /*    width: 50%;*/
-    /*    margin-left: 10%;*/
-    /*    margin-top: 3%;*/
-    /*}*/
-
-    /*.userSearchBar {*/
-    /*    width: 50%;*/
-    /*    margin-left: 10%;*/
-    /*}*/
-
-    /*.userformItem {*/
-    /*    margin-top: 3%;*/
-    /*}*/
-
-    /*.addAtrCls {*/
-    /*    margin-left: 70%;*/
-    /*}*/
-
-    /*.pgClass {*/
-    /*    margin-left: 70%;*/
-    /*    position: relative;*/
-    /*}*/
-
-
 </style>

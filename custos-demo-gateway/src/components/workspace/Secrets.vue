@@ -299,7 +299,11 @@
                     accessible_tokens: accessible_token
                 }
                 return await this.$store.dispatch('secret/getAllCredentials', data)
-            }
+            },
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
         },
 
 
@@ -356,5 +360,4 @@
     .secformItem {
         margin-top: 3%;
     }
-
 </style>

@@ -20,8 +20,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="Vue Single File Component" />
         <option value="JavaScript File" />
+        <option value="Vue Single File Component" />
       </list>
     </option>
   </component>
@@ -98,7 +98,7 @@
       <option name="presentableId" value="Default" />
       <updated>1599486133223</updated>
       <workItem from="1599486134588" duration="217546000" />
-      <workItem from="1601038400517" duration="39716000" />
+      <workItem from="1601038400517" duration="67230000" />
     </task>
     <servers />
   </component>
@@ -132,7 +132,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/workspace/Users.vue</url>
-          <line>320</line>
+          <line>324</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

@@ -4,6 +4,12 @@
         <Header/>
         <div class="p-3">
             <div class="grouptable">
+                <div>
+                    <b-alert v-model="groupError" variant="danger" dismissible
+                             @dismissed="callDismissed">
+                        Group name not available
+                    </b-alert>
+                </div>
                 <div v-if="this.groupsLoading" class="d-flex justify-content-center mb-3">
                     <b-spinner variant="primary" label="Text Centered"></b-spinner>
                 </div>
@@ -224,7 +230,7 @@
                                         :key="indexOpt"
                                         :value="selectOption"
                                 >
-                                    {{ selectOption.id }}
+                                    {{ selectOption.name }}
                                 </option>
                             </b-form-select>
                         </div>
@@ -246,7 +252,7 @@
         components: {Header},
         data: function () {
             return {
-                fields: ['id', 'name', 'description', 'ownerId'],
+                fields: ['name', 'id', 'description', 'ownerId'],
                 groupItems: [],
                 members: [],
                 childGroupMembers: [],
@@ -257,7 +263,7 @@
                 ],
                 memberTypes: [
                     'ADMIN', 'MEMBER'],
-                memberGroupsFields: ['id', 'name'],
+                memberGroupsFields: ['name', 'id'],
                 selectedId: null,
                 selectedName: null,
                 selectedDescription: null,
@@ -277,6 +283,8 @@
                 addingGr: null,
                 groupsLoading: false,
                 operationCompleted: true,
+                currentUser: null,
+                groupError: null
 
             }
         },
@@ -329,8 +337,15 @@
                 }
             },
 
-            addChildGroup: function () {
+            async addChildGroup() {
                 let grs = []
+                let dat = {
+                    client_id: this.custosId,
+                    client_sec: this.custosSec,
+                    groupId: this.selectedId
+                }
+
+                let parentGroups = await this.$store.dispatch('group/getAllParentGroups', dat)
                 this.groupItems.forEach(gr => {
                     let addToGroup = true
                     this.childGroupMembers.forEach(lx => {
@@ -341,10 +356,22 @@
                     if (gr.id === this.selectedId) {
                         addToGroup = false
                     }
+
+                    if (parentGroups != null && parentGroups.length > 0) {
+                        parentGroups.forEach(pGr => {
+                            if (gr.id === pGr.id) {
+                                addToGroup = false
+                            }
+
+                        })
+
+                    }
+
                     if (addToGroup) {
                         grs.push(gr)
                     }
                 })
+
                 this.feasibleGroupMembers = grs
                 this.$refs.addGrMembershipModel.show()
             },
@@ -396,6 +423,7 @@
                 let data = {
                     client_id: this.custosId,
                     client_sec: this.custosSec,
+                    username: this.currentUser,
                     body: {
                         groups: [{
                             name: this.selectedNewGrName,
@@ -408,11 +436,17 @@
                         }]
                     }
                 }
-                await this.$store.dispatch('group/createGroup', data)
-                this.groupItems = await this.$store.dispatch('group/loadAllGroups', data)
-                this.groupsLoading = false
-                this.this.selectedNewGrName = null
-                this.selectedNewGrDesc = null
+                let response = await this.$store.dispatch('group/createGroup', data)
+                console.log(response)
+                if (!response) {
+                    this.groupError = true
+                    this.groupsLoading = false
+                } else {
+                    await this.loadGroups(data)
+                    this.groupsLoading = false
+                    this.this.selectedNewGrName = null
+                    this.selectedNewGrDesc = null
+                }
             },
 
             async loadUsers() {
@@ -516,9 +550,10 @@
                 this.$refs.groupmodel.hide()
                 let dat = {
                     client_id: this.custosId,
-                    client_sec: this.custosSec
+                    client_sec: this.custosSec,
+                    username: this.currentUser
                 }
-                this.groupItems = await this.$store.dispatch('group/loadAllGroups', dat)
+                await this.loadGroups(dat)
                 this.operationCompleted = true
             },
 
@@ -542,9 +577,10 @@
                 this.$refs.groupmodel.hide()
                 let dat = {
                     client_id: this.custosId,
-                    client_sec: this.custosSec
+                    client_sec: this.custosSec,
+                    username: this.currentUser
                 }
-                this.groupItems = await this.$store.dispatch('group/loadAllGroups', dat)
+                await this.loadGroups(dat)
                 this.operationCompleted = true
             },
 
@@ -580,7 +616,32 @@
                     this.childGroupMembers = response.groups
                 }
                 this.operationCompleted = true
-            }
+            },
+
+
+            async loadGroups(data) {
+                if (this.isAdminUser) {
+                    this.groupItems = await this.$store.dispatch('group/loadAllGroups', data)
+                } else {
+                    let grs = []
+                    grs = await this.$store.dispatch('group/getAllGroupsOfUser', data)
+                    let groups = []
+                    grs.forEach(gr => {
+                        gr.ownerId = gr.owner_id
+                        groups.push(gr)
+                    })
+                    this.groupItems = groups
+                }
+            },
+
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
+            async callDismissed() {
+                this.groupError = false
+            },
+
 
         },
         async mounted() {
@@ -588,11 +649,13 @@
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
+            this.currentUser = await this.$store.dispatch('identity/getCurrentUserName')
             let data = {
                 client_id: this.custosId,
-                client_sec: this.custosSec
+                client_sec: this.custosSec,
+                username: this.currentUser
             }
-            this.groupItems = await this.$store.dispatch('group/loadAllGroups', data)
+            await this.loadGroups(data)
             this.groupsLoading = false
             this.loadUsers()
         }
@@ -658,5 +721,9 @@
     .addGr {
         margin-right: 0;
         position: relative;
+    }
+
+    .gotoWork {
+        margin-left: 70%;
     }
 </style>

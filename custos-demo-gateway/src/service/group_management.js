@@ -6,6 +6,7 @@ const groupMgtEndpoint = "https://custos.scigap.org/apiserver/group-management/v
 export default {
 
     createGroup(params) {
+
         let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = groupMgtEndpoint + "/groups"
         return api().post(endpoint, params.body, {
@@ -91,7 +92,7 @@ export default {
     },
 
     changeGroupMembership(params) {
-        let authHeader = {'Authorization': 'Bearer '  +btoa(params.client_id + ':' + params.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = groupMgtEndpoint + "/user/group/membership"
 
         return api().put(endpoint, params.body, {
@@ -101,7 +102,7 @@ export default {
     },
 
     addChildGroup(params) {
-        let authHeader = {'Authorization': 'Bearer '  +btoa(params.client_id + ':' + params.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = groupMgtEndpoint + "/group/membership"
 
         return api().post(endpoint, params.body, {
@@ -111,7 +112,7 @@ export default {
     },
 
     removeChildGroup(params) {
-        let authHeader = {'Authorization': 'Bearer '  +btoa(params.client_id + ':' + params.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = groupMgtEndpoint + "/group/membership"
 
         return new Promise((resolve, reject) => {
@@ -131,7 +132,7 @@ export default {
 
     getAllChildUsers(params) {
 
-        let authHeader = {'Authorization': 'Bearer ' +btoa(params.client_id + ':' + params.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = groupMgtEndpoint + "/user/group/memberships/child"
         let parm = {
             'group.id': params.group_id
@@ -143,7 +144,7 @@ export default {
     },
 
     getAllChildGroups(params) {
-        let authHeader = {'Authorization': 'Bearer '  +btoa(params.client_id + ':' + params.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = groupMgtEndpoint + "/groups/memberships/child"
         let parm = {
             'group.id': params.group_id
@@ -151,6 +152,28 @@ export default {
         return api().get(endpoint, {params: parm, headers: authHeader})
 
     },
+
+
+    getAllGroupsOfUser(params) {
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
+        let endpoint = groupMgtEndpoint + "/user/group/memberships"
+        let parm = {
+            'profile.username': params.username
+        }
+        return api().get(endpoint, {params: parm, headers: authHeader})
+
+    },
+
+
+    getAllParentGroupsOfGroup(params) {
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
+        let endpoint = groupMgtEndpoint + "/groups/memberships"
+        let parm = {
+            'group.id': params.groupId
+        }
+        return api().get(endpoint, {params: parm, headers: authHeader})
+
+    }
 
 
 }

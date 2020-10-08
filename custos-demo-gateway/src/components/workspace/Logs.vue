@@ -164,7 +164,12 @@
                     this.isCheckedBtnDisabled = true
                     this.isLoggingEnabled = true
                 }
-            }
+            },
+
+            async goToWorkspace() {
+                await this.$router.push('/workspace')
+            },
+
         },
         computed: {
             rows() {
@@ -223,5 +228,4 @@
     .pgClass {
         margin-left: 70%;
     }
-
 </style>
