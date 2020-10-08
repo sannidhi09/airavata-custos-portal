@@ -175,5 +175,7 @@
         color: #203a43;
     }
 
-
+    .navigation a:focus {
+        outline: none;
+    }
 </style>
