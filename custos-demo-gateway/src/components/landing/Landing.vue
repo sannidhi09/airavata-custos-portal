@@ -120,6 +120,9 @@
                     this.loginError = true
                 }
                 this.loginDisabled = false
+
+
+                this.$router.go()
             },
 
 

@@ -74,6 +74,8 @@
                 await this.$store.dispatch('secret/reset')
                 await this.$store.dispatch('sharing/reset')
                 await this.$store.dispatch('user/reset')
+
+                this.$router.go()
             }
         },
 
