@@ -16,12 +16,6 @@
                                 Manage Users
                             </b-button>
                         </div>
-                        <div v-if="!this.isAdmin">
-                            <b-button href="#" variant="outline-primary"
-                                      v-on:click="loadRoute($event, '/workspace/profile')">
-                                Manage Profile
-                            </b-button>
-                        </div>
                     </b-card>
                     <b-card :img-src="require('../../assets/groups_web.png')"
                             img-height="50%"

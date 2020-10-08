@@ -15,7 +15,7 @@
                 <template slot="button-content">
                     <b-icon icon="person-fill"></b-icon>
                 </template>
-                <b-dropdown-item href="#" disabled>Profile</b-dropdown-item>
+                <b-dropdown-item href="#" v-on:click="$router.push('/workspace/profile')">Profile</b-dropdown-item>
                 <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-dropdown>
 

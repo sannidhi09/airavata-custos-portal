@@ -1,9 +1,7 @@
 <template>
     <div>
-        <div class="gotoWork">
-            <b-button href="#" v-on:click="goToWorkspace">Go to Workspace</b-button>
-        </div>
-        <div class="row">
+        <Header/>
+        <div class="row p-3">
 
             <div class="column">
                 <div v-if="!this.updatingProfile" class="d-flex justify-content-center mb-3">
@@ -117,14 +115,15 @@
 
         </div>
     </div>
-
 </template>
 
 <script>
     import config from "@/config";
+    import Header from "./Header";
 
     export default {
         name: "Profile",
+        components: {Header},
         data: function () {
             return {
                 user: null,
@@ -325,6 +324,7 @@
         margin-left: 30%;
         margin-top: 5%;
     }
+
     .gotoWork {
         margin-left: 70%;
     }
