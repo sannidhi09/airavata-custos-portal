@@ -1,17 +1,16 @@
 <template>
-    <div>
+    <div v-if="showHeader()">
         <div class="header p-3">
             <div class="custos-logo">
                 <div class="custos-logo-icon"></div>
-                <div class="custos-logo-text pl-2">Custos</div>
+                <div class="custos-logo-text pl-2">Custos {{$router.currentRoute.path}}</div>
             </div>
-            <div class="user-details">
-                <div class="username">{{this.user.first_name + " "+ this.user.last_name}}</div>
-                <div class="email">{{this.user.email}}</div>
+            <div class="user-details" v-if="user">
+                <div class="username">{{user.first_name + " "+ user.last_name}}</div>
+                <div class="email">{{user.email}}</div>
             </div>
 
-
-            <b-dropdown right class="ml-2" text="" no-caret toggle-class="user-avatar-button">
+            <b-dropdown v-if="user" right class="ml-2" text="" no-caret toggle-class="user-avatar-button">
                 <template slot="button-content">
                     <b-icon icon="person-fill"></b-icon>
                 </template>
@@ -62,46 +61,57 @@
             }
         },
         methods: {
+            showHeader() {
+                console.log("--- this.currentUserName --- ", this.currentUserName)
+                return this.currentUserName !== null
+            },
             async logout() {
                 let data = {
                     client_id: this.custosId,
                     client_sec: this.custosSec
                 }
                 await this.$store.dispatch('identity/logout', data)
-                await this.$router.push("/")
-                await this.$store.dispatch('agent/reset')
-                await this.$store.dispatch('group/reset')
-                await this.$store.dispatch('secret/reset')
-                await this.$store.dispatch('sharing/reset')
-                await this.$store.dispatch('user/reset')
 
-                this.$router.go()
+
+                // TODO fix in https://github.com/apache/airavata-custos-portal/issues/37
+                window.location.reload()
+
+                // await this.$router.push("/")
+                // await this.$store.dispatch('agent/reset')
+                // await this.$store.dispatch('group/reset')
+                // await this.$store.dispatch('secret/reset')
+                // await this.$store.dispatch('sharing/reset')
+                // await this.$store.dispatch('user/reset')
             }
         },
 
         async mounted() {
-            this.custosId = config.value('clientId')
-            this.custosSec = config.value('clientSec')
-            this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
+            try {
+                this.custosId = config.value('clientId')
+                this.custosSec = config.value('clientSec')
+                this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
 
-            this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
-            let data = {
-                offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
-                username: this.currentUserName
-            }
-            let resp = await this.$store.dispatch('user/users', data)
-            if (Array.isArray(resp) && resp.length > 0) {
-                resp.forEach(obj => {
-                    this.user = {
-                        username: obj.username,
-                        first_name: obj.first_name,
-                        last_name: obj.last_name,
-                        email: obj.email,
-                        status: obj.state,
-                        attributes: [],
-                        roles: []
-                    }
-                })
+                this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
+                let data = {
+                    offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                    username: this.currentUserName
+                }
+                let resp = await this.$store.dispatch('user/users', data)
+                if (Array.isArray(resp) && resp.length > 0) {
+                    resp.forEach(obj => {
+                        this.user = {
+                            username: obj.username,
+                            first_name: obj.first_name,
+                            last_name: obj.last_name,
+                            email: obj.email,
+                            status: obj.state,
+                            attributes: [],
+                            roles: []
+                        }
+                    })
+                }
+            } catch (e) {
+                console.log("ERRRRRR==== ", e)
             }
         }
     }

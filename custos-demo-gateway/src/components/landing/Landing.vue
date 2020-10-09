@@ -89,29 +89,11 @@
                     await this.$store.dispatch('identity/authenticateLocally', params)
                     let resp = await this.$store.dispatch('identity/isAuthenticated', data)
                     if (resp) {
-                        await this.$router.push('workspace')
-                        let data = {
-                            offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
-                            username: this.username
-                        }
-                        let resp = await this.$store.dispatch('user/users', data)
-                        if (Array.isArray(resp) && resp.length > 0) {
-                            resp.forEach(user => {
-                                let data = {
-                                    client_id: this.custosId,
-                                    client_sec: this.custosSec,
-                                    body: {
-                                        username: user.username,
-                                        first_name: user.first_name,
-                                        last_name: user.last_name,
-                                        email: user.email,
-                                    }
-                                }
-                                this.$store.dispatch('user/updateUserProfile', data)
 
-                            })
-                        }
+                        // TODO fix in https://github.com/apache/airavata-custos-portal/issues/37
+                        window.location.reload()
 
+                        // await this.$router.push('workspace')
                     } else {
                         this.loginError = true
                     }
@@ -119,9 +101,6 @@
                     this.loginError = true
                 }
                 this.loginDisabled = false
-
-
-                this.$router.go()
             },
 
 
