@@ -46,7 +46,7 @@
         </div>
 
         <div>
-            <b-modal ref="usermodel" scrollable title="User Profile" ok-title="Update" @ok="this.updateUserProfile">
+            <b-modal ref="usermodel" id="user-modal" scrollable title="User Profile">
                 <div class="user-profile">
                     <div class="p-2">
                         <label class="form-input-label" for="form-input-username">Username</label>
@@ -105,39 +105,66 @@
                                  @row-selected="onRoleSelected">
                         </b-table>
                     </div>
-
                 </div>
+                <template v-slot:modal-footer>
+                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-modal')">
+                        Cancel
+                    </b-button>
+                    <b-button size="sm" variant="primary" v-on:click="updateUserProfile"
+                              @click="$bvModal.hide('user-modal')">
+                        Save
+                    </b-button>
+                </template>
             </b-modal>
-            <b-modal ref="atrModel" scrollable title="Add Attribute" ok-title="Add" @ok="addAtrOkPressed">
+            <b-modal ref="atrModel" id="user-attribute-modal" scrollable title="Add Attribute">
                 <div class="userform">
-                    <div class="userformItem">
-                        <p>Key</p>
-                        <b-form-input v-model="newKey"></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                        <b-form-input id="form-input-attribute-key" size="sm" v-model="newKey"></b-form-input>
                     </div>
-                    <div class="userformItem">
-                        <p>Value</p>
-                        <b-form-input v-model="newValue"></b-form-input>
-                    </div>
-                </div>
-            </b-modal>
-            <b-modal ref="atrModelSelected" scrollable title="Attribute" ok-title="Delete"
-                     @ok="addAtrDeletePressed">
-                <div class="userform">
-                    <div class="userformItem">
-                        <p>Key</p>
-                        <b-form-input v-model="selectedKey" disabled></b-form-input>
-                    </div>
-                    <div class="userformItem">
-                        <p>Value</p>
-                        <b-form-input v-model="selectedValue" disabled></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                        <b-form-input id="form-input-attribute-value" size="sm" v-model="newValue"></b-form-input>
                     </div>
                 </div>
+                <template v-slot:modal-footer>
+                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-modal')">
+                        Cancel
+                    </b-button>
+                    <b-button :disabled="!newKey || !newValue" size="sm" variant="primary" v-on:click="addAtrOkPressed"
+                              @click="$bvModal.hide('user-attribute-modal')">
+                        Add
+                    </b-button>
+                </template>
             </b-modal>
-            <b-modal ref="roleModel" scrollable title="Add  Role" ok-title="Add" @ok="addRoleOkPressed">
+            <b-modal ref="atrModelSelected" id="user-attribute-view-modal" scrollable title="Attribute">
                 <div class="userform">
-                    <div class="userformItem">
-                        <p>Scope</p>
-                        <b-form-select v-model="selectedScope">
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                        <b-form-input id="form-input-attribute-key" size="sm" disabled
+                                      v-model="selectedKey"></b-form-input>
+                    </div>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                        <b-form-input id="form-input-attribute-value" size="sm" disabled
+                                      v-model="selectedValue"></b-form-input>
+                    </div>
+                </div>
+                <template v-slot:modal-footer>
+                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-view-modal')">
+                        Cancel
+                    </b-button>
+                    <b-button size="sm" variant="danger" v-on:click="addAtrDeletePressed"
+                              @click="$bvModal.hide('user-attribute-view-modal')">
+                        Delete
+                    </b-button>
+                </template>
+            </b-modal>
+            <b-modal ref="roleModel" id="user-role-modal" scrollable title="Add Role">
+                <div class="userform">
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-role-scope">Scope</label>
+                        <b-form-select id="form-input-role-scope" size="sm" v-model="selectedScope">
                             <option v-for="(selectOption, indexOpt) in scopes"
                                     :key="indexOpt"
                                     :value="selectOption"
@@ -146,42 +173,59 @@
                             </option>
                         </b-form-select>
                     </div>
-                    <div class="userformItem">
-                        <p>Role</p>
-                        <div v-if="selectedScope==='TENANT'">
-                            <b-form-select v-model="selectedRole">
-                                <option v-for="(selectOption, indexOpt) in tenantroles"
-                                        :key="indexOpt"
-                                        :value="selectOption"
-                                >
-                                    {{ selectOption }}
-                                </option>
-                            </b-form-select>
-                        </div>
-                        <div v-if="selectedScope==='CLIENT'">
-                            <b-form-select v-model="selectedRole">
-                                <option v-for="(selectOption, indexOpt) in clientroles"
-                                        :key="indexOpt"
-                                        :value="selectOption"
-                                >
-                                    {{ selectOption }}
-                                </option>
-                            </b-form-select>
-                        </div>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-role">Role</label>
+                        <b-form-select v-if="selectedScope==='TENANT'" id="form-input-role" size="sm"
+                                       v-model="selectedRole">
+                            <option v-for="(selectOption, indexOpt) in tenantroles"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption }}
+                            </option>
+                        </b-form-select>
+                        <b-form-select v-if="selectedScope==='CLIENT'" id="form-input-role" size="sm"
+                                       v-model="selectedRole">
+                            <option v-for="(selectOption, indexOpt) in clientroles"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption }}
+                            </option>
+                        </b-form-select>
                     </div>
                 </div>
+                <template v-slot:modal-footer>
+                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-role-modal')">
+                        Cancel
+                    </b-button>
+                    <b-button :disabled="!selectedScope || !selectedRole" size="sm" variant="primary"
+                              v-on:click="addRoleOkPressed" @click="$bvModal.hide('user-role-modal')">
+                        Add
+                    </b-button>
+                </template>
             </b-modal>
-            <b-modal ref="roleModelSelected" scrollable title="Role" ok-title="Delete" @ok="deleteRoleOkPressed">
+            <b-modal ref="roleModelSelected" id="user-role-view-modal" scrollable title="Role">
                 <div class="userform">
-                    <div class="userformItem">
-                        <p>Role</p>
-                        <b-form-input v-model="rowSelectedRole" disabled></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-role">Role</label>
+                        <b-form-input id="form-input-role" size="sm" disabled v-model="rowSelectedRole"></b-form-input>
                     </div>
-                    <div class="userformItem">
-                        <p>Scope</p>
-                        <b-form-input v-model="rowSelectedScope" disabled></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-role-scope">Scope</label>
+                        <b-form-input id="form-input-role-scope" size="sm" disabled
+                                      v-model="rowSelectedScope"></b-form-input>
                     </div>
                 </div>
+                <template v-slot:modal-footer>
+                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-role-view-modal')">
+                        Cancel
+                    </b-button>
+                    <b-button size="sm" variant="danger" v-on:click="deleteRoleOkPressed"
+                              @click="$bvModal.hide('user-role-view-modal')">
+                        Delete
+                    </b-button>
+                </template>
             </b-modal>
         </div>
     </div>
