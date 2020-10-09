@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="w-100 mb-5">
-            <h2>Manage Users</h2>
+            <h2>Manage Groups</h2>
         </div>
         <div class="w-100">
             <div>
