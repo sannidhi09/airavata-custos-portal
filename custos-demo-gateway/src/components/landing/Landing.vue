@@ -17,7 +17,6 @@
 
                 <h3>Login with Custos Explorer</h3>
 
-
                 <div class="m-1">
                     <label class="form-input-label" for="form-input-username">Username</label>
                     <b-form-input id="form-input-username" v-model="username" placeholder="Username"></b-form-input>
