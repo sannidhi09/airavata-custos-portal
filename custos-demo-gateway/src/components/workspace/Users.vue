@@ -16,14 +16,14 @@
         <div v-if="this.userloading" class="d-flex justify-content-center w-100">
             <b-spinner variant="primary" label="Text Centered"></b-spinner>
         </div>
-        <div class="usertable w-100">
+        <div class="w-100">
 
             <b-table striped hover responsive :items="items" :fields="fields" selectable small
                      ref="selectableTable"
                      select-mode="single"
                      :per-page="perPage"
                      :current-page="currentPage"
-                     @row-selected="onRowSelected" caption-top>
+                     @row-selected="onRowSelected">
 
                 <template v-slot:cell(status)="data">
                     <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
@@ -47,26 +47,27 @@
 
         <div>
             <b-modal ref="usermodel" scrollable title="User Profile" ok-title="Update" @ok="this.updateUserProfile">
-                <div class="userform">
-                    <div class="userformItem">
-                        <p>Username</p>
-                        <b-form-input v-model="selectedUsername" disabled></b-form-input>
+                <div class="user-profile">
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-username">Username</label>
+                        <b-form-input id="form-input-username" size="sm" v-model="selectedUsername"
+                                      disabled></b-form-input>
                     </div>
-                    <div class="userformItem">
-                        <p>First Name</p>
-                        <b-form-input v-model="selectedFirstName"></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-first-name">First Name</label>
+                        <b-form-input id="form-input-first-name" size="sm" v-model="selectedFirstName"></b-form-input>
                     </div>
-                    <div class="userformItem">
-                        <p>Last Name</p>
-                        <b-form-input v-model="selectedLastName"></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-last-name">Last Name</label>
+                        <b-form-input id="form-input-last-name" size="sm" v-model="selectedLastName"></b-form-input>
                     </div>
-                    <div class="userformItem">
-                        <p>Email</p>
-                        <b-form-input v-model="selectedEmail"></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-email">Email</label>
+                        <b-form-input id="form-input-email" size="sm" v-model="selectedEmail"></b-form-input>
                     </div>
-                    <div class="userformItem">
-                        <p>Status</p>
-                        <b-form-select v-model="selectedStatus">
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-email">Status</label>
+                        <b-form-select id="form-input-status" size="sm" v-model="selectedStatus">
                             <option v-for="(selectOption, indexOpt) in statusOptions"
                                     :key="indexOpt"
                                     :value="selectOption"
@@ -75,29 +76,34 @@
                             </option>
                         </b-form-select>
                     </div>
+
                     <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
                         <b-spinner variant="primary" label="Text Centered"></b-spinner>
                     </div>
-                    <div class="userformItem">
-                        <p>Attributes</p>
-                        <b-table striped hover responsive :items="selectedAttributes" selectable
+
+                    <div class="w-100 mt-5">
+                        <strong>Attributes</strong>
+                        <b-button variant="link" v-on:click="addAttribute">+ Add Attributes</b-button>
+                        <div class="w-100">
+                            <small v-if="selectedAttributes.length == 0">There are no attributes created. </small>
+                        </div>
+                        <b-table small striped hover responsive :items="selectedAttributes" class="mt-2" selectable
                                  select-mode="single"
                                  @row-selected="onAtrSelected">
                         </b-table>
-                        <dev class="addAtrCls">
-                            <b-button variant="outline-primary" v-on:click="addAttribute">Add Attributes</b-button>
-                        </dev>
                     </div>
-                    <div class="userformItem">
-                        <p>Roles</p>
-                        <b-table striped hover responsive :items="selectedRoles" selectable select-mode="single"
+
+                    <div class="w-100 mt-5">
+                        <strong>Roles</strong>
+                        <b-button variant="link" v-on:click="addRole" :disabled="this.isAdminUser==false">+ Add Role
+                        </b-button>
+                        <div class="w-100">
+                            <small v-if="selectedRoles.length == 0">There are no roles assigned. </small>
+                        </div>
+                        <b-table small striped hover responsive :items="selectedRoles" class="mt-2" selectable
+                                 select-mode="single"
                                  @row-selected="onRoleSelected">
                         </b-table>
-                        <dev class="addAtrCls">
-                            <b-button variant="outline-primary" v-on:click="addRole"
-                                      :disabled="this.isAdminUser==false">Add Role
-                            </b-button>
-                        </dev>
                     </div>
 
                 </div>
@@ -377,6 +383,34 @@
                 this.operationCompleted = true
                 this.newKey = null
                 this.newValue = null
+                this.loadUsers()
+            },
+            async deleteAttribute(key, value) {
+                this.operationCompleted = false
+                let accessToken = await this.$store.getters['identity/getAccessToken']
+                let bd = {
+                    user_token: accessToken, body: {
+                        attributes: [{
+                            key: key,
+                            values: [value]
+                        }],
+                        users: [this.selectedUsername]
+                    }
+                }
+                let userAtr = await this.$store.dispatch('user/deleteUserAttributes', bd)
+                if (userAtr) {
+                    let newAtr = []
+                    this.selectedAttributes.forEach(atr => {
+
+                        if (atr.key != this.selectedKey) {
+                            newAtr.push(atr)
+                        }
+                        this.selectedAttributes = newAtr
+                    })
+                }
+                this.operationCompleted = true
+                this.selectedKey = null
+                this.selectedValue = null
                 this.loadUsers()
             },
             async addAtrDeletePressed() {
