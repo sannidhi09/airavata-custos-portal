@@ -1,54 +1,74 @@
 <template>
     <div>
-        <div class="column">
-            <div v-if="!this.updatingProfile" class="d-flex justify-content-center mb-3">
-                <b-spinner variant="primary" label="Text Centered"></b-spinner>
-            </div>
-            <div class="profile">
-                <div class="profItem">
-                    <p>Username</p>
-                    <b-form-input
-                            id="input-1"
-                            v-model="currentUserName"
-                            type="email"
-                            disabled
-                    ></b-form-input>
+        <div class="row">
+            <div class="column">
+                <div v-if="this.updatingProfile" class="d-flex justify-content-center mb-3">
+                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
                 </div>
-                <div class="profItem">
-                    <p>Status</p>
-                    <b-form-input
-                            id="input-4"
-                            v-model="status"
-                            required
-                            disabled
-                    ></b-form-input>
-                </div>
+                <div class="profile">
+                    <div class="profItem">
+                        <p>Username</p>
+                        <b-form-input
+                                id="input-1"
+                                v-model="currentUserName"
+                                type="email"
+                                disabled
+                        ></b-form-input>
+                    </div>
+                    <div class="profItem">
+                        <p>Status</p>
+                        <b-form-input
+                                id="input-4"
+                                v-model="status"
+                                required
+                                disabled
+                        ></b-form-input>
+                    </div>
 
-                <div class="profItem">
-                    <p>First Name</p>
-                    <b-form-input
-                            id="input-2"
-                            v-model="first_name"
-                            required
-                    ></b-form-input>
-                </div>
+                    <div class="profItem">
+                        <p>First Name</p>
+                        <div>
+                            <b-alert v-model="firstNameError" variant="danger" dismissible
+                                     @dismissed="this.callDismissed">
+                                Invalid name
+                            </b-alert>
+                        </div>
+                        <b-form-input
+                                id="input-2"
+                                v-model="first_name"
+                                required
+                        ></b-form-input>
+                    </div>
 
-                <div class="profItem">
-                    <p>Last Name</p>
-                    <b-form-input
-                            id="input-3"
-                            v-model="last_name"
-                            required
-                    ></b-form-input>
-                </div>
+                    <div class="profItem">
+                        <p>Last Name</p>
+                        <div>
+                            <b-alert v-model="lastnameError" variant="danger" dismissible
+                                     @dismissed="this.callDismissed">
+                               Invalid name
+                            </b-alert>
+                        </div>
+                        <b-form-input
+                                id="input-3"
+                                v-model="last_name"
+                                required
+                        ></b-form-input>
+                    </div>
 
-                <div class="profItem">
-                    <p>Email</p>
-                    <b-form-input
-                            id="input-3"
-                            v-model="email"
-                            required
-                    ></b-form-input>
+                    <div class="profItem">
+                        <p>Email</p>
+                        <div>
+                            <b-alert v-model="emailError" variant="danger" dismissible
+                                     @dismissed="this.callDismissed">
+                                Invalid email
+                            </b-alert>
+                        </div>
+                        <b-form-input
+                                id="input-3"
+                                v-model="email"
+                                required
+                        ></b-form-input>
+                    </div>
                 </div>
             </div>
 
@@ -132,7 +152,10 @@
                 selectedKey: null,
                 selectedValue: null,
                 operationCompleted: true,
-                updatingProfile: true
+                updatingProfile: false,
+                emailError: false,
+                firstNameError: false,
+                lastnameError: false
             }
         },
 
@@ -202,23 +225,54 @@
             },
 
             async updateProfile() {
-                this.updatingProfile = false
-                let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
-                    body: {
-                        username: this.currentUserName,
-                        first_name: this.first_name,
-                        last_name: this.last_name,
-                        email: this.email
-                    }
-                }
-                await this.$store.dispatch('user/updateUserProfile', data)
                 this.updatingProfile = true
+
+                // eslint-disable-next-line no-useless-escape
+                let emailRegs = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+                let regexPucn = /[~!" "@#$%^&*()+=;"'<>,.]/
+
+                if (this.first_name == null || this.first_name =='' || regexPucn.test(this.first_name)  || this.first_name.length>20){
+                    this.firstNameError =true
+                    this.updatingProfile = false
+                }
+
+                if (this.last_name == null || this.last_name =='' || regexPucn.test(this.last_name)  || this.last_name.length >20){
+                    this.lastnameError =true
+                    this.updatingProfile = false
+                }
+
+
+                if (this.email == null ||  emailRegs.test(this.email) == false ){
+                    this.emailError =true
+                    this.updatingProfile = false
+                }
+
+                if (!(this.firstNameError || this.lastnameError || this.emailError)) {
+
+                    let data = {
+                        client_id: this.custosId,
+                        client_sec: this.custosSec,
+                        body: {
+                            username: this.currentUserName,
+                            first_name: this.first_name,
+                            last_name: this.last_name,
+                            email: this.email
+                        }
+                    }
+                    await this.$store.dispatch('user/updateUserProfile', data)
+                    this.updatingProfile = false
+                }
             },
             async goToWorkspace() {
                 await this.$router.push('/workspace')
             },
+
+
+            async callDismissed() {
+                this.emailError = false
+                this.firstNameError = false
+                this.lastnameError = false
+            }
 
 
         },

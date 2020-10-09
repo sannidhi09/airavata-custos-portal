@@ -27,8 +27,8 @@
 
                 <template v-slot:cell(status)="data">
                     <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
-                    <b-badge v-if="data.value == 'INACTIVE'" variant="danger">Inactive</b-badge>
-                    <b-badge v-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
+                    <b-badge v-else-if="data.value == 'DEACTIVE'" variant="danger">Inactive</b-badge>
+                    <b-badge v-else-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
                 </template>
 
             </b-table>
@@ -253,7 +253,7 @@
                     }
 
                 ],
-                statusOptions: ['ACTIVE', 'DISABLE'],
+                statusOptions: ['ACTIVE', 'DEACTIVE'],
                 scopes: ['TENANT', 'CLIENT'],
                 tenantroles: [],
                 clientroles: [],
@@ -313,7 +313,7 @@
                     this.selectedStatus = this.selectedItem[0].status
                     this.selectedAttributes = this.selectedItem[0].attributes
                     this.selectedRoles = this.selectedItem[0].roles
-                    if ((this.selectedUsername === this.currentUserName || this.isAdminUser) && this.selectedUsername != 'admin') {
+                    if ((this.selectedUsername === this.currentUserName || this.isAdminUser) && this.selectedUsername != 'admin' ) {
                         this.$refs.usermodel.show()
                     }
                 }
@@ -328,7 +328,7 @@
                     await this.loadUsers()
                 } else {
                     let data = {
-                        offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                        offset: 0, limit: 5, client_id: this.custosId, client_sec: this.custosSec,
                         username: this.searchUsername
                     }
                     await this.$store.dispatch('user/users', data)
@@ -402,7 +402,9 @@
                     if (this.isAdminUser) {
                         this.rowSelectedScope = this.selectedRoleItem[0].scope
                         this.rowSelectedRole = this.selectedRoleItem[0].name
-                        this.$refs.roleModelSelected.show()
+                        if (this.rowSelectedRole !== 'offline_access' && this.rowSelectedRole !== 'uma_authorization') {
+                            this.$refs.roleModelSelected.show()
+                        }
                     }
                 }
             },
@@ -513,41 +515,43 @@
                 this.loadUsers()
             },
             async deleteRoleOkPressed() {
-                this.operationCompleted = false
-                let accessToken = await this.$store.getters['identity/getAccessToken']
-                let bd = {};
-                if (this.rowSelectedScope === 'TENANT') {
-                    bd = {
-                        user_token: accessToken,
-                        body: {
-                            roles: [this.rowSelectedRole],
-                            username: this.selectedUsername
+                    this.operationCompleted = false
+                    let accessToken = await this.$store.getters['identity/getAccessToken']
+                    let bd = {};
+                    if (this.rowSelectedScope === 'TENANT') {
+                        bd = {
+                            user_token: accessToken,
+                            body: {
+                                roles: [this.rowSelectedRole],
+                                username: this.selectedUsername
+                            }
+                        }
+                    } else {
+                        bd = {
+                            user_token: accessToken,
+                            body: {
+                                client_roles: [this.rowSelectedRole],
+                                username: this.selectedUsername
+                            }
                         }
                     }
-                } else {
-                    bd = {
-                        user_token: accessToken,
-                        body: {
-                            client_roles: [this.rowSelectedRole],
-                            username: this.selectedUsername
-                        }
+
+                    let deleted = await this.$store.dispatch('user/deleteRoleFromUser', bd)
+                    if (deleted) {
+
+                        let newRoles = []
+                        this.selectedRoles.forEach(atr => {
+
+                            if (atr.name != this.rowSelectedRole) {
+                                newRoles.push(atr)
+                            }
+                            this.selectedRoles = newRoles
+                        })
                     }
-                }
+                    this.operationCompleted = true
+                    this.loadUsers()
 
-                let deleted = await this.$store.dispatch('user/deleteRoleFromUser', bd)
-                if (deleted) {
 
-                    let newRoles = []
-                    this.selectedRoles.forEach(atr => {
-
-                        if (atr.name != this.rowSelectedRole) {
-                            newRoles.push(atr)
-                        }
-                        this.selectedRoles = newRoles
-                    })
-                }
-                this.operationCompleted = true
-                this.loadUsers()
             },
 
             async loadUsers() {
@@ -583,7 +587,7 @@
                             first_name: obj.first_name,
                             last_name: obj.last_name,
                             email: obj.email,
-                            status: obj.state,
+                            status: (obj.state=='ACTIVE')?obj.state:'DEACTIVE',
                             attributes: [],
                             roles: []
                         }

@@ -46,7 +46,7 @@
                     </div>
                     <div class="w-100 mt-5">
                         <strong>Members</strong>
-                        <b-button class="addmemberbtn" variant="link" v-on:click="addMemberShip"> + Add Member
+                        <b-button variant="link" :disabled="disableAccess" v-on:click="addMemberShip"> + Add Member
                         </b-button>
                         <div class="w-100" v-if="members.length === 0"><small>There are no members.</small></div>
                         <b-table v-if="members.length > 0" class="mt-3" small striped hover responsive :items="members"
@@ -55,11 +55,11 @@
                                  @row-selected="onMemberShipSelected">
                         </b-table>
                     </div>
-
+                    
                     <div class="w-100 mt-5">
                         <strong>Child Groups</strong>
-                        <b-button variant="link" v-on:click="addChildGroup">
-                            +Add Child Group
+                        <b-button variant="link" :disabled="disableAccess" v-on:click="addChildGroup">
+                            + Add Child Group
                         </b-button>
                         <div class="w-100" v-if="childGroupMembers.length === 0"><small>There are no child
                             groups.</small></div>
@@ -75,15 +75,15 @@
                 <template v-slot:modal-footer>
                     <div class="w-100">
                         <b-button variant="primary" size="sm" class="mr-2" v-on:click="closeGroupProfile"
-                                  @click="$bvModal.hide('group-profile-modal')">
+                                  @click="$bvModal.hide('group-profile-modal')" :disabled="disableAccess">
                             Close
                         </b-button>
                         <b-button variant="danger" size="sm" class="mr-2" v-on:click="removeGroupProfile"
-                                  @click="$bvModal.hide('group-profile-modal')">
+                                  @click="$bvModal.hide('group-profile-modal')" :disabled="disableAccess">
                             Delete
                         </b-button>
                         <b-button variant="primary" size="sm" class="mr-2" v-on:click="updateGroupProfile"
-                                  @click="$bvModal.hide('group-profile-modal')">
+                                  @click="$bvModal.hide('group-profile-modal')" :disabled="disableAccess">
                             Update
                         </b-button>
                     </div>
@@ -290,7 +290,8 @@
                 groupsLoading: false,
                 operationCompleted: true,
                 currentUser: null,
-                groupError: null
+                groupError: null,
+                disableAccess: false
 
             }
         },
@@ -320,6 +321,25 @@
 
                     let response = await this.$store.dispatch('group/getAllChildGroups', data)
                     this.childGroupMembers = response.groups
+
+                    if (!this.isAdminUser && this.selectedOwnerId != this.currentUser) {
+
+                        let data = {
+                            client_id: this.custosId,
+                            client_sec: this.custosSec,
+                            groupId: this.selectedId,
+                            username: this.currentUser,
+                            type: 'ADMIN'
+                        }
+
+                        let resp = await this.$store.dispatch('group/hasAccess', data)
+
+                        if (!resp.status) {
+                            this.disableAccess = true
+
+                        }
+
+                    }
 
                     this.$refs.groupmodel.show()
                 }

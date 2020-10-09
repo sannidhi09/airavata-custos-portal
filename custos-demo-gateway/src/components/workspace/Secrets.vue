@@ -101,7 +101,8 @@
                 selectedExPrivKey: null,
                 selectedExOwnerId: null,
                 currentUserName: null,
-                secretsLoading: false
+                secretsLoading: false,
+                passwordEmptyError: false
 
             }
         },
@@ -177,37 +178,44 @@
                     await this.$store.dispatch('sharing/createEntity', dataEn)
 
                 } else {
-                    let data = {
-                        client_id: this.custosId,
-                        client_sec: this.custosSec,
-                        body: {
-                            metadata: {
-                                client_id: this.custosId,
-                                description: this.selectedDescription,
-                                owner_id: this.currentUserName
-                            },
-                            password: this.selectedPassword
-                        }
-                    }
-                    let response = await this.$store.dispatch('secret/addPasswordCredential', data)
-                    let dataEN = {
-                        client_id: this.custosId,
-                        client_sec: this.custosSec,
-                        body: {
+
+                    if (this.selectedPassword == null || this.selectedPassword == '') {
+                        this.passwordEmptyError = true
+
+                    } else {
+
+                        let data = {
                             client_id: this.custosId,
-                            entity: {
-                                id: response.token,
-                                name: 'Password token',
-                                description: 'Password credential created for ' + this.selectedDescription,
-                                type: 'SECRET',
-                                owner_id: this.currentUserName
+                            client_sec: this.custosSec,
+                            body: {
+                                metadata: {
+                                    client_id: this.custosId,
+                                    description: this.selectedDescription,
+                                    owner_id: this.currentUserName
+                                },
+                                password: this.selectedPassword
                             }
                         }
+                        let response = await this.$store.dispatch('secret/addPasswordCredential', data)
+                        let dataEN = {
+                            client_id: this.custosId,
+                            client_sec: this.custosSec,
+                            body: {
+                                client_id: this.custosId,
+                                entity: {
+                                    id: response.token,
+                                    name: 'Password token',
+                                    description: 'Password credential created for ' + this.selectedDescription,
+                                    type: 'SECRET',
+                                    owner_id: this.currentUserName
+                                }
+                            }
+                        }
+                        await this.$store.dispatch('sharing/createEntity', dataEN)
                     }
-                    await this.$store.dispatch('sharing/createEntity', dataEN)
+                    this.secItems = await this.getAllCredentials()
+                    this.secretsLoading = false
                 }
-                this.secItems = await this.getAllCredentials()
-                this.secretsLoading = false
             },
 
             async secDeleteButtonPressed() {
