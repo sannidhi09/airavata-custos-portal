@@ -173,6 +173,17 @@ export default {
         }
         return api().get(endpoint, {params: parm, headers: authHeader})
 
+    },
+
+    hasAccess(params) {
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
+        let endpoint = groupMgtEndpoint + "/user/group/access"
+        let parm = {
+            'group_id': params.groupId,
+            'username':params.username,
+            'type': params.type
+        }
+        return api().get(endpoint, {params: parm, headers: authHeader})
     }
 
 

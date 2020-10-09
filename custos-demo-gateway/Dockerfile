@@ -14,6 +14,6 @@ COPY privkey.pem /etc/nginx/privkey.pem
 COPY fullchain.pem /etc/nginx/fullchain.pem
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-EXPOSE 8080
+EXPOSE 8080 443
 ENTRYPOINT [ "/entrypoint.sh" ]
 #CMD ["nginx", "-g", "daemon off;"]

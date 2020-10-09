@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="w-100">
-                        <b-button class="addmemberbtn" variant="outline-primary" v-on:click="addMemberShip">Add Member
+                        <b-button class="addmemberbtn" variant="outline-primary"  :disabled="disableAccess" v-on:click="addMemberShip">Add Member
                         </b-button>
                     </div>
                     <div class="groupformItem">
@@ -65,7 +65,7 @@
                         </b-table>
                     </div>
                     <div class="w-100">
-                        <b-button class="addmemberbtn" variant="outline-primary" v-on:click="addChildGroup">Add Child
+                        <b-button class="addmemberbtn" variant="outline-primary"  :disabled="disableAccess"  v-on:click="addChildGroup">Add Child
                             Group
                         </b-button>
                     </div>
@@ -78,6 +78,7 @@
                                 size="sm"
                                 class="grBtnDel"
                                 v-on:click="removeGroupProfile"
+                                :disabled="disableAccess"
                                 @click="show=false"
                         >
                             Delete
@@ -97,6 +98,7 @@
                                 size="sm"
                                 class="grBtnUp"
                                 v-on:click="updateGroupProfile"
+                                :disabled="disableAccess"
                                 @click="show=false"
 
                         >
@@ -278,7 +280,8 @@
                 groupsLoading: false,
                 operationCompleted: true,
                 currentUser: null,
-                groupError: null
+                groupError: null,
+                disableAccess: false
 
             }
         },
@@ -308,6 +311,25 @@
 
                     let response = await this.$store.dispatch('group/getAllChildGroups', data)
                     this.childGroupMembers = response.groups
+
+                    if (!this.isAdminUser && this.selectedOwnerId != this.currentUser) {
+
+                        let data = {
+                            client_id: this.custosId,
+                            client_sec: this.custosSec,
+                            groupId: this.selectedId,
+                            username: this.currentUser,
+                            type: 'ADMIN'
+                        }
+
+                        let resp = await this.$store.dispatch('group/hasAccess', data)
+
+                        if (!resp.status) {
+                            this.disableAccess = true
+
+                        }
+
+                    }
 
                     this.$refs.groupmodel.show()
                 }

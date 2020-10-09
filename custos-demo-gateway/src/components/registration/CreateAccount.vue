@@ -165,12 +165,12 @@
                     this.isButtonDisabled = false
                 }
 
-                if (this.firstName == null || this.firstName == '') {
+                if (this.firstName == null || this.firstName == '' || this.firstName.length>20) {
                     this.firstNameError = true
                     this.isButtonDisabled = false
                 }
 
-                if (this.lastName == null || this.lastName == '') {
+                if (this.lastName == null || this.lastName == '' || this.lastName.length>20) {
                     this.lastnameError = true
                     this.isButtonDisabled = false
                 }
