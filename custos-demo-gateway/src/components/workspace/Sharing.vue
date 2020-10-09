@@ -6,6 +6,12 @@
         <div class="row">
             <div class="column">
                 <div class="sharingtable">
+                    <div>
+                        <b-alert v-model="this.inputErrorPR" variant="danger" dismissible
+                                 @dismissed="callDismissed">
+                            Input validation error
+                        </b-alert>
+                    </div>
                     <div v-if="this.permissionTypesLoading" class="d-flex justify-content-center mb-3">
                         <b-spinner variant="primary" label="Text Centered"></b-spinner>
                     </div>
@@ -23,6 +29,12 @@
                     <b-spinner variant="primary" label="Text Centered"></b-spinner>
                 </div>
                 <div class="sharingtable">
+                    <div>
+                        <b-alert v-model="this.inputErrorEnTy" variant="danger" dismissible
+                                 @dismissed="callDismissed">
+                            Input validation error
+                        </b-alert>
+                    </div>
                     <b-table striped hover responsive :items="entityTypes" :fields="fields" selectable
                              ref="selectableTable"
                              select-mode="single"
@@ -37,6 +49,12 @@
                     <b-spinner variant="primary" label="Text Centered"></b-spinner>
                 </div>
                 <div class="sharingtable">
+                    <div>
+                        <b-alert v-model="this.inputErrorEn" variant="danger" dismissible
+                                 @dismissed="callDismissed">
+                            Input validation error
+                        </b-alert>
+                    </div>
                     <b-table striped hover responsive :items="entities" :fields="entityFields" selectable
                              ref="selectableTable"
                              select-mode="single"
@@ -51,6 +69,12 @@
                     <b-spinner variant="primary" label="Text Centered"></b-spinner>
                 </div>
                 <div class="sharingtable">
+                    <div>
+                        <b-alert v-model="this.sharingError" variant="danger" dismissible
+                                 @dismissed="callDismissed">
+                            Input validation error
+                        </b-alert>
+                    </div>
                     <b-table striped hover responsive :items="sharings" :fields="sharingFields" selectable
                              ref="selectableTable"
                              select-mode="single"
@@ -102,10 +126,6 @@
                 <div>
                     <b-modal ref="enModel" scrollable title="Add  Entity " ok-title="Add" @ok="addNewEntity">
                         <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Id</p>
-                                <b-form-input v-model="enId"></b-form-input>
-                            </div>
                             <div class="groupformItem">
                                 <p>Name</p>
                                 <b-form-input v-model="enName"></b-form-input>
@@ -275,7 +295,8 @@
             <div v-if="this.isAdminUser" class="column">
                 <div class="permissionChecker">
                     <div class="addGr">
-                        <b-button variant="outline-primary" v-on:click="checkPermissions">Evaluate Permissions</b-button>
+                        <b-button variant="outline-primary" v-on:click="checkPermissions">Evaluate Permissions
+                        </b-button>
                     </div>
                 </div>
             </div>
@@ -326,16 +347,16 @@
                     </b-button>
                 </div>
                 <div v-if="!this.evaluating">
-                <div v-if="evalutionResult" class="groupform">
-                    <p class="textCls"> Evalution Status: True </p>
-                    <p>User has permission</p>
+                    <div v-if="evalutionResult" class="groupform">
+                        <p class="textCls"> Evalution Status: True </p>
+                        <p>User has permission</p>
 
-                </div>
-                <div v-if="!evalutionResult" class="groupform">
-                    <p class="textClsWrng"> Evalution Status: False </p>
-                    <p>User does not have permission</p>
+                    </div>
+                    <div v-if="!evalutionResult" class="groupform">
+                        <p class="textClsWrng"> Evalution Status: False </p>
+                        <p>User does not have permission</p>
 
-                </div>
+                    </div>
                 </div>
             </b-modal>
         </div>
@@ -395,11 +416,17 @@
                 selectedShOwType: null,
                 evalutionResult: false,
                 permissionTypesLoading: false,
-                entityTypesLoading:false,
-                entitiesLoading:false,
-                sharingsLoading:false,
+                entityTypesLoading: false,
+                entitiesLoading: false,
+                sharingsLoading: false,
                 evaluating: false,
-                defaultGroupName: null
+                defaultGroupName: null,
+                inputErrorPR: false,
+                inputErrorEnTy:false,
+                inputErrorEn:false,
+                sharingError:false,
+
+
 
 
             }
@@ -407,23 +434,29 @@
 
         methods: {
             async addPrType() {
-                this.permissionTypesLoading =true
-                let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
-                    body: {
+                this.permissionTypesLoading = true
+                if (this.prId == null || this.prName == null || this.prId == '' || this.prName == '') {
+                    this.inputErrorPR = true
+                    this.permissionTypesLoading = false
+                }
+                if (!this.inputErrorPR) {
+                    let data = {
                         client_id: this.custosId,
-                        permission_type: {
-                            id: this.prId,
-                            name: this.prName,
-                            description: this.prDesc
+                        client_sec: this.custosSec,
+                        body: {
+                            client_id: this.custosId,
+                            permission_type: {
+                                id: this.prId,
+                                name: this.prName,
+                                description: this.prDesc
 
+                            }
                         }
                     }
-                }
 
-                this.permissionTypes = await this.$store.dispatch('sharing/createPermissionType', data)
-                this.permissionTypesLoading = false
+                    this.permissionTypes = await this.$store.dispatch('sharing/createPermissionType', data)
+                    this.permissionTypesLoading = false
+                }
                 this.prId = null
                 this.prName = null
                 this.prDesc = null
@@ -431,7 +464,7 @@
             },
 
             async deletePRType() {
-                this.permissionTypesLoading =true
+                this.permissionTypesLoading = true
                 let data = {
                     client_id: this.custosId,
                     client_sec: this.custosSec,
@@ -454,21 +487,28 @@
             },
             async addNewEnType() {
                 this.entityTypesLoading = true
-                let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
-                    body: {
+                if (this.enTyId == null || this.enTyName == null || this.enTyName==''|| this.enTyId == '') {
+                    this.inputErrorEnTy = true
+                    this.entityTypesLoading = false
+                }
+                if (!this.inputErrorEnTy) {
+                    let data = {
                         client_id: this.custosId,
-                        entity_type: {
-                            id: this.enTyId,
-                            name: this.enTyName,
-                            description: this.enTyDesc
+                        client_sec: this.custosSec,
+                        body: {
+                            client_id: this.custosId,
+                            entity_type: {
+                                id: this.enTyId,
+                                name: this.enTyName,
+                                description: this.enTyDesc
+                            }
                         }
                     }
-                }
 
-                this.entityTypes = await this.$store.dispatch('sharing/createEntityType', data)
-                this.entityTypesLoading = false
+                    this.entityTypes = await this.$store.dispatch('sharing/createEntityType', data)
+                    this.entityTypesLoading = false
+
+                }
                 this.enTyId = null
                 this.enTyName = null
                 this.enTyDesc = null
@@ -501,28 +541,36 @@
 
             async addNewEntity() {
                 this.entitiesLoading = true
-                let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
-                    body: {
-                        client_id: this.custosId,
-                        entity: {
-                            id: this.enId,
-                            name: this.enName,
-                            description: this.enDesc,
-                            type: this.selectedEntityType.id,
-                            owner_id: this.currentUserName
-                        }
-                    }
+                if (this.enName == null || this.enName =='') {
+                    this.inputErrorEn = true
+                    this.entitiesLoading = false
                 }
 
-                this.entities = await this.$store.dispatch('sharing/createEntity', data)
-                this.entitiesLoading =  false
+                if (!this.inputErrorEn) {
+                    this.enId = this.enName + "_" + this.makeid(15)
+                    let data = {
+                        client_id: this.custosId,
+                        client_sec: this.custosSec,
+                        body: {
+                            client_id: this.custosId,
+                            entity: {
+                                id: this.enId,
+                                name: this.enName,
+                                description: this.enDesc,
+                                type: this.selectedEntityType.id,
+                                owner_id: this.currentUserName
+                            }
+                        }
+                    }
+
+                    this.entities = await this.$store.dispatch('sharing/createEntity', data)
+                    this.entitiesLoading = false
+                    this.sharings = await this.loadSharings()
+                }
                 this.enId = null
                 this.enName = null
                 this.enDesc = null
                 this.selectedEntityType = null
-                this.sharings = await this.loadSharings()
 
             },
 
@@ -554,37 +602,47 @@
 
             async addNewSharing() {
                 this.sharingsLoading = true
-                let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
-                    body: {
 
-                        client_id: this.custosId,
-                        entity: {
-                            id: this.defaultEntityId.id
-                        },
-                        permission_type: {
-                            id: this.defaultPermissionType.id
-                        },
-                        owner_id: [this.defaultOwner],
-                        cascade: true
+                if (this.defaultEntityId == null || this.defaultPermissionType == null
+                    || (this.defaultGroupName == null && this.defaultOwner == null)) {
+                    this.sharingError = true
+                    this.sharingsLoading = false
 
-                    }
                 }
 
-                if (this.defaultSharingType === 'USERS') {
-                    let response = await this.$store.dispatch('sharing/shareEntityWithUsers', data)
+                if (!this.sharingError) {
+                    let data = {
+                        client_id: this.custosId,
+                        client_sec: this.custosSec,
+                        body: {
 
-                    if (response) {
-                        this.sharings = await this.loadSharings()
+                            client_id: this.custosId,
+                            entity: {
+                                id: this.defaultEntityId.id
+                            },
+                            permission_type: {
+                                id: this.defaultPermissionType.id
+                            },
+                            owner_id: [this.defaultOwner],
+                            cascade: true
+
+                        }
                     }
-                } else {
-                    console.log(this.defaultGroupName)
-                    data.body.owner_id = [this.defaultGroupName.id]
-                    console.log(data)
-                    let response = await this.$store.dispatch('sharing/shareEntityWithGroups', data)
-                    if (response) {
-                        this.sharings = await this.loadSharings()
+
+                    if (this.defaultSharingType === 'USERS') {
+                        let response = await this.$store.dispatch('sharing/shareEntityWithUsers', data)
+
+                        if (response) {
+                            this.sharings = await this.loadSharings()
+                        }
+                    } else {
+                        console.log(this.defaultGroupName)
+                        data.body.owner_id = [this.defaultGroupName.id]
+                        console.log(data)
+                        let response = await this.$store.dispatch('sharing/shareEntityWithGroups', data)
+                        if (response) {
+                            this.sharings = await this.loadSharings()
+                        }
                     }
                 }
                 this.sharingsLoading = false
@@ -704,7 +762,7 @@
                     username: this.currentUserName
                 }
                 if (this.isAdminUser) {
-                     return  await this.$store.dispatch('group/loadAllGroups', data)
+                    return await this.$store.dispatch('group/loadAllGroups', data)
                 } else {
                     let grs = []
                     grs = await this.$store.dispatch('group/getAllGroupsOfUser', data)
@@ -713,7 +771,7 @@
                         gr.ownerId = gr.owner_id
                         groups.push(gr)
                     })
-                    return  groups
+                    return groups
                 }
 
             },
@@ -784,6 +842,23 @@
             async goToWorkspace() {
                 await this.$router.push('/workspace')
             },
+
+            makeid(length) {
+                let result = '';
+                let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let charactersLength = characters.length;
+                for (var i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                }
+                return result;
+            },
+
+            async  callDismissed(){
+                this.inputErrorEn = false
+                this.inputErrorEnTy = false
+                this.inputErrorEn = false
+                this.sharingError =false
+            }
 
         },
 

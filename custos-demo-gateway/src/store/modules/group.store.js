@@ -115,6 +115,12 @@ const actions = {
     async reset({commit}, data) {
         commit('RESET')
         return true
+    },
+
+    // eslint-disable-next-line no-unused-vars
+    async hasAccess({commit}, data) {
+        let response = await group_management.hasAccess(data)
+        return response.data
     }
 
 }
