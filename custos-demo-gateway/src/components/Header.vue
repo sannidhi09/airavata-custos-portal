@@ -3,7 +3,7 @@
         <div class="header p-3">
             <div class="custos-logo">
                 <div class="custos-logo-icon"></div>
-                <div class="custos-logo-text pl-2">Custos {{$router.currentRoute.path}}</div>
+                <div class="custos-logo-text pl-2">Custos</div>
             </div>
             <div class="user-details" v-if="user">
                 <div class="username">{{user.first_name + " "+ user.last_name}}</div>
