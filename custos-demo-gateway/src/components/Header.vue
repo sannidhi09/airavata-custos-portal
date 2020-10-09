@@ -2,8 +2,7 @@
     <div v-if="showHeader()">
         <div class="header p-3">
             <div class="custos-logo">
-                <div class="custos-logo-icon"></div>
-                <div class="custos-logo-text pl-2">Custos</div>
+                <img src="../assets/custos-logo_custos-logo-color-v1.png" style="width: 140px;">
             </div>
             <div class="user-details" v-if="user">
                 <div class="username">{{user.first_name + " "+ user.last_name}}</div>
@@ -172,7 +171,7 @@
     }
 
     .navigation {
-        background-color: #CDDC39;
+        background-color: #fff9cc;
     }
 
     .navigation a {
