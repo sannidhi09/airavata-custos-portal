@@ -55,7 +55,7 @@
                                  @row-selected="onMemberShipSelected">
                         </b-table>
                     </div>
-                    
+
                     <div class="w-100 mt-5">
                         <strong>Child Groups</strong>
                         <b-button variant="link" :disabled="disableAccess" v-on:click="addChildGroup">

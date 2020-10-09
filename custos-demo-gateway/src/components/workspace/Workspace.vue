@@ -105,44 +105,6 @@
 </script>
 
 <style scoped>
-    /*.grouping {*/
-    /*    position: relative;*/
-    /*    margin-left: 30%;*/
-    /*    width: 40%;*/
-    /*    margin-top: 5%;*/
-    /*}*/
-
-    /*.groupingbt {*/
-    /*    position: relative;*/
-    /*    margin-left: 30%;*/
-    /*    width: 40%;*/
-    /*    margin-top: 5%;*/
-    /*}*/
-
-    .bcbody {
-        background-color: white;
-        height: 30%;
-    }
-
-    .bcbody a {
-    }
-
-    .logout {
-        margin-left: 70%;
-    }
-
-    .loggeduser {
-        font-size: x-large;
-        color: blue;
-    }
-
-    .groupingbtntA {
-        position: relative;
-        margin-left: 40%;
-        width: 40%;
-        margin-top: 5%;
-    }
-
     .menu-card {
         max-width: 250px;
         min-width: 200px;
