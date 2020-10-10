@@ -1,8 +1,19 @@
 <template>
     <div>
-        <div class="row">
-            <div class="column">
-                <div class="sharingtable">
+        <div class="w-100">
+            <h2>Sharing</h2>
+        </div>
+        <b-container class="text-left">
+            <div v-if="this.isAdminUser" class="w-100">
+                Do you wanna evaluate if a specific user has a specific permission to a specific entity ?
+                <b-button variant="link" v-on:click="checkPermissions">Evaluate Permissions</b-button>
+            </div>
+            <div>
+                <div class="mt-5">
+                    <strong>Permission Types</strong>
+                    <b-button v-if="this.isAdminUser" variant="link" v-on:click="onNewPrTyAdd">
+                        + Add Permission Type
+                    </b-button>
                     <div>
                         <b-alert v-model="this.inputErrorPR" variant="danger" dismissible
                                  @dismissed="callDismissed">
@@ -12,291 +23,268 @@
                     <div v-if="this.permissionTypesLoading" class="d-flex justify-content-center mb-3">
                         <b-spinner variant="primary" label="Text Centered"></b-spinner>
                     </div>
-                    <b-table striped hover responsive :items="permissionTypes" :fields="fields" selectable
-                             ref="selectableTable"
-                             select-mode="single"
-                             @row-selected="onPrTySelected" caption-top>
-                        <template v-slot:table-caption>Permissions</template>
+                    <b-table small striped hover responsive :items="permissionTypes" :fields="fields" selectable
+                             ref="selectableTable" select-mode="single" @row-selected="onPrTySelected">
                     </b-table>
-                    <div v-if="this.isAdminUser" class="addGr">
-                        <b-button variant="outline-primary" v-on:click="onNewPrTyAdd">Add Permission Type</b-button>
+                </div>
+                <div class="mt-5">
+                    <strong>Entity Types</strong>
+                    <b-button v-if="this.isAdminUser" variant="link" v-on:click="onNewEnTyAdd">
+                        + Add Entity Type
+                    </b-button>
+                    <div v-if="this.entityTypesLoading" class="d-flex justify-content-center mb-3">
+                        <b-spinner variant="primary" label="Text Centered"></b-spinner>
                     </div>
-                </div>
-                <div v-if="this.entityTypesLoading" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <div class="sharingtable">
                     <div>
                         <b-alert v-model="this.inputErrorEnTy" variant="danger" dismissible
                                  @dismissed="callDismissed">
                             Input validation error
                         </b-alert>
                     </div>
-                    <b-table striped hover responsive :items="entityTypes" :fields="fields" selectable
-                             ref="selectableTable"
-                             select-mode="single"
-                             @row-selected="onEnTySelected" caption-top>
-                        <template v-slot:table-caption>Entity Types</template>
+                    <b-table small striped hover responsive :items="entityTypes" :fields="fields" selectable
+                             ref="selectableTable" select-mode="single" @row-selected="onEnTySelected" caption-top>
                     </b-table>
-                    <div v-if="this.isAdminUser" class="addGr">
-                        <b-button variant="outline-primary" v-on:click="onNewEnTyAdd">Add Entity Type</b-button>
+                </div>
+                <div class="mt-5">
+                    <strong>Entities</strong>
+                    <b-button variant="link" v-on:click="onNewEnAdd">
+                        + Add Entity
+                    </b-button>
+                    <div v-if="this.entitiesLoading" class="d-flex justify-content-center mb-3">
+                        <b-spinner variant="primary" label="Text Centered"></b-spinner>
                     </div>
-                </div>
-                <div v-if="this.entitiesLoading" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <div class="sharingtable">
                     <div>
                         <b-alert v-model="this.inputErrorEn" variant="danger" dismissible
                                  @dismissed="callDismissed">
                             Input validation error
                         </b-alert>
                     </div>
-                    <b-table striped hover responsive :items="entities" :fields="entityFields" selectable
-                             ref="selectableTable"
-                             select-mode="single"
-                             @row-selected="onEntitySelected" caption-top>
-                        <template v-slot:table-caption>Entities</template>
+                    <b-table small striped hover responsive :items="entities" :fields="entityFields" selectable
+                             ref="selectableTable" select-mode="single" @row-selected="onEntitySelected">
                     </b-table>
-                    <div class="addGr">
-                        <b-button variant="outline-primary" v-on:click="onNewEnAdd">Add Entity</b-button>
+                </div>
+                <div class="mt-5">
+                    <strong>Entity Sharing</strong>
+                    <b-button variant="link" v-on:click="onSharingAdd">
+                        + Add Entity Sharing
+                    </b-button>
+                    <div v-if="this.sharingsLoading" class="d-flex justify-content-center mb-3">
+                        <b-spinner variant="primary" label="Text Centered"></b-spinner>
                     </div>
-                </div>
-                <div v-if="this.sharingsLoading" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <div class="sharingtable">
                     <div>
                         <b-alert v-model="this.sharingError" variant="danger" dismissible
                                  @dismissed="callDismissed">
                             Input validation error
                         </b-alert>
                     </div>
-                    <b-table striped hover responsive :items="sharings" :fields="sharingFields" selectable
+                    <b-table small striped hover responsive :items="sharings" :fields="sharingFields" selectable
                              ref="selectableTable"
                              select-mode="single"
-                             @row-selected="onSharingSelected" caption-top>
-                        <template v-slot:table-caption>Sharings</template>
+                             @row-selected="onSharingSelected">
                     </b-table>
-                    <div class="addGr">
-                        <b-button variant="outline-primary" v-on:click="onSharingAdd">Share Entities</b-button>
+                </div>
+
+
+            </div>
+
+            <b-modal ref="prtypemodel" scrollable title="Add Permission Type " ok-title="Add" @ok="addPrType">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Id</p>
+                        <b-form-input v-model="prId"></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Name</p>
+                        <b-form-input v-model="prName"></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="prDesc"></b-form-input>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="entypemodel" scrollable title="Add Entity Type " ok-title="Add" @ok="addNewEnType">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Id</p>
+                        <b-form-input v-model="enTyId"></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Name</p>
+                        <b-form-input v-model="enTyName"></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="enTyDesc"></b-form-input>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="enModel" scrollable title="Add  Entity " ok-title="Add" @ok="addNewEntity">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Name</p>
+                        <b-form-input v-model="enName"></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Type</p>
+                        <b-form-select v-model="selectedEntityType">
+                            <option v-for="(selectOption, indexOpt) in entityTypes"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption.id }}
+                            </option>
+                        </b-form-select>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="enDesc"></b-form-input>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="selectedPrTyModel" scrollable title="Permission Type " ok-title="Delete"
+                     @ok="deletePRType">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Id</p>
+                        <b-form-input v-model="selectedPrTyId" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Name</p>
+                        <b-form-input v-model="selectedPrTyName" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="selectedPrTyDesc" disabled></b-form-input>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="selectedEnTyModel" scrollable title="Entity Type " ok-title="Delete"
+                     @ok="deleteEnType">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Id</p>
+                        <b-form-input v-model="selectedEnTyId" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Name</p>
+                        <b-form-input v-model="selectedEnTyName" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="selectedEnTyDesc" disabled></b-form-input>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="selectedEnModel" scrollable title="Entity " ok-title="Delete" @ok="deleteEntity">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Id</p>
+                        <b-form-input v-model="selectedEnId" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Name</p>
+                        <b-form-input v-model="selectedEnName" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Type</p>
+                        <b-form-input v-model="selectedEntityType" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Description</p>
+                        <b-form-input v-model="selectedEnDesc" disabled></b-form-input>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="selectedShraingModel" scrollable title="Sharing " ok-title="Delete"
+                     @ok="removeSharing">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Entity Id</p>
+                        <b-form-input v-model="selectedShEnId" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Permission Type Id</p>
+                        <b-form-input v-model="selectedShPrId" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Owner Id</p>
+                        <b-form-input v-model="selectedShOwId" disabled></b-form-input>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Type</p>
+                        <b-form-input v-model="selectedShOwType" disabled></b-form-input>
+                    </div>
+
+                </div>
+            </b-modal>
+            <b-modal ref="sharingModel" scrollable title="Share Entities " ok-title="Add" @ok="addNewSharing">
+                <div class="groupform">
+                    <div class="groupformItem">
+                        <p>Entity Id</p>
+                        <b-form-select v-model="defaultEntityId">
+                            <option v-for="(selectOption, indexOpt) in entities"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption.id }}
+                            </option>
+                        </b-form-select>
+                    </div>
+                    <div class="groupformItem">
+                        <p>Permission Type</p>
+                        <b-form-select v-model="defaultPermissionType">
+                            <option v-for="(selectOption, indexOpt) in permissionTypes"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption.id }}
+                            </option>
+                        </b-form-select>
+                    </div>
+
+                    <div class="groupformItem">
+                        <p>Sharing Type</p>
+                        <b-form-select v-model="defaultSharingType">
+                            <option v-for="(selectOption, indexOpt) in sharingTypeIds"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption }}
+                            </option>
+                        </b-form-select>
+                    </div>
+                    <div v-if="defaultSharingType == 'USERS'" class="groupformItem">
+                        <p>User Id</p>
+                        <b-form-select v-model="defaultOwner">
+                            <option v-for="(selectOption, indexOpt) in users"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption }}
+                            </option>
+                        </b-form-select>
+                    </div>
+
+                    <div v-if="defaultSharingType == 'GROUPS'" class="groupformItem">
+                        <p>Group Name</p>
+                        <b-form-select v-model="defaultGroupName">
+                            <option v-for="(selectOption, indexOpt) in groups"
+                                    :key="indexOpt"
+                                    :value="selectOption"
+                            >
+                                {{ selectOption.name }}
+                            </option>
+                        </b-form-select>
                     </div>
                 </div>
-                <div>
-                    <b-modal ref="prtypemodel" scrollable title="Add Permission Type " ok-title="Add" @ok="addPrType">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Id</p>
-                                <b-form-input v-model="prId"></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="prName"></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Description</p>
-                                <b-form-input v-model="prDesc"></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                </div>
-                <div>
-                    <b-modal ref="entypemodel" scrollable title="Add Entity Type " ok-title="Add" @ok="addNewEnType">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Id</p>
-                                <b-form-input v-model="enTyId"></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="enTyName"></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Description</p>
-                                <b-form-input v-model="enTyDesc"></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                </div>
-                <div>
-                    <b-modal ref="enModel" scrollable title="Add  Entity " ok-title="Add" @ok="addNewEntity">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="enName"></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Type</p>
-                                <b-form-select v-model="selectedEntityType">
-                                    <option v-for="(selectOption, indexOpt) in entityTypes"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption.id }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Description</p>
-                                <b-form-input v-model="enDesc"></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                    <b-modal ref="selectedPrTyModel" scrollable title="Permission Type " ok-title="Delete"
-                             @ok="deletePRType">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Id</p>
-                                <b-form-input v-model="selectedPrTyId" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="selectedPrTyName" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Description</p>
-                                <b-form-input v-model="selectedPrTyDesc" disabled></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                    <b-modal ref="selectedEnTyModel" scrollable title="Entity Type " ok-title="Delete"
-                             @ok="deleteEnType">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Id</p>
-                                <b-form-input v-model="selectedEnTyId" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="selectedEnTyName" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Description</p>
-                                <b-form-input v-model="selectedEnTyDesc" disabled></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                    <b-modal ref="selectedEnModel" scrollable title="Entity " ok-title="Delete" @ok="deleteEntity">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Id</p>
-                                <b-form-input v-model="selectedEnId" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Name</p>
-                                <b-form-input v-model="selectedEnName" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Type</p>
-                                <b-form-input v-model="selectedEntityType" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Description</p>
-                                <b-form-input v-model="selectedEnDesc" disabled></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                    <b-modal ref="selectedShraingModel" scrollable title="Sharing " ok-title="Delete"
-                             @ok="removeSharing">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Entity Id</p>
-                                <b-form-input v-model="selectedShEnId" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Permission Type Id</p>
-                                <b-form-input v-model="selectedShPrId" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Owner Id</p>
-                                <b-form-input v-model="selectedShOwId" disabled></b-form-input>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Type</p>
-                                <b-form-input v-model="selectedShOwType" disabled></b-form-input>
-                            </div>
-
-                        </div>
-                    </b-modal>
-                </div>
-                <div>
-                    <b-modal ref="sharingModel" scrollable title="Share Entities " ok-title="Add" @ok="addNewSharing">
-                        <div class="groupform">
-                            <div class="groupformItem">
-                                <p>Entity Id</p>
-                                <b-form-select v-model="defaultEntityId">
-                                    <option v-for="(selectOption, indexOpt) in entities"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption.id }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-                            <div class="groupformItem">
-                                <p>Permission Type</p>
-                                <b-form-select v-model="defaultPermissionType">
-                                    <option v-for="(selectOption, indexOpt) in permissionTypes"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption.id }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-
-                            <div class="groupformItem">
-                                <p>Sharing Type</p>
-                                <b-form-select v-model="defaultSharingType">
-                                    <option v-for="(selectOption, indexOpt) in sharingTypeIds"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-                            <div v-if="defaultSharingType == 'USERS'" class="groupformItem">
-                                <p>User Id</p>
-                                <b-form-select v-model="defaultOwner">
-                                    <option v-for="(selectOption, indexOpt) in users"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-
-                            <div v-if="defaultSharingType == 'GROUPS'" class="groupformItem">
-                                <p>Group Name</p>
-                                <b-form-select v-model="defaultGroupName">
-                                    <option v-for="(selectOption, indexOpt) in groups"
-                                            :key="indexOpt"
-                                            :value="selectOption"
-                                    >
-                                        {{ selectOption.name }}
-                                    </option>
-                                </b-form-select>
-                            </div>
-                        </div>
-                    </b-modal>
-                </div>
-            </div>
-            <div v-if="this.isAdminUser" class="column">
-                <div class="permissionChecker">
-                    <div class="addGr">
-                        <b-button variant="outline-primary" v-on:click="checkPermissions">Evaluate Permissions
-                        </b-button>
-                    </div>
-                </div>
-            </div>
+            </b-modal>
             <b-modal ref="permissionChecker" scrollable title="Check Permissions" ok-title="Evaluate"
                      @ok="evaluatePermission">
                 <div class="groupform">
@@ -356,7 +344,7 @@
                     </div>
                 </div>
             </b-modal>
-        </div>
+        </b-container>
     </div>
 </template>
 
@@ -419,11 +407,9 @@
                 evaluating: false,
                 defaultGroupName: null,
                 inputErrorPR: false,
-                inputErrorEnTy:false,
-                inputErrorEn:false,
-                sharingError:false,
-
-
+                inputErrorEnTy: false,
+                inputErrorEn: false,
+                sharingError: false,
 
 
             }
@@ -484,7 +470,7 @@
             },
             async addNewEnType() {
                 this.entityTypesLoading = true
-                if (this.enTyId == null || this.enTyName == null || this.enTyName==''|| this.enTyId == '') {
+                if (this.enTyId == null || this.enTyName == null || this.enTyName == '' || this.enTyId == '') {
                     this.inputErrorEnTy = true
                     this.entityTypesLoading = false
                 }
@@ -538,7 +524,7 @@
 
             async addNewEntity() {
                 this.entitiesLoading = true
-                if (this.enName == null || this.enName =='') {
+                if (this.enName == null || this.enName == '') {
                     this.inputErrorEn = true
                     this.entitiesLoading = false
                 }
@@ -850,11 +836,11 @@
                 return result;
             },
 
-            async  callDismissed(){
+            async callDismissed() {
                 this.inputErrorEn = false
                 this.inputErrorEnTy = false
                 this.inputErrorEn = false
-                this.sharingError =false
+                this.sharingError = false
             }
 
         },
@@ -923,62 +909,11 @@
 </script>
 
 <style scoped>
-    .sharingtable {
-        margin-left: 20%;
-        width: 100%;
+    h2 {
+        font-family: Avenir;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: left;
+        color: #203a43;
     }
-
-    .addGr {
-        margin-left: 60%;
-    }
-
-    .column {
-        float: left;
-        width: 50%;
-        padding: 10px;
-        height: 300px; /* Should be removed. Only for demonstration */
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .permissionChecker {
-        width: 60%;
-        position: relative;
-        margin-left: 10%;
-        margin-top: 10%;
-    }
-
-    .groupformItem {
-        margin-top: 3%;
-    }
-
-    .textCls {
-        color: blue;
-        font-family: Arial;
-        font-size: x-large;
-        margin-left: 10%;
-    }
-
-    .textClsWrng {
-        color: red;
-        font-family: Arial;
-        font-size: x-large;
-        margin-left: 10%;
-    }
-
-    .evaluater {
-        margin-left: 40%;
-        color: #42b983;
-    }
-
-    .gotoWork {
-        margin-left: 70%;
-    }
-
-
 </style>
