@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="w-100 mb-5">
+            <h2>Access Logs</h2>
+        </div>
         <div v-if="activateLogEnabling">
             <b-form-checkbox v-model="checked" :disabled=isCheckedBtnDisabled v-on:change="enableLogging"
                              name="check-button" switch>
@@ -7,11 +10,11 @@
             </b-form-checkbox>
         </div>
         <div v-if="isLoggingEnabled">
-            <div class="logSearchBar">
+            <div>
                 <b-input-group>
                     <template v-slot:prepend>
-                        <b-form-input disabled v-model="defaultSearchText">Search By</b-form-input>
-                        <b-dropdown :text="selectedService" variant="info" v-model="selectedService">
+                        <b-form-input size="sm" disabled v-model="defaultSearchText">Search By</b-form-input>
+                        <b-dropdown size="sm" :text="selectedService" v-model="selectedService">
                             <b-dropdown-item v-for="option in options"
                                              :key="option.value"
                                              :value="option.value"
@@ -25,23 +28,19 @@
                 </b-input-group>
             </div>
 
-            <div class="grouptable">
-                <b-table striped hover responsive :items="logItems" :fields="fields" selectable
+            <div class="mt-3">
+                <b-table small striped hover responsive :items="logItems" :fields="fields" selectable
                          ref="selectableTable"
                          select-mode="single"
                          :per-page="perPage"
                          :current-page="currentPage"
                          caption-top>
-                    <template v-slot:table-caption>Access Logs</template>
                 </b-table>
                 <div class="pgClass">
-                    <b-pagination
-                            v-model="currentPage"
-                            :total-rows="rows"
-                            :per-page="perPage"
-                            aria-controls="my-table"
+                    <b-pagination size="sm" v-model="currentPage" :total-rows="rows" :per-page="perPage"
+                                  aria-controls="my-table" class="float-right">
 
-                    ></b-pagination>
+                    </b-pagination>
                 </div>
             </div>
         </div>
@@ -210,17 +209,11 @@
 </script>
 
 <style scoped>
-    .logSearchBar {
-        margin-left: 35%;
-    }
-
-    .grouptable {
-        width: 80%;
-        margin-left: 10%;
-        margin-top: 3%;
-    }
-
-    .pgClass {
-        margin-left: 70%;
+    h2 {
+        font-family: Avenir;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: left;
+        color: #203a43;
     }
 </style>
