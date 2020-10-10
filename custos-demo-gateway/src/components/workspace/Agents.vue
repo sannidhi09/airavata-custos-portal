@@ -16,6 +16,11 @@
                  ref="selectableTable"
                  select-mode="single"
                  @row-selected="onCommunityAcSelected" caption-top>
+            <template v-slot:cell(status)="data">
+                <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
+                <b-badge v-else-if="data.value == 'DEACTIVE'" variant="danger">Inactive</b-badge>
+                <b-badge v-else-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
+            </template>
         </b-table>
         <div class="addAccItem">
             <b-button variant="outline-primary" v-on:click="this.addAccount">Add Service Account</b-button>
