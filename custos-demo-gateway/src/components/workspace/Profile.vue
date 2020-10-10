@@ -61,21 +61,19 @@
                 </b-col>
                 <b-col style="max-width: 100%; min-width: 300px;" class="p-3">
                     <strong>My Attributes</strong>
-                    <b-button variant="link" v-on:click="addAttribute"> + Add Attribute</b-button>
+                    <!--                    <b-button variant="link" v-on:click="addAttribute"> + Add Attribute</b-button>-->
                     <div class="w-100">
                         <small v-if="attributes.length === 0">There are no attributes created.</small>
                     </div>
-                    <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
-                        <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                    </div>
-                    <b-table small striped hover responsive :items="attributes" ref="selectableTable" selectable
-                             select-mode="single" @row-selected="onAtrSelected">
+                    <b-table small striped hover responsive :items="attributes" class="mt-3" ref="selectableTable"
+                             select-mode="single">
                     </b-table>
                 </b-col>
             </b-row>
             <b-row style="max-width: 1000px;" class="w-100 text-right mt-5">
                 <b-col v-if="this.updatingProfile">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner> Saving ...
+                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                    Saving ...
                 </b-col>
                 <b-col>
                     <b-button size="sm" variant="primary" v-on:click="updateProfile">Save Changes</b-button>
