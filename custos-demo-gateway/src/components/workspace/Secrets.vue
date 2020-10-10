@@ -17,7 +17,7 @@
         </div>
         <div>
             <b-modal ref="addSecmodel" id="add-secret-modal" scrollable title="Add Secret">
-                <div class="secform">
+                <div>
                     <div class="p-2">
                         <label class="form-input-label" for="form-input-secret-type">Type</label>
                         <b-form-select id="form-input-secret-type" size="sm" v-model="defaultMemType">
@@ -54,7 +54,7 @@
         </div>
         <div>
             <b-modal ref="updateSecmodel" id="view-secret-modal" scrollable title="View Secret">
-                <div class="secform">
+                <div>
                     <div class="secformItem">
                         <label class="form-input-label" for="form-input-secret-token">Token</label>
                         <b-form-input id="form-input-secret-token" size="sm" v-model="selectedExId"
@@ -90,7 +90,6 @@
                         <b-textarea id="form-input-secret-private-key" size="sm" v-model="selectedExPrivKey"
                                     disabled></b-textarea>
                     </div>
-
                 </div>
                 <template slot="modal-footer">
                     <b-button size="sm" class="mr-2" @click="$bvModal.hide('view-secret-modal')">

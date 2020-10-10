@@ -85,7 +85,7 @@
                         <strong>Attributes</strong>
                         <b-button variant="link" v-on:click="addAttribute">+ Add Attributes</b-button>
                         <div class="w-100">
-                            <small v-if="selectedAttributes.length == 0">There are no attributes created. </small>
+                            <small v-if="selectedAttributes.length === 0">There are no attributes created. </small>
                         </div>
                         <b-table small striped hover responsive :items="selectedAttributes" class="mt-2" selectable
                                  select-mode="single"
@@ -98,7 +98,7 @@
                         <b-button variant="link" v-on:click="addRole" :disabled="this.isAdminUser==false">+ Add Role
                         </b-button>
                         <div class="w-100">
-                            <small v-if="selectedRoles.length == 0">There are no roles assigned. </small>
+                            <small v-if="selectedRoles.length === 0">There are no roles assigned. </small>
                         </div>
                         <b-table small striped hover responsive :items="selectedRoles" class="mt-2" selectable
                                  select-mode="single"
