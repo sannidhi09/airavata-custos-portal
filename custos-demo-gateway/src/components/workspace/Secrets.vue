@@ -1,24 +1,26 @@
 <template>
     <div>
-        <div class="secrettable">
+        <div class="w-100">
+            <h2>Secrets</h2>
+        </div>
+        <div class="w-100 mt-5">
             <div v-if="this.secretsLoading" class="d-flex justify-content-center mb-3">
                 <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
-            <b-table striped hover responsive :items="secItems" :fields="fields" selectable
+            <b-table small striped hover responsive :items="secItems" :fields="fields" selectable
                      select-mode="single"
                      @row-selected="onRowSelected" caption-top>
-                <template v-slot:table-caption>Secrets</template>
             </b-table>
-            <div class="addSec">
+            <div class="w-100">
                 <b-button variant="outline-primary" v-on:click="addSec">Add Secret</b-button>
             </div>
         </div>
         <div>
-            <b-modal ref="addSecmodel" scrollable title="Add Secret" ok-title="Add" @ok="addSecOKButtonPressed">
+            <b-modal ref="addSecmodel" id="add-secret-modal" scrollable title="Add Secret">
                 <div class="secform">
-                    <div class="secFormItem">
-                        <p>Type</p>
-                        <b-form-select v-model="defaultMemType">
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-secret-type">Type</label>
+                        <b-form-select id="form-input-secret-type" size="sm" v-model="defaultMemType">
                             <option v-for="(selectOption, indexOpt) in secretTypes"
                                     :key="indexOpt"
                                     :value="selectOption"
@@ -27,53 +29,78 @@
                             </option>
                         </b-form-select>
                     </div>
-                    <div class="secformItem">
-                        <p>Description</p>
-                        <b-form-input v-model="selectedDescription"></b-form-input>
+                    <div class="p-2">
+                        <label class="form-input-label" for="form-input-secret-description">Description</label>
+                        <b-form-input id="form-input-secret-description" size="sm"
+                                      v-model="selectedDescription"></b-form-input>
                     </div>
-                    <div v-if="defaultMemType==='Password'" class="secformItem">
-                        <p>Password</p>
-                        <b-form-input v-model="selectedPassword"></b-form-input>
+                    <div v-if="defaultMemType==='Password'" class="p-2">
+                        <label class="form-input-label" for="form-input-secret-password">Password</label>
+                        <b-form-input id="form-input-secret-password" size="sm"
+                                      v-model="selectedPassword"></b-form-input>
                     </div>
                 </div>
-
+                <template slot="modal-footer">
+                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('add-secret-modal')">
+                        Cancel
+                    </b-button>
+                    <b-button size="sm" variant="primary" v-on:click="addSecOKButtonPressed"
+                              :disabled="defaultMemType === 'Password' && !selectedPassword"
+                              @click="$bvModal.hide('add-secret-modal')">
+                        Add Secret
+                    </b-button>
+                </template>
             </b-modal>
         </div>
         <div>
-            <b-modal ref="updateSecmodel" scrollable title="View Secret" cancel-title="Delete"
-                     @cancel="secDeleteButtonPressed" cancel-variant="outline-primary">
+            <b-modal ref="updateSecmodel" id="view-secret-modal" scrollable title="View Secret">
                 <div class="secform">
                     <div class="secformItem">
-                        <p>Token</p>
-                        <b-form-input v-model="selectedExId" disabled></b-form-input>
+                        <label class="form-input-label" for="form-input-secret-token">Token</label>
+                        <b-form-input id="form-input-secret-token" size="sm" v-model="selectedExId"
+                                      disabled></b-form-input>
                     </div>
                     <div class="secFormItem">
-                        <p>Type</p>
-                        <b-form-input v-model="selectedExType" disabled></b-form-input>
+                        <label class="form-input-label" for="form-input-secret-type">Type</label>
+                        <b-form-input id="form-input-secret-type" size="sm" v-model="selectedExType"
+                                      disabled></b-form-input>
                     </div>
                     <div class="secformItem">
-                        <p>Description</p>
-                        <b-form-input v-model="selectedExDescription" disabled></b-form-input>
+                        <label class="form-input-label" for="form-input-secret-description">Description</label>
+                        <b-form-input id="form-input-secret-description" size="sm" v-model="selectedExDescription"
+                                      disabled></b-form-input>
                     </div>
                     <div class="secformItem">
-                        <p>Owner Id</p>
-                        <b-form-input v-model="selectedExOwnerId" disabled></b-form-input>
+                        <label class="form-input-label" for="form-input-secret-owner">Owner</label>
+                        <b-form-input id="form-input-secret-owner" size="sm" v-model="selectedExOwnerId"
+                                      disabled></b-form-input>
                     </div>
                     <div v-if="selectedExType ==='PASSWORD'" class="secformItem">
-                        <p>Password</p>
-                        <b-form-input v-model="selectedExPassword" disabled></b-form-input>
+                        <label class="form-input-label" for="form-input-secret-password">Password</label>
+                        <b-form-input id="form-input-secret-password" size="sm" v-model="selectedExPassword"
+                                      disabled></b-form-input>
                     </div>
                     <div v-if="selectedExType ==='SSH'" class="secformItem">
-                        <p>Publick Key</p>
-                        <b-textarea v-model="selectedExPubKey" disabled></b-textarea>
+                        <label class="form-input-label" for="form-input-secret-public-key">Public Key</label>
+                        <b-textarea id="form-input-secret-public-key" size="sm" v-model="selectedExPubKey"
+                                    disabled></b-textarea>
                     </div>
                     <div v-if="selectedExType ==='SSH'" class="secformItem">
-                        <p>Private Key</p>
-                        <b-textarea v-model="selectedExPrivKey" disabled></b-textarea>
+                        <label class="form-input-label" for="form-input-secret-private-key">Private Key</label>
+                        <b-textarea id="form-input-secret-private-key" size="sm" v-model="selectedExPrivKey"
+                                    disabled></b-textarea>
                     </div>
 
                 </div>
-
+                <template slot="modal-footer">
+                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('view-secret-modal')">
+                        Cancel
+                    </b-button>
+                    <b-button size="sm" variant="danger" v-on:click="secDeleteButtonPressed"
+                              @click="$bvModal.hide('view-secret-modal')">
+                        Delete
+                    </b-button>
+                </template>
             </b-modal>
         </div>
     </div>
@@ -354,13 +381,11 @@
 </script>
 
 <style scoped>
-    .secrettable {
-        width: 50%;
-        margin-left: 10%;
-        margin-top: 3%;
-    }
-
-    .secformItem {
-        margin-top: 3%;
+    h2 {
+        font-family: Avenir;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: left;
+        color: #203a43;
     }
 </style>
