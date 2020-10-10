@@ -1,5 +1,5 @@
 <template>
-    <div class="accounttable">
+    <div>
         <div class="w-100 mb-5">
             <h2>Service Accounts</h2>
         </div>
