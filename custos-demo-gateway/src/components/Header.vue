@@ -29,7 +29,7 @@
                 Groups
             </b-button>
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
-                Community Accounts
+                Service Accounts
             </b-button>
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">
                 Secrets
