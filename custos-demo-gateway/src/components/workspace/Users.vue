@@ -3,21 +3,20 @@
         <div class="w-100">
             <h2>Manage Users</h2>
         </div>
-        <form class="userSearchBar mb-5" v-on:submit.prevent="searchResult">
-            <b-input-group>
-                <b-form-input size="sm" v-model="searchUsername" placeholder="Search"></b-form-input>
-                <b-input-group-append>
-                    <b-button size="sm" type="submit">
-                        <b-icon icon="search"></b-icon>
-                    </b-button>
-                </b-input-group-append>
-            </b-input-group>
-        </form>
-        <div v-if="this.userloading" class="d-flex justify-content-center w-100">
-            <b-spinner variant="primary" label="Text Centered"></b-spinner>
-        </div>
-        <div class="w-100">
-
+        <b-container class="w-100">
+            <form class="userSearchBar mb-5" v-on:submit.prevent="searchResult">
+                <b-input-group>
+                    <b-form-input size="sm" v-model="searchUsername" placeholder="Search"></b-form-input>
+                    <b-input-group-append>
+                        <b-button size="sm" type="submit">
+                            <b-icon icon="search"></b-icon>
+                        </b-button>
+                    </b-input-group-append>
+                </b-input-group>
+            </form>
+            <div v-if="this.userloading" class="d-flex justify-content-center w-100">
+                <b-spinner variant="primary" label="Text Centered"></b-spinner>
+            </div>
             <b-table striped hover responsive :items="items" :fields="fields" selectable small
                      ref="selectableTable"
                      select-mode="single"
@@ -32,7 +31,6 @@
                 </template>
 
             </b-table>
-
             <div>
                 <b-pagination
                         size="sm"
@@ -43,191 +41,188 @@
                         aria-controls="my-table"
                 ></b-pagination>
             </div>
-        </div>
+        </b-container>
+        <b-modal ref="usermodel" id="user-modal" scrollable title="User Profile">
+            <div class="user-profile">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-username">Username</label>
+                    <b-form-input id="form-input-username" size="sm" v-model="selectedUsername"
+                                  disabled></b-form-input>
+                </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-first-name">First Name</label>
+                    <b-form-input id="form-input-first-name" size="sm" v-model="selectedFirstName"></b-form-input>
+                </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-last-name">Last Name</label>
+                    <b-form-input id="form-input-last-name" size="sm" v-model="selectedLastName"></b-form-input>
+                </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-email">Email</label>
+                    <b-form-input id="form-input-email" size="sm" v-model="selectedEmail"></b-form-input>
+                </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-email">Status</label>
+                    <b-form-select id="form-input-status" size="sm" v-model="selectedStatus">
+                        <option v-for="(selectOption, indexOpt) in statusOptions"
+                                :key="indexOpt"
+                                :value="selectOption"
+                        >
+                            {{ selectOption }}
+                        </option>
+                    </b-form-select>
+                </div>
 
-        <div>
-            <b-modal ref="usermodel" id="user-modal" scrollable title="User Profile">
-                <div class="user-profile">
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-username">Username</label>
-                        <b-form-input id="form-input-username" size="sm" v-model="selectedUsername"
-                                      disabled></b-form-input>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-first-name">First Name</label>
-                        <b-form-input id="form-input-first-name" size="sm" v-model="selectedFirstName"></b-form-input>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-last-name">Last Name</label>
-                        <b-form-input id="form-input-last-name" size="sm" v-model="selectedLastName"></b-form-input>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-email">Email</label>
-                        <b-form-input id="form-input-email" size="sm" v-model="selectedEmail"></b-form-input>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-email">Status</label>
-                        <b-form-select id="form-input-status" size="sm" v-model="selectedStatus">
-                            <option v-for="(selectOption, indexOpt) in statusOptions"
-                                    :key="indexOpt"
-                                    :value="selectOption"
-                            >
-                                {{ selectOption }}
-                            </option>
-                        </b-form-select>
-                    </div>
+                <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
+                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                </div>
 
-                    <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
-                        <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                <div class="w-100 mt-5">
+                    <strong>Attributes</strong>
+                    <b-button variant="link" v-on:click="addAttribute">+ Add Attributes</b-button>
+                    <div class="w-100">
+                        <small v-if="selectedAttributes.length === 0">There are no attributes created. </small>
                     </div>
+                    <b-table small striped hover responsive :items="selectedAttributes" class="mt-2" selectable
+                             select-mode="single"
+                             @row-selected="onAtrSelected">
+                    </b-table>
+                </div>
 
-                    <div class="w-100 mt-5">
-                        <strong>Attributes</strong>
-                        <b-button variant="link" v-on:click="addAttribute">+ Add Attributes</b-button>
-                        <div class="w-100">
-                            <small v-if="selectedAttributes.length === 0">There are no attributes created. </small>
-                        </div>
-                        <b-table small striped hover responsive :items="selectedAttributes" class="mt-2" selectable
-                                 select-mode="single"
-                                 @row-selected="onAtrSelected">
-                        </b-table>
+                <div class="w-100 mt-5">
+                    <strong>Roles</strong>
+                    <b-button variant="link" v-on:click="addRole" :disabled="this.isAdminUser==false">+ Add Role
+                    </b-button>
+                    <div class="w-100">
+                        <small v-if="selectedRoles.length === 0">There are no roles assigned. </small>
                     </div>
-
-                    <div class="w-100 mt-5">
-                        <strong>Roles</strong>
-                        <b-button variant="link" v-on:click="addRole" :disabled="this.isAdminUser==false">+ Add Role
-                        </b-button>
-                        <div class="w-100">
-                            <small v-if="selectedRoles.length === 0">There are no roles assigned. </small>
-                        </div>
-                        <b-table small striped hover responsive :items="selectedRoles" class="mt-2" selectable
-                                 select-mode="single"
-                                 @row-selected="onRoleSelected">
-                        </b-table>
-                    </div>
+                    <b-table small striped hover responsive :items="selectedRoles" class="mt-2" selectable
+                             select-mode="single"
+                             @row-selected="onRoleSelected">
+                    </b-table>
                 </div>
-                <template v-slot:modal-footer>
-                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-modal')">
-                        Cancel
-                    </b-button>
-                    <b-button size="sm" variant="primary" v-on:click="updateUserProfile"
-                              @click="$bvModal.hide('user-modal')">
-                        Save
-                    </b-button>
-                </template>
-            </b-modal>
-            <b-modal ref="atrModel" id="user-attribute-modal" scrollable title="Add Attribute">
-                <div class="userform">
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-attribute-key">Key</label>
-                        <b-form-input id="form-input-attribute-key" size="sm" v-model="newKey"></b-form-input>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-attribute-value">Value</label>
-                        <b-form-input id="form-input-attribute-value" size="sm" v-model="newValue"></b-form-input>
-                    </div>
+            </div>
+            <template v-slot:modal-footer>
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="primary" v-on:click="updateUserProfile"
+                          @click="$bvModal.hide('user-modal')">
+                    Save
+                </b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="atrModel" id="user-attribute-modal" scrollable title="Add Attribute">
+            <div class="userform">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                    <b-form-input id="form-input-attribute-key" size="sm" v-model="newKey"></b-form-input>
                 </div>
-                <template v-slot:modal-footer>
-                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-modal')">
-                        Cancel
-                    </b-button>
-                    <b-button :disabled="!newKey || !newValue" size="sm" variant="primary" v-on:click="addAtrOkPressed"
-                              @click="$bvModal.hide('user-attribute-modal')">
-                        Add
-                    </b-button>
-                </template>
-            </b-modal>
-            <b-modal ref="atrModelSelected" id="user-attribute-view-modal" scrollable title="Attribute">
-                <div class="userform">
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-attribute-key">Key</label>
-                        <b-form-input id="form-input-attribute-key" size="sm" disabled
-                                      v-model="selectedKey"></b-form-input>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-attribute-value">Value</label>
-                        <b-form-input id="form-input-attribute-value" size="sm" disabled
-                                      v-model="selectedValue"></b-form-input>
-                    </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                    <b-form-input id="form-input-attribute-value" size="sm" v-model="newValue"></b-form-input>
                 </div>
-                <template v-slot:modal-footer>
-                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-view-modal')">
-                        Cancel
-                    </b-button>
-                    <b-button size="sm" variant="danger" v-on:click="addAtrDeletePressed"
-                              @click="$bvModal.hide('user-attribute-view-modal')">
-                        Delete
-                    </b-button>
-                </template>
-            </b-modal>
-            <b-modal ref="roleModel" id="user-role-modal" scrollable title="Add Role">
-                <div class="userform">
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-role-scope">Scope</label>
-                        <b-form-select id="form-input-role-scope" size="sm" v-model="selectedScope">
-                            <option v-for="(selectOption, indexOpt) in scopes"
-                                    :key="indexOpt"
-                                    :value="selectOption"
-                            >
-                                {{ selectOption }}
-                            </option>
-                        </b-form-select>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-role">Role</label>
-                        <b-form-select v-if="selectedScope==='TENANT'" id="form-input-role" size="sm"
-                                       v-model="selectedRole">
-                            <option v-for="(selectOption, indexOpt) in tenantroles"
-                                    :key="indexOpt"
-                                    :value="selectOption"
-                            >
-                                {{ selectOption }}
-                            </option>
-                        </b-form-select>
-                        <b-form-select v-if="selectedScope==='CLIENT'" id="form-input-role" size="sm"
-                                       v-model="selectedRole">
-                            <option v-for="(selectOption, indexOpt) in clientroles"
-                                    :key="indexOpt"
-                                    :value="selectOption"
-                            >
-                                {{ selectOption }}
-                            </option>
-                        </b-form-select>
-                    </div>
+            </div>
+            <template v-slot:modal-footer>
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-modal')">
+                    Cancel
+                </b-button>
+                <b-button :disabled="!newKey || !newValue" size="sm" variant="primary" v-on:click="addAtrOkPressed"
+                          @click="$bvModal.hide('user-attribute-modal')">
+                    Add
+                </b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="atrModelSelected" id="user-attribute-view-modal" scrollable title="Attribute">
+            <div class="userform">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                    <b-form-input id="form-input-attribute-key" size="sm" disabled
+                                  v-model="selectedKey"></b-form-input>
                 </div>
-                <template v-slot:modal-footer>
-                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-role-modal')">
-                        Cancel
-                    </b-button>
-                    <b-button :disabled="!selectedScope || !selectedRole" size="sm" variant="primary"
-                              v-on:click="addRoleOkPressed" @click="$bvModal.hide('user-role-modal')">
-                        Add
-                    </b-button>
-                </template>
-            </b-modal>
-            <b-modal ref="roleModelSelected" id="user-role-view-modal" scrollable title="Role">
-                <div class="userform">
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-role">Role</label>
-                        <b-form-input id="form-input-role" size="sm" disabled v-model="rowSelectedRole"></b-form-input>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-role-scope">Scope</label>
-                        <b-form-input id="form-input-role-scope" size="sm" disabled
-                                      v-model="rowSelectedScope"></b-form-input>
-                    </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                    <b-form-input id="form-input-attribute-value" size="sm" disabled
+                                  v-model="selectedValue"></b-form-input>
                 </div>
-                <template v-slot:modal-footer>
-                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-role-view-modal')">
-                        Cancel
-                    </b-button>
-                    <b-button size="sm" variant="danger" v-on:click="deleteRoleOkPressed"
-                              @click="$bvModal.hide('user-role-view-modal')">
-                        Delete
-                    </b-button>
-                </template>
-            </b-modal>
-        </div>
+            </div>
+            <template v-slot:modal-footer>
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-view-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="danger" v-on:click="addAtrDeletePressed"
+                          @click="$bvModal.hide('user-attribute-view-modal')">
+                    Delete
+                </b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="roleModel" id="user-role-modal" scrollable title="Add Role">
+            <div class="userform">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-role-scope">Scope</label>
+                    <b-form-select id="form-input-role-scope" size="sm" v-model="selectedScope">
+                        <option v-for="(selectOption, indexOpt) in scopes"
+                                :key="indexOpt"
+                                :value="selectOption"
+                        >
+                            {{ selectOption }}
+                        </option>
+                    </b-form-select>
+                </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-role">Role</label>
+                    <b-form-select v-if="selectedScope==='TENANT'" id="form-input-role" size="sm"
+                                   v-model="selectedRole">
+                        <option v-for="(selectOption, indexOpt) in tenantroles"
+                                :key="indexOpt"
+                                :value="selectOption"
+                        >
+                            {{ selectOption }}
+                        </option>
+                    </b-form-select>
+                    <b-form-select v-if="selectedScope==='CLIENT'" id="form-input-role" size="sm"
+                                   v-model="selectedRole">
+                        <option v-for="(selectOption, indexOpt) in clientroles"
+                                :key="indexOpt"
+                                :value="selectOption"
+                        >
+                            {{ selectOption }}
+                        </option>
+                    </b-form-select>
+                </div>
+            </div>
+            <template v-slot:modal-footer>
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-role-modal')">
+                    Cancel
+                </b-button>
+                <b-button :disabled="!selectedScope || !selectedRole" size="sm" variant="primary"
+                          v-on:click="addRoleOkPressed" @click="$bvModal.hide('user-role-modal')">
+                    Add
+                </b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="roleModelSelected" id="user-role-view-modal" scrollable title="Role">
+            <div class="userform">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-role">Role</label>
+                    <b-form-input id="form-input-role" size="sm" disabled v-model="rowSelectedRole"></b-form-input>
+                </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-role-scope">Scope</label>
+                    <b-form-input id="form-input-role-scope" size="sm" disabled
+                                  v-model="rowSelectedScope"></b-form-input>
+                </div>
+            </div>
+            <template v-slot:modal-footer>
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-role-view-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="danger" v-on:click="deleteRoleOkPressed"
+                          @click="$bvModal.hide('user-role-view-modal')">
+                    Delete
+                </b-button>
+            </template>
+        </b-modal>
     </div>
 </template>
 
@@ -313,7 +308,7 @@
                     this.selectedStatus = this.selectedItem[0].status
                     this.selectedAttributes = this.selectedItem[0].attributes
                     this.selectedRoles = this.selectedItem[0].roles
-                    if ((this.selectedUsername === this.currentUserName || this.isAdminUser) && this.selectedUsername != 'admin' ) {
+                    if ((this.selectedUsername === this.currentUserName || this.isAdminUser) && this.selectedUsername != 'admin') {
                         this.$refs.usermodel.show()
                     }
                 }
@@ -515,41 +510,41 @@
                 this.loadUsers()
             },
             async deleteRoleOkPressed() {
-                    this.operationCompleted = false
-                    let accessToken = await this.$store.getters['identity/getAccessToken']
-                    let bd = {};
-                    if (this.rowSelectedScope === 'TENANT') {
-                        bd = {
-                            user_token: accessToken,
-                            body: {
-                                roles: [this.rowSelectedRole],
-                                username: this.selectedUsername
-                            }
-                        }
-                    } else {
-                        bd = {
-                            user_token: accessToken,
-                            body: {
-                                client_roles: [this.rowSelectedRole],
-                                username: this.selectedUsername
-                            }
+                this.operationCompleted = false
+                let accessToken = await this.$store.getters['identity/getAccessToken']
+                let bd = {};
+                if (this.rowSelectedScope === 'TENANT') {
+                    bd = {
+                        user_token: accessToken,
+                        body: {
+                            roles: [this.rowSelectedRole],
+                            username: this.selectedUsername
                         }
                     }
-
-                    let deleted = await this.$store.dispatch('user/deleteRoleFromUser', bd)
-                    if (deleted) {
-
-                        let newRoles = []
-                        this.selectedRoles.forEach(atr => {
-
-                            if (atr.name != this.rowSelectedRole) {
-                                newRoles.push(atr)
-                            }
-                            this.selectedRoles = newRoles
-                        })
+                } else {
+                    bd = {
+                        user_token: accessToken,
+                        body: {
+                            client_roles: [this.rowSelectedRole],
+                            username: this.selectedUsername
+                        }
                     }
-                    this.operationCompleted = true
-                    this.loadUsers()
+                }
+
+                let deleted = await this.$store.dispatch('user/deleteRoleFromUser', bd)
+                if (deleted) {
+
+                    let newRoles = []
+                    this.selectedRoles.forEach(atr => {
+
+                        if (atr.name != this.rowSelectedRole) {
+                            newRoles.push(atr)
+                        }
+                        this.selectedRoles = newRoles
+                    })
+                }
+                this.operationCompleted = true
+                this.loadUsers()
 
 
             },
@@ -587,7 +582,7 @@
                             first_name: obj.first_name,
                             last_name: obj.last_name,
                             email: obj.email,
-                            status: (obj.state=='ACTIVE')?obj.state:'DEACTIVE',
+                            status: (obj.state == 'ACTIVE') ? obj.state : 'DEACTIVE',
                             attributes: [],
                             roles: []
                         }

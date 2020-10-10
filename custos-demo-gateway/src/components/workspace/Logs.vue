@@ -27,7 +27,6 @@
                     </template>
                 </b-input-group>
             </div>
-
             <div class="mt-3">
                 <b-table small striped hover responsive :items="logItems" :fields="fields" selectable
                          ref="selectableTable"

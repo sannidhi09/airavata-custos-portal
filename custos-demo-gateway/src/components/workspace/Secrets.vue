@@ -3,7 +3,7 @@
         <div class="w-100">
             <h2>Secrets</h2>
         </div>
-        <div class="w-100 mt-5">
+        <b-container class="w-100 mt-5">
             <div v-if="this.secretsLoading" class="d-flex justify-content-center mb-3">
                 <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
@@ -14,94 +14,90 @@
             <div class="w-100">
                 <b-button variant="outline-primary" v-on:click="addSec">Add Secret</b-button>
             </div>
-        </div>
-        <div>
-            <b-modal ref="addSecmodel" id="add-secret-modal" scrollable title="Add Secret">
-                <div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-secret-type">Type</label>
-                        <b-form-select id="form-input-secret-type" size="sm" v-model="defaultMemType">
-                            <option v-for="(selectOption, indexOpt) in secretTypes"
-                                    :key="indexOpt"
-                                    :value="selectOption"
-                            >
-                                {{ selectOption }}
-                            </option>
-                        </b-form-select>
-                    </div>
-                    <div class="p-2">
-                        <label class="form-input-label" for="form-input-secret-description">Description</label>
-                        <b-form-input id="form-input-secret-description" size="sm"
-                                      v-model="selectedDescription"></b-form-input>
-                    </div>
-                    <div v-if="defaultMemType==='Password'" class="p-2">
-                        <label class="form-input-label" for="form-input-secret-password">Password</label>
-                        <b-form-input id="form-input-secret-password" size="sm"
-                                      v-model="selectedPassword"></b-form-input>
-                    </div>
+        </b-container>
+        <b-modal ref="addSecmodel" id="add-secret-modal" scrollable title="Add Secret">
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-secret-type">Type</label>
+                    <b-form-select id="form-input-secret-type" size="sm" v-model="defaultMemType">
+                        <option v-for="(selectOption, indexOpt) in secretTypes"
+                                :key="indexOpt"
+                                :value="selectOption"
+                        >
+                            {{ selectOption }}
+                        </option>
+                    </b-form-select>
                 </div>
-                <template slot="modal-footer">
-                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('add-secret-modal')">
-                        Cancel
-                    </b-button>
-                    <b-button size="sm" variant="primary" v-on:click="addSecOKButtonPressed"
-                              :disabled="defaultMemType === 'Password' && !selectedPassword"
-                              @click="$bvModal.hide('add-secret-modal')">
-                        Add Secret
-                    </b-button>
-                </template>
-            </b-modal>
-        </div>
-        <div>
-            <b-modal ref="updateSecmodel" id="view-secret-modal" scrollable title="View Secret">
-                <div>
-                    <div class="secformItem">
-                        <label class="form-input-label" for="form-input-secret-token">Token</label>
-                        <b-form-input id="form-input-secret-token" size="sm" v-model="selectedExId"
-                                      disabled></b-form-input>
-                    </div>
-                    <div class="secFormItem">
-                        <label class="form-input-label" for="form-input-secret-type">Type</label>
-                        <b-form-input id="form-input-secret-type" size="sm" v-model="selectedExType"
-                                      disabled></b-form-input>
-                    </div>
-                    <div class="secformItem">
-                        <label class="form-input-label" for="form-input-secret-description">Description</label>
-                        <b-form-input id="form-input-secret-description" size="sm" v-model="selectedExDescription"
-                                      disabled></b-form-input>
-                    </div>
-                    <div class="secformItem">
-                        <label class="form-input-label" for="form-input-secret-owner">Owner</label>
-                        <b-form-input id="form-input-secret-owner" size="sm" v-model="selectedExOwnerId"
-                                      disabled></b-form-input>
-                    </div>
-                    <div v-if="selectedExType ==='PASSWORD'" class="secformItem">
-                        <label class="form-input-label" for="form-input-secret-password">Password</label>
-                        <b-form-input id="form-input-secret-password" size="sm" v-model="selectedExPassword"
-                                      disabled></b-form-input>
-                    </div>
-                    <div v-if="selectedExType ==='SSH'" class="secformItem">
-                        <label class="form-input-label" for="form-input-secret-public-key">Public Key</label>
-                        <b-textarea id="form-input-secret-public-key" size="sm" v-model="selectedExPubKey"
-                                    disabled></b-textarea>
-                    </div>
-                    <div v-if="selectedExType ==='SSH'" class="secformItem">
-                        <label class="form-input-label" for="form-input-secret-private-key">Private Key</label>
-                        <b-textarea id="form-input-secret-private-key" size="sm" v-model="selectedExPrivKey"
-                                    disabled></b-textarea>
-                    </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-secret-description">Description</label>
+                    <b-form-input id="form-input-secret-description" size="sm"
+                                  v-model="selectedDescription"></b-form-input>
                 </div>
-                <template slot="modal-footer">
-                    <b-button size="sm" class="mr-2" @click="$bvModal.hide('view-secret-modal')">
-                        Cancel
-                    </b-button>
-                    <b-button size="sm" variant="danger" v-on:click="secDeleteButtonPressed"
-                              @click="$bvModal.hide('view-secret-modal')">
-                        Delete
-                    </b-button>
-                </template>
-            </b-modal>
-        </div>
+                <div v-if="defaultMemType==='Password'" class="p-2">
+                    <label class="form-input-label" for="form-input-secret-password">Password</label>
+                    <b-form-input id="form-input-secret-password" size="sm"
+                                  v-model="selectedPassword"></b-form-input>
+                </div>
+            </div>
+            <template slot="modal-footer">
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('add-secret-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="primary" v-on:click="addSecOKButtonPressed"
+                          :disabled="defaultMemType === 'Password' && !selectedPassword"
+                          @click="$bvModal.hide('add-secret-modal')">
+                    Add Secret
+                </b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="updateSecmodel" id="view-secret-modal" scrollable title="View Secret">
+            <div>
+                <div class="secformItem">
+                    <label class="form-input-label" for="form-input-secret-token">Token</label>
+                    <b-form-input id="form-input-secret-token" size="sm" v-model="selectedExId"
+                                  disabled></b-form-input>
+                </div>
+                <div class="secFormItem">
+                    <label class="form-input-label" for="form-input-secret-type">Type</label>
+                    <b-form-input id="form-input-secret-type" size="sm" v-model="selectedExType"
+                                  disabled></b-form-input>
+                </div>
+                <div class="secformItem">
+                    <label class="form-input-label" for="form-input-secret-description">Description</label>
+                    <b-form-input id="form-input-secret-description" size="sm" v-model="selectedExDescription"
+                                  disabled></b-form-input>
+                </div>
+                <div class="secformItem">
+                    <label class="form-input-label" for="form-input-secret-owner">Owner</label>
+                    <b-form-input id="form-input-secret-owner" size="sm" v-model="selectedExOwnerId"
+                                  disabled></b-form-input>
+                </div>
+                <div v-if="selectedExType ==='PASSWORD'" class="secformItem">
+                    <label class="form-input-label" for="form-input-secret-password">Password</label>
+                    <b-form-input id="form-input-secret-password" size="sm" v-model="selectedExPassword"
+                                  disabled></b-form-input>
+                </div>
+                <div v-if="selectedExType ==='SSH'" class="secformItem">
+                    <label class="form-input-label" for="form-input-secret-public-key">Public Key</label>
+                    <b-textarea id="form-input-secret-public-key" size="sm" v-model="selectedExPubKey"
+                                disabled></b-textarea>
+                </div>
+                <div v-if="selectedExType ==='SSH'" class="secformItem">
+                    <label class="form-input-label" for="form-input-secret-private-key">Private Key</label>
+                    <b-textarea id="form-input-secret-private-key" size="sm" v-model="selectedExPrivKey"
+                                disabled></b-textarea>
+                </div>
+            </div>
+            <template slot="modal-footer">
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('view-secret-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="danger" v-on:click="secDeleteButtonPressed"
+                          @click="$bvModal.hide('view-secret-modal')">
+                    Delete
+                </b-button>
+            </template>
+        </b-modal>
     </div>
 </template>
 

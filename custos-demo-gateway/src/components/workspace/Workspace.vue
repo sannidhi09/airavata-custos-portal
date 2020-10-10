@@ -26,7 +26,6 @@
                         Sharing
                     </b-button>
                 </b-card>
-
                 <b-card class="menu-card" v-if="isAdmin" :img-src="require('../../assets/bots.png')" img-top>
                     <b-button href="#" :disabled="!isAdmin"
                               v-on:click="loadRoute($event, '/workspace/agents')">

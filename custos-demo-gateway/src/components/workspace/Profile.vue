@@ -4,7 +4,7 @@
             <h2>User Profile</h2>
         </div>
         <b-container>
-            <b-row style="max-width: 1000px;" class="text-left">
+            <b-row class="text-left">
                 <b-col style="max-width: 300px; min-width: 200px;" class="p-2">
                     <label class="form-input-label" for="form-input-username">Username</label>
                     <b-form-input id="form-input-username" size="sm" v-model="currentUserName" type="email"
@@ -49,7 +49,7 @@
                     <b-form-input id="form-input-email" size="sm" v-model="email" required></b-form-input>
                 </b-col>
             </b-row>
-            <b-row style="max-width: 1000px;" class="text-left mt-5">
+            <b-row class="text-left mt-5">
                 <b-col style="max-width: 100%; min-width: 300px;" class="p-3">
                     <strong>My Roles</strong>
                     <div class="w-100">
@@ -70,7 +70,7 @@
                     </b-table>
                 </b-col>
             </b-row>
-            <b-row style="max-width: 1000px;" class="w-100 text-right mt-5">
+            <b-row class="w-100 text-right mt-5">
                 <b-col v-if="this.updatingProfile">
                     <b-spinner variant="primary" label="Text Centered"></b-spinner>
                     Saving ...

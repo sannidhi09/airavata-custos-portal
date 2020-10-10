@@ -9,23 +9,22 @@
         <!--                Enable Community Accounts-->
         <!--            </b-form-checkbox>-->
         <!--        </div>-->
-        <div v-if="this.loadingAgents" class="d-flex justify-content-center mb-3">
-            <b-spinner variant="primary" label="Text Centered"></b-spinner>
-        </div>
-        <b-table small striped hover responsive :items="communityAccounts" :fields="community_fields" selectable
-                 ref="selectableTable"
-                 select-mode="single"
-                 @row-selected="onCommunityAcSelected" caption-top>
-            <template v-slot:cell(status)="data">
-                <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
-                <b-badge v-else-if="data.value == 'DEACTIVE'" variant="danger">Inactive</b-badge>
-                <b-badge v-else-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
-            </template>
-        </b-table>
-        <div class="addAccItem">
-            <b-button variant="outline-primary" v-on:click="this.addAccount">Add Service Account</b-button>
-        </div>
-
+        <b-container>
+            <div v-if="this.loadingAgents" class="d-flex justify-content-center mb-3">
+                <b-spinner variant="primary" label="Text Centered"></b-spinner>
+            </div>
+            <b-table small striped hover responsive :items="communityAccounts" :fields="community_fields" selectable
+                     ref="selectableTable" select-mode="single" @row-selected="onCommunityAcSelected" caption-top>
+                <template v-slot:cell(status)="data">
+                    <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
+                    <b-badge v-else-if="data.value == 'DEACTIVE'" variant="danger">Inactive</b-badge>
+                    <b-badge v-else-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
+                </template>
+            </b-table>
+            <div>
+                <b-button variant="outline-primary" v-on:click="this.addAccount">Add Service Account</b-button>
+            </div>
+        </b-container>
         <b-modal ref="newAcc" id="add-account-modal" scrollable title="New Account">
             <div>
                 <div class="p-2">
@@ -146,7 +145,6 @@
                 </b-button>
             </template>
         </b-modal>
-
     </div>
 </template>
 
