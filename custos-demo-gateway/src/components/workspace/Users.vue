@@ -23,13 +23,11 @@
                      :per-page="perPage"
                      :current-page="currentPage"
                      @row-selected="onRowSelected">
-
                 <template v-slot:cell(status)="data">
                     <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
                     <b-badge v-else-if="data.value == 'DEACTIVE'" variant="danger">Inactive</b-badge>
                     <b-badge v-else-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
                 </template>
-
             </b-table>
             <div>
                 <b-pagination
