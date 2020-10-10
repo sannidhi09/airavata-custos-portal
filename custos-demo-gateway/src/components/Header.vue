@@ -22,13 +22,13 @@
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">
                 <b-icon icon="house-door-fill"></b-icon>
             </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/users')">
+            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/users')">
                 Users
             </b-button>
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/groups')">
                 Groups
             </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
+            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
                 Service Accounts
             </b-button>
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">
@@ -37,7 +37,7 @@
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/sharings')">
                 Sharing
             </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/logs')">
+            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/logs')">
                 Logs
             </b-button>
         </div>
