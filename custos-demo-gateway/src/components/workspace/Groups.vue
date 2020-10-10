@@ -165,7 +165,6 @@
                             Cancel
                         </b-button>
                         <b-button size="sm" class="mr-2" variant="primary" :disabled="usernames.length === 0"
-                                  v-if="usernames.length > 0"
                                   v-on:click="addMembershipOKPressed" @click="$bvModal.hide('add-membership-modal')">
                             Add Membership
                         </b-button>
