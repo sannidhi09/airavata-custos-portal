@@ -54,7 +54,7 @@
         data: function () {
             return {
                 defaultSearchText: 'Search By',
-                fields: ['service_name', 'event_type', 'accessed_time', 'external_ip'],
+                fields: ['service_name', 'event_type', 'accessed_time'],
                 logItems: [],
                 options: [
                     {
@@ -136,8 +136,9 @@
                 let response = await this.$store.dispatch('log/getLogEvents', dat)
 
                 response.forEach(res => {
-                    let date = new Date(res.created_time * 1000)
-                    res.accessed_time = date.toString()
+                    let date = new Date(0)
+                    date.setUTCSeconds(res.created_time/1000)
+                    res.accessed_time = date.toUTCString()
                 })
                 this.logItems = response
 
@@ -196,8 +197,9 @@
                 let response = await this.$store.dispatch('log/getLogEvents', data)
 
                 response.forEach(res => {
-                    let date = new Date(res.created_time * 1000)
-                    res.accessed_time = date.toString()
+                    let date = new Date(0)
+                    date.setUTCSeconds(res.created_time/1000)
+                    res.accessed_time = date.toUTCString()
                 })
                 this.logItems = response
 

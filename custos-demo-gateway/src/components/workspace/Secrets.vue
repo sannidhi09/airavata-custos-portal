@@ -190,7 +190,7 @@
                             entity: {
                                 id: response.token,
                                 name: 'SSH token',
-                                description: 'SSH credential created for ' + this.selectedDescription,
+                                description: this.selectedDescription,
                                 type: 'SECRET',
                                 owner_id: this.currentUserName
                             }
@@ -227,7 +227,7 @@
                                 entity: {
                                     id: response.token,
                                     name: 'Password token',
-                                    description: 'Password credential created for ' + this.selectedDescription,
+                                    description: this.selectedDescription,
                                     type: 'SECRET',
                                     owner_id: this.currentUserName
                                 }
@@ -235,9 +235,10 @@
                         }
                         await this.$store.dispatch('sharing/createEntity', dataEN)
                     }
-                    this.secItems = await this.getAllCredentials()
-                    this.secretsLoading = false
                 }
+                this.secItems = await this.getAllCredentials()
+                this.secretsLoading = false
+
             },
 
             async secDeleteButtonPressed() {
