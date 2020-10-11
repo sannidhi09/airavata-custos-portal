@@ -1,12 +1,12 @@
 <template>
     <b-container>
-        <b-row align-v="center" align-h="center">
+        <b-row align-v="top" align-h="center">
             <b-col style="min-width: 300px; max-width: 100%">
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
-            <b-col style="max-width: 600px;min-width: 300px;" align-v="center" align-h="center">
+            <b-col style="max-width: 600px;min-width: 300px;" align-h="center">
                 <b-card class="w-100 mt-3 login-card">
                     <form v-on:submit.prevent="registerUser" class="p-2 text-left">
                         <h3 class="mb-3">CREATE ACCOUNT</h3>

@@ -1,13 +1,13 @@
 <template>
     <b-container>
-        <b-row align-v="center" align-h="center">
+        <b-row align-v="top" align-h="center">
             <b-col style="min-width: 300px; max-width: 100%">
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
-            <b-col style="max-width: 300px;min-width: 400px;" align-v="center" align-h="center">
-                <b-card class="w-100 mt-3 login-card">
+            <b-col style="max-width: 300px;min-width: 400px;" align-h="center">
+                <b-card class="w-100 login-card">
                     <div class="p-2">
                         <h3 class="mb-2">Do you have a Federated Identity ?</h3>
                         <b-button class="primary-btn w-100 text-center mt-2" variant="warning"
