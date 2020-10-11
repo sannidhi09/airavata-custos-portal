@@ -6,18 +6,18 @@
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
-            <b-col style="max-width: 350px;min-width: 350px;" align-v="center" align-h="center">
+            <b-col style="max-width: 300px;min-width: 400px;" align-v="center" align-h="center">
                 <b-card class="w-100 mt-3 login-card">
-                    <form class="p-2">
-                        <h3 class="mb-2">LOGIN WITH INSTITUTION</h3>
-                        <b-button class="primary-btn w-100 text-center mt-3" variant="warning"
+                    <div class="p-2">
+                        <h3 class="mb-2">Do you have a Federated Identity ?</h3>
+                        <b-button class="primary-btn w-100 text-center mt-2" variant="warning"
                                   v-on:click="this.loadAuthURL">
-                            Login with Existing Institution
+                            Register or Login with Federated Identity
                         </b-button>
-                    </form>
+                    </div>
                 </b-card>
                 <b-card class="w-100 mt-3 login-card">
-                    <form v-on:submit="this.login" class="p-2">
+                    <form v-on:submit.prevent="this.login" class="p-2">
                         <h3 class="mb-3">LOGIN WITH CUSTOS EXPLORER</h3>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-username">Username</label>
@@ -37,7 +37,7 @@
                         <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
                             Invalid Username or Password
                         </div>
-                        <p class="mt-3 w-100 additional-links">
+                        <p class="mt-3 w-100 additional-links text-center">
                             Don't have an account?
                             <router-link to="/register">Create an account</router-link>
                         </p>
