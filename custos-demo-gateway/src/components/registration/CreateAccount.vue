@@ -15,7 +15,7 @@
                             <b-form-input size="sm" id="form-input-username" v-model="username" :state="usernameValid"
                                           placeholder="Username"></b-form-input>
                             <b-form-invalid-feedback>
-                                Username should only have lowercase letters and numbers
+                                Username should only have lowercase letters and numbers.
                             </b-form-invalid-feedback>
                         </div>
                         <div class="p-2">
@@ -24,19 +24,23 @@
                                           :state="passwordValid" placeholder="Password"></b-form-input>
                             <b-form-invalid-feedback>
                                 Password should contain at least one upper case,
-                                lower case, one number, and 4 - 10 characters
+                                lower case, one number, and 4 - 10 characters.
                             </b-form-invalid-feedback>
                         </div>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-confirm-password">Confirm Password</label>
                             <b-form-input size="sm" id="form-input-confirm-password" type="password"
-                                          v-model="confirmedPassword" placeholder="Confirm Password"></b-form-input>
+                                          v-model="confirmedPassword" :state="confirmedPasswordValid"
+                                          placeholder="Confirm Password"></b-form-input>
+                            <b-form-invalid-feedback>
+                                Password doesn't match.
+                            </b-form-invalid-feedback>
                         </div>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-email">Email</label>
                             <b-form-input size="sm" id="form-input-email" v-model="email" :state="emailValid"
                                           placeholder="Email"></b-form-input>
-                            <b-form-invalid-feedback> Invalid email</b-form-invalid-feedback>
+                            <b-form-invalid-feedback>Invalid email.</b-form-invalid-feedback>
                         </div>
 
                         <div class="p-2">
@@ -44,14 +48,14 @@
                             <b-form-input size="sm" id="form-input-first-name" v-model="firstName"
                                           :state="firstNameValid"
                                           placeholder="First Name"></b-form-input>
-                            <b-form-invalid-feedback>Invalid name</b-form-invalid-feedback>
+                            <b-form-invalid-feedback>Invalid name.</b-form-invalid-feedback>
                         </div>
 
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-last-name">Last Name</label>
                             <b-form-input size="sm" id="form-input-last-name" v-model="lastName" :state="lastnameValid"
                                           placeholder="Last Name"></b-form-input>
-                            <b-form-invalid-feedback>Invalid name</b-form-invalid-feedback>
+                            <b-form-invalid-feedback>Invalid name.</b-form-invalid-feedback>
                         </div>
 
                         <b-button class="primary-btn w-100 text-center mt-3" type="submit" variant="warning"
@@ -97,11 +101,10 @@
                 isButtonDisabled: false,
                 usernameValid: null,
                 passwordValid: null,
+                confirmedPasswordValid: null,
                 emailValid: null,
                 firstNameValid: null,
                 lastnameValid: null
-
-
             }
         },
 
@@ -141,10 +144,17 @@
                 }
 
 
-                if (this.password == null || this.confirmedPassword == null || this.password !== this.confirmedPassword || !passwordRegex.test(this.password)) {
+                if (this.password == null || !passwordRegex.test(this.password)) {
                     this.passwordValid = false
                 } else {
                     this.passwordValid = true
+                }
+
+
+                if (this.password !== this.confirmedPassword) {
+                    this.confirmedPasswordValid = false
+                } else {
+                    this.confirmedPasswordValid = true
                 }
 
                 if (this.email == null || !emailRegs.test(this.email)) {
