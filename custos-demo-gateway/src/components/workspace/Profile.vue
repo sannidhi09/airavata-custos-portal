@@ -1,141 +1,131 @@
 <template>
     <div>
-        <div class="gotoWork">
-            <b-button href="#" v-on:click="goToWorkspace">Go to Workspace</b-button>
+        <div class="w-100 mb-5">
+            <h2>User Profile</h2>
         </div>
-        <div class="row">
+        <b-container>
+            <b-row class="text-left">
+                <b-col style="max-width: 300px; min-width: 200px;" class="p-2">
+                    <label class="form-input-label" for="form-input-username">Username</label>
+                    <b-form-input id="form-input-username" size="sm" v-model="currentUserName" type="email"
+                                  disabled></b-form-input>
+                </b-col>
+                <b-col style="max-width: 300px; min-width: 200px;" class="p-2">
+                    <label class="form-input-label" for="form-input-status">Status</label>
+                    <b-form-input id="form-input-status" size="sm" v-model="status" required
+                                  disabled></b-form-input>
+                </b-col>
 
-            <div class="column">
-                <div v-if="this.updatingProfile" class="d-flex justify-content-center mb-3">
-                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
-                </div>
-                <div class="profile">
-                    <div class="profItem">
-                        <p>Username</p>
-                        <b-form-input
-                                id="input-1"
-                                v-model="currentUserName"
-                                type="email"
-                                disabled
-                        ></b-form-input>
+                <b-col style="max-width: 300px; min-width: 200px;" class="p-2">
+                    <label class="form-input-label" for="form-input-first-name">First Name</label>
+                    <div>
+                        <b-alert v-model="firstNameError" variant="danger" dismissible
+                                 @dismissed="this.callDismissed">
+                            Invalid name
+                        </b-alert>
                     </div>
-                    <div class="profItem">
-                        <p>Status</p>
-                        <b-form-input
-                                id="input-4"
-                                v-model="status"
-                                required
-                                disabled
-                        ></b-form-input>
+                    <b-form-input id="form-input-first-name" size="sm" v-model="first_name" required></b-form-input>
+                </b-col>
+
+                <b-col style="max-width: 300px; min-width: 200px;" class="p-2">
+                    <label class="form-input-label" for="form-input-last-name">First Name</label>
+                    <div>
+                        <b-alert v-model="lastnameError" variant="danger" dismissible
+                                 @dismissed="this.callDismissed">
+                            Invalid name
+                        </b-alert>
                     </div>
+                    <b-form-input id="form-input-last-name" size="sm" v-model="last_name" required></b-form-input>
+                </b-col>
 
-                    <div class="profItem">
-                        <p>First Name</p>
-                        <div>
-                            <b-alert v-model="firstNameError" variant="danger" dismissible
-                                     @dismissed="this.callDismissed">
-                                Invalid name
-                            </b-alert>
-                        </div>
-                        <b-form-input
-                                id="input-2"
-                                v-model="first_name"
-                                required
-                        ></b-form-input>
+                <b-col style="max-width: 300px; min-width: 200px;" class="p-2">
+                    <label class="form-input-label" for="form-input-email">Email</label>
+                    <div>
+                        <b-alert v-model="emailError" variant="danger" dismissible
+                                 @dismissed="this.callDismissed">
+                            Invalid email
+                        </b-alert>
                     </div>
-
-                    <div class="profItem">
-                        <p>Last Name</p>
-                        <div>
-                            <b-alert v-model="lastnameError" variant="danger" dismissible
-                                     @dismissed="this.callDismissed">
-                               Invalid name
-                            </b-alert>
-                        </div>
-                        <b-form-input
-                                id="input-3"
-                                v-model="last_name"
-                                required
-                        ></b-form-input>
+                    <b-form-input id="form-input-email" size="sm" v-model="email" required></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row class="text-left mt-5">
+                <b-col style="max-width: 100%; min-width: 300px;" class="p-3">
+                    <strong>My Roles</strong>
+                    <div class="w-100">
+                        <small v-if="roles.length === 0">There are no roles assigned.</small>
                     </div>
-
-                    <div class="profItem">
-                        <p>Email</p>
-                        <div>
-                            <b-alert v-model="emailError" variant="danger" dismissible
-                                     @dismissed="this.callDismissed">
-                                Invalid email
-                            </b-alert>
-                        </div>
-                        <b-form-input
-                                id="input-3"
-                                v-model="email"
-                                required
-                        ></b-form-input>
-                    </div>
-                </div>
-
-                <div class="updateProfCls">
-                    <b-button variant="outline-primary" v-on:click="updateProfile">Update Profile</b-button>
-                </div>
-
-            </div>
-            <div class="column">
-                <div>
-                    <b-table striped hover responsive :items="roles"
-                             ref="selectableTable"
-                             select-mode="single"
-                             caption-top>
-                        <template v-slot:table-caption>My Roles</template>
+                    <b-table small striped hover responsive :items="roles" class="mt-3" ref="selectableTable"
+                             select-mode="single">
                     </b-table>
-                </div>
-            </div>
-            <div class="column">
-                <div v-if="!this.operationCompleted" class="d-flex justify-content-center mb-3">
+                </b-col>
+                <b-col style="max-width: 100%; min-width: 300px;" class="p-3">
+                    <strong>My Attributes</strong>
+                    <!--                    <b-button variant="link" v-on:click="addAttribute"> + Add Attribute</b-button>-->
+                    <div class="w-100">
+                        <small v-if="attributes.length === 0">There are no attributes created.</small>
+                    </div>
+                    <b-table small striped hover responsive :items="attributes" class="mt-3" ref="selectableTable"
+                             select-mode="single">
+                    </b-table>
+                </b-col>
+            </b-row>
+            <b-row class="w-100 text-right mt-5">
+                <b-col v-if="this.updatingProfile">
                     <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                    Saving ...
+                </b-col>
+                <b-col>
+                    <b-button size="sm" variant="primary" v-on:click="updateProfile">Save Changes</b-button>
+                </b-col>
+            </b-row>
+        </b-container>
+        <b-modal ref="atrModel" id="user-attribute-modal" scrollable title="Add Attribute" ok-title="Add"
+                 @ok="addAtrOkPressed">
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                    <b-form-input id="form-input-attribute-key" size="sm" v-model="newKey"></b-form-input>
                 </div>
-                <b-table striped hover responsive :items="attributes"
-                         ref="selectableTable"
-                         select-mode="single"
-                         @row-selected="onAtrSelected"
-                         caption-top
-                >
-                    <template v-slot:table-caption>My Attributes</template>
-                </b-table>
-                <!--            <dev class="addAtrCls">-->
-                <!--                <b-button variant="outline-primary" v-on:click="addAttribute">Add Attributes</b-button>-->
-                <!--            </dev>-->
-
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                    <b-form-input id="form-input-attribute-value" size="sm" v-model="newValue"></b-form-input>
+                </div>
             </div>
-            <b-modal ref="atrModel" scrollable title="Add Attribute" ok-title="Add" @ok="addAtrOkPressed">
-                <div class="userform">
-                    <div class="userformItem">
-                        <p>Key</p>
-                        <b-form-input v-model="newKey"></b-form-input>
-                    </div>
-                    <div class="userformItem">
-                        <p>Value</p>
-                        <b-form-input v-model="newValue"></b-form-input>
-                    </div>
+            <template v-slot:modal-footer>
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-modal')">
+                    Cancel
+                </b-button>
+                <b-button :disabled="!newKey || !newValue" size="sm" variant="primary" v-on:click="addAtrOkPressed"
+                          @click="$bvModal.hide('user-attribute-modal')">
+                    Add
+                </b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="selectModel" id="user-attribute-view-modal" scrollable title="Delete Attribute">
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                    <b-form-input id="form-input-attribute-key" size="sm" disabled
+                                  v-model="selectedKey"></b-form-input>
                 </div>
-            </b-modal>
-            <b-modal ref="selectModel" scrollable title="Delete Attribute" cancel-title="Delete"
-                     @cancel="removeAtrOKPressed">
-                <div class="userform">
-                    <div class="userformItem">
-                        <p>Key</p>
-                        <b-form-input v-model="selectedKey" disabled></b-form-input>
-                    </div>
-                    <div class="userformItem">
-                        <p>Value</p>
-                        <b-form-input v-model="selectedValue" disabled></b-form-input>
-                    </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                    <b-form-input id="form-input-attribute-value" size="sm" disabled
+                                  v-model="selectedValue"></b-form-input>
                 </div>
-            </b-modal>
-
-        </div>
+            </div>
+            <template v-slot:modal-footer>
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('user-attribute-view-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="danger" v-on:click="removeAtrOKPressed"
+                          @click="$bvModal.hide('user-attribute-view-modal')">
+                    Delete
+                </b-button>
+            </template>
+        </b-modal>
     </div>
-
 </template>
 
 <script>
@@ -237,19 +227,19 @@
                 let emailRegs = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
                 let regexPucn = /[~!" "@#$%^&*()+=;"'<>,.]/
 
-                if (this.first_name == null || this.first_name =='' || regexPucn.test(this.first_name)  || this.first_name.length>20){
-                    this.firstNameError =true
+                if (this.first_name == null || this.first_name == '' || regexPucn.test(this.first_name) || this.first_name.length > 20) {
+                    this.firstNameError = true
                     this.updatingProfile = false
                 }
 
-                if (this.last_name == null || this.last_name =='' || regexPucn.test(this.last_name)  || this.last_name.length >20){
-                    this.lastnameError =true
+                if (this.last_name == null || this.last_name == '' || regexPucn.test(this.last_name) || this.last_name.length > 20) {
+                    this.lastnameError = true
                     this.updatingProfile = false
                 }
 
 
-                if (this.email == null ||  emailRegs.test(this.email) == false ){
-                    this.emailError =true
+                if (this.email == null || emailRegs.test(this.email) == false) {
+                    this.emailError = true
                     this.updatingProfile = false
                 }
 
@@ -336,49 +326,11 @@
 </script>
 
 <style scoped>
-    .profile {
-        position: relative;
-        margin-left: 30%;
-        width: 70%;
-        border: solid;
-        border-color: darkgrey;
-        background-color: lightgray;
+    h2 {
+        font-family: Avenir;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: left;
+        color: #203a43;
     }
-
-    .profItem {
-        position: relative;
-        margin-top: 2%;
-    }
-
-    .column {
-        float: left;
-        width: 25%;
-        padding: 10px;
-        height: 300px; /* Should be removed. Only for demonstration */
-        margin-left: 5%;
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .userformItem {
-        margin-top: 3%;
-    }
-
-    .addAtrCls {
-        margin-left: 0%;
-    }
-
-    .updateProfCls {
-        margin-left: 30%;
-        margin-top: 5%;
-    }
-    .gotoWork {
-        margin-left: 70%;
-    }
-
 </style>
