@@ -8,9 +8,9 @@
             </b-col>
             <b-col style="max-width: 350px;min-width: 350px;" align-v="center" align-h="center">
                 <b-card class="w-100 mt-3 login-card">
-                    <form v-on:submit="this.loadAuthURL" class="p-2">
+                    <form class="p-2">
                         <h3 class="mb-2">LOGIN WITH INSTITUTION</h3>
-                        <b-button class="primary-btn w-100 text-center mt-3" type="submit" variant="warning"
+                        <b-button class="primary-btn w-100 text-center mt-3" variant="warning"
                                   v-on:click="this.loadAuthURL">
                             Login with Existing Institution
                         </b-button>
@@ -152,14 +152,14 @@
     h2 {
         text-align: left;
         font-family: Avenir;
-        font-size: 40px;
+        font-size: 35px;
         font-weight: 900;
         color: #203a43;
     }
 
     .h2-sub {
         font-family: Avenir-Roman;
-        font-size: 25px;
+        font-size: 22px;
         text-align: left;
         color: #203a43;
     }
