@@ -1,45 +1,57 @@
 <template>
-<div>
-    <div class="gotoWork">
-        <b-button href="#" v-on:click="goToWorkspace">Go to Workspace</b-button>
-    </div>
-    <div class="accounttable">
-<!--        <div class="enableComAcc">-->
-<!--            <b-form-checkbox v-model="checked" :disabled=isCheckedBtnDisabled v-on:change="enableAgents"-->
-<!--                             name="check-button" switch>-->
-<!--                Enable Community Accounts-->
-<!--            </b-form-checkbox>-->
-<!--        </div>-->
+    <div>
+        <div class="w-100 mb-5">
+            <h2>Service Accounts</h2>
+        </div>
+        <!--        <div class="enableComAcc">-->
+        <!--            <b-form-checkbox v-model="checked" :disabled=isCheckedBtnDisabled v-on:change="enableAgents"-->
+        <!--                             name="check-button" switch>-->
+        <!--                Enable Community Accounts-->
+        <!--            </b-form-checkbox>-->
+        <!--        </div>-->
+        <b-container>
             <div v-if="this.loadingAgents" class="d-flex justify-content-center mb-3">
                 <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
-            <b-table striped hover responsive :items="communityAccounts" :fields="community_fields" selectable
-                     ref="selectableTable"
-                     select-mode="single"
-                     @row-selected="onCommunityAcSelected" caption-top>
-                <template v-slot:table-caption>Community Accounts</template>
+            <b-table small striped hover responsive :items="communityAccounts" :fields="community_fields" selectable
+                     ref="selectableTable" select-mode="single" @row-selected="onCommunityAcSelected" caption-top>
+                <template v-slot:cell(status)="data">
+                    <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
+                    <b-badge v-else-if="data.value == 'DEACTIVE'" variant="danger">Inactive</b-badge>
+                    <b-badge v-else-if="data.value == 'PENDING'" variant="warning">Pending</b-badge>
+                </template>
             </b-table>
-            <div class="addAccItem">
-                <b-button variant="outline-primary" v-on:click="this.addAccount">Add Account</b-button>
+            <div>
+                <b-button variant="outline-primary" v-on:click="this.addAccount">Add Service Account</b-button>
             </div>
-
-        <b-modal ref="newAcc" scrollable title="New Account" ok-title="Ok" @ok="registerAgent">
-            <div class="userform">
-                <div class="userformItem">
-                    <p>Id</p>
-                    <b-form-input v-model="newAccountName"></b-form-input>
+        </b-container>
+        <b-modal ref="newAcc" id="add-account-modal" scrollable title="New Account">
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-account-id">Service Account ID</label>
+                    <b-form-input id="form-input-account-id" size="sm" v-model="newAccountName"></b-form-input>
                 </div>
             </div>
+            <template slot="modal-footer">
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('add-account-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="primary" v-on:click="registerAgent" :disabled="!newAccountName"
+                          @click="$bvModal.hide('add-account-modal')">
+                    Add
+                </b-button>
+            </template>
         </b-modal>
-        <b-modal ref="exAcc" scrollable title=" Account" ok-title="Ok" hide-footer>
-            <div class="userform">
-                <div class="userformItem">
-                    <p>Id</p>
-                    <b-form-input v-model="exAccountId" disabled></b-form-input>
+        <b-modal ref="exAcc" id="view-account-modal" scrollable title="Account">
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-account-id">Service Account ID</label>
+                    <b-form-input id="form-input-account-id" size="sm" v-model="exAccountId" disabled></b-form-input>
                 </div>
-                <div class="userform">
-                    <p>Status</p>
-                    <b-form-select v-model="selectedStatus" v-on:change="changeAccountStatus">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-account-status">Status</label>
+                    <b-form-select id="form-input-account-status" size="sm" v-model="selectedStatus"
+                                   v-on:change="changeAccountStatus">
                         <option v-for="(selectOption, indexOpt) in statusOptions"
                                 :key="indexOpt"
                                 :value="selectOption"
@@ -48,56 +60,92 @@
                         </option>
                     </b-form-select>
                 </div>
-                <div class="userformItem">
-                    <p>Attributes</p>
-                    <b-table striped hover responsive :items="accSelectedAttributes" selectable select-mode="single"
+                <div>
+                    <strong>Attributes</strong>
+                    <b-button variant="link" v-on:click="addActAttribute"> + Add Attribute</b-button>
+                    <div class="w-100">
+                        <small v-if="accSelectedAttributes.length === 0">There are no attributes created.</small>
+                    </div>
+                    <b-table v-if="accSelectedAttributes.length > 0" small striped hover responsive
+                             :items="accSelectedAttributes" selectable
+                             select-mode="single"
                              @row-selected="onAccAtrSelected">
                     </b-table>
-                    <dev class="addAtrCls">
-                        <b-button variant="outline-primary" v-on:click="addActAttribute">Add Attributes</b-button>
-                    </dev>
                 </div>
             </div>
+            <template slot="modal-footer">
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('view-account-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="primary" @click="$bvModal.hide('view-account-modal')">
+                    Save
+                </b-button>
+            </template>
         </b-modal>
-        <b-modal ref="accAtrModel" scrollable title="Add Attribute" ok-title="Add" @ok="addAtrOkPressed">
+        <b-modal ref="accAtrModel" id="add-attribute-modal" scrollable title="Add Attribute">
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                    <b-form-input id="form-input-attribute-key" size="sm" v-model="newAcAtrKey"></b-form-input>
+                </div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                    <b-form-input id="form-input-attribute-value" size="sm" v-model="newAcAtrValue"></b-form-input>
+                </div>
+            </div>
+            <template slot="modal-footer">
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('add-attribute-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="primary" v-on:click="addAtrOkPressed"
+                          :disabled="!newAcAtrKey || !newAcAtrValue" @click="$bvModal.hide('add-attribute-modal')">
+                    Add Attribute
+                </b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="AccAtrModelSelected" id="view-attribute-modal" scrollable title="Attribute" ok-title="Delete"
+                 @ok="deleteAtrOkPressed">
             <div class="userform">
                 <div class="userformItem">
-                    <p>Key</p>
-                    <b-form-input v-model="newAcAtrKey"></b-form-input>
+                    <label class="form-input-label" for="form-input-attribute-key">Key</label>
+                    <b-form-input id="form-input-attribute-key" size="sm" v-model="exAccountAtrKey"
+                                  disabled></b-form-input>
                 </div>
                 <div class="userformItem">
-                    <p>Value</p>
-                    <b-form-input v-model="newAcAtrValue"></b-form-input>
+                    <label class="form-input-label" for="form-input-attribute-value">Value</label>
+                    <b-form-input id="form-input-attribute-value" size="sm" v-model="exAccountAtrValue"
+                                  disabled></b-form-input>
                 </div>
             </div>
+            <template slot="modal-footer">
+                <b-button size="sm" class="mr-2" @click="$bvModal.hide('view-attribute-modal')">
+                    Cancel
+                </b-button>
+                <b-button size="sm" variant="danger" v-on:click="deleteAtrOkPressed"
+                          @click="$bvModal.hide('view-attribute-modal')">
+                    Delete
+                </b-button>
+            </template>
         </b-modal>
-        <b-modal ref="AccAtrModelSelected" scrollable title="Attribute" ok-title="Delete" @ok="deleteAtrOkPressed">
-            <div class="userform">
-                <div class="userformItem">
-                    <p>Key</p>
-                    <b-form-input v-model="exAccountAtrKey" disabled></b-form-input>
+        <b-modal ref="enablePopOver" id="account-credentials-view-modal" scrollable title="Agent Credentials">
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-credential-id">ID</label>
+                    <b-form-input id="form-input-credential-id" size="sm" v-model="agentId" disabled></b-form-input>
                 </div>
-                <div class="userformItem">
-                    <p>Value</p>
-                    <b-form-input v-model="exAccountAtrValue" disabled></b-form-input>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-credential-secret">Secret</label>
+                    <b-form-input id="form-input-credential-secret" size="sm" v-model="agentSec"
+                                  disabled></b-form-input>
                 </div>
             </div>
+            <template slot="modal-footer">
+                <b-button size="sm" variant="primary" @click="$bvModal.hide('account-credentials-view-modal')">
+                    Ok
+                </b-button>
+            </template>
         </b-modal>
-        <b-modal ref="enablePopOver" scrollable title="Agent Credentials" cancel-disabled>
-            <div class="userform">
-                <div class="userformItem">
-                    <p>Id</p>
-                    <b-form-input v-model="agentId" disabled></b-form-input>
-                </div>
-                <div class="userformItem">
-                    <p>Secret</p>
-                    <b-form-input v-model="agentSec" disabled></b-form-input>
-                </div>
-            </div>
-        </b-modal>
-
     </div>
-</div>
 </template>
 
 <script>
@@ -133,7 +181,7 @@
                 agentId: null,
                 agentSec: null,
                 selectedStatus: null,
-                loadingAgents:false
+                loadingAgents: false
 
 
             }
@@ -274,7 +322,7 @@
         async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
-            this.isAdminUser =  await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
+            this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
 
             let accessToken = await this.$store.getters['identity/getAccessToken']
             let data = {
@@ -289,21 +337,11 @@
 </script>
 
 <style scoped>
-    .enableComAcc {
-        width: 70%;
-    }
-
-    .addAccItem {
-        margin-left: 70%;
-    }
-
-    .accounttable {
-        width: 30%;
-        margin-left: 30%;
-        margin-top: 3%;
-    }
-
-    .gotoWork {
-        margin-left: 70%;
+    h2 {
+        font-family: Avenir;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: left;
+        color: #203a43;
     }
 </style>

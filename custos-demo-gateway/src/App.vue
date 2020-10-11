@@ -1,19 +1,18 @@
 <template>
     <div id="app">
-        <div id="nav">
+        <Header/>
+        <div class="p-3" id="nav">
             <router-view/>
         </div>
     </div>
 </template>
 
 <script>
-    import TheNavigator from "./components/TheNavigator.vue";
+    import Header from "@/components/Header";
 
     export default {
         name: 'App',
-        components: [
-            TheNavigator
-        ]
+        components: {Header}
     }
 </script>
 
@@ -24,6 +23,6 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-        margin-top: 60px;
+        /*margin-top: 60px;*/
     }
 </style>
