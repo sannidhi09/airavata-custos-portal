@@ -18,7 +18,7 @@
             </b-dropdown>
 
         </div>
-        <div class="navigation text-left">
+        <div class="navigation text-left" v-if="user">
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">
                 <b-icon icon="house-door-fill"></b-icon>
             </b-button>
