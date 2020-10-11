@@ -1,104 +1,85 @@
 <template>
-    <div class="account">
-        <div class="row">
-            <div class="column">
-                <div class="login">
-                    <div class="locallogin">
-                        <h2> Create account </h2>
-
-                        <div class="logininput">
-                            <p>Username</p>
+    <b-container>
+        <b-row align-v="top" align-h="center">
+            <b-col style="min-width: 300px; max-width: 100%">
+                <h2>Welcome to Custos</h2>
+                <p class="h2-sub">Sign up and start authenticating</p>
+                <img class="w-100" src="./../../assets/custos_home.png">
+            </b-col>
+            <b-col style="max-width: 600px;min-width: 300px;" align-h="center">
+                <b-card class="w-100 mt-3 login-card">
+                    <form v-on:submit.prevent="registerUser" class="p-2 text-left">
+                        <h3 class="mb-3">CREATE ACCOUNT</h3>
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-username">Username</label>
+                            <b-form-input size="sm" id="form-input-username" v-model="username" :state="usernameValid"
+                                          placeholder="Username"></b-form-input>
+                            <b-form-invalid-feedback>
+                                Username should only have lowercase letters and numbers.
+                            </b-form-invalid-feedback>
                         </div>
-                        <div>
-                            <b-alert v-model="usernameError" variant="danger" dismissible
-                                     @dismissed="this.callDismissed">
-                                Username should only have lowercase letters and numbers
-                            </b-alert>
-                        </div>
-                        <div class="logininput">
-                            <b-form-input v-model="username" placeholder="Username"></b-form-input>
-                        </div>
-                        <div class="logininput">
-                            <p>Password</p>
-                        </div>
-                        <div>
-                            <b-alert v-model="passwordError" variant="danger" dismissible
-                                     @dismissed="this.callDismissed">
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-password">Password</label>
+                            <b-form-input size="sm" id="form-input-password" type="password" v-model="password"
+                                          :state="passwordValid" placeholder="Password"></b-form-input>
+                            <b-form-invalid-feedback>
                                 Password should contain at least one upper case,
-                                lower case, one number, and  4 - 10 characters
-                            </b-alert>
+                                lower case, one number, and 4 - 10 characters.
+                            </b-form-invalid-feedback>
                         </div>
-                        <div class="logininput">
-                            <b-form-input type="password" v-model="password" placeholder="Password"></b-form-input>
-                        </div>
-                        <div class="logininput">
-                            <p>Password</p>
-                        </div>
-                        <div class="logininput">
-                            <b-form-input type="password" v-model="confirmedPassword"
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-confirm-password">Confirm Password</label>
+                            <b-form-input size="sm" id="form-input-confirm-password" type="password"
+                                          v-model="confirmedPassword" :state="confirmedPasswordValid"
                                           placeholder="Confirm Password"></b-form-input>
+                            <b-form-invalid-feedback>
+                                Password doesn't match.
+                            </b-form-invalid-feedback>
+                        </div>
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-email">Email</label>
+                            <b-form-input size="sm" id="form-input-email" v-model="email" :state="emailValid"
+                                          placeholder="Email"></b-form-input>
+                            <b-form-invalid-feedback>Invalid email.</b-form-invalid-feedback>
                         </div>
 
-
-                        <div class="logininput">
-                            <p>Email</p>
-                        </div>
-                        <div>
-                            <b-alert v-model="emailError" variant="danger" dismissible @dismissed="this.callDismissed">
-                                Invalid email
-                            </b-alert>
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-first-name">First Name</label>
+                            <b-form-input size="sm" id="form-input-first-name" v-model="firstName"
+                                          :state="firstNameValid"
+                                          placeholder="First Name"></b-form-input>
+                            <b-form-invalid-feedback>Invalid name.</b-form-invalid-feedback>
                         </div>
 
-                        <div class="logininput">
-                            <b-form-input type="email" v-model="email" placeholder="Email"></b-form-input>
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-last-name">Last Name</label>
+                            <b-form-input size="sm" id="form-input-last-name" v-model="lastName" :state="lastnameValid"
+                                          placeholder="Last Name"></b-form-input>
+                            <b-form-invalid-feedback>Invalid name.</b-form-invalid-feedback>
                         </div>
 
-                        <div class="logininput">
-                            <p>First Name</p>
-                        </div>
-                        <div>
-                            <b-alert v-model="firstNameError" variant="danger" dismissible
-                                     @dismissed="this.callDismissed">
-                                Invalid name
-                            </b-alert>
-                        </div>
-                        <div class="logininput">
-                            <b-form-input type="email" v-model="firstName" placeholder="First Name"></b-form-input>
-                        </div>
-
-
-                        <div class="logininput">
-                            <p>Last Name</p>
-                        </div>
-                        <div>
-                            <b-alert v-model="lastnameError" variant="danger" dismissible
-                                     @dismissed="this.callDismissed">
-                                Invalid name
-                            </b-alert>
-                        </div>
-                        <div>
-
-                        </div>
-                        <div class="logininput">
-                            <b-form-input type="email" v-model="lastName" placeholder="Last Name"></b-form-input>
-                        </div>
-                        <div class="logininput">
-                            <b-button variant="primary" v-on:click="this.registerUser"
-                                      :disabled="this.isButtonDisabled">
-                                <div v-if="this.isButtonDisabled">
-                                    <b-spinner small></b-spinner>
-                                </div>
-                                Create Account
-                            </b-button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
-    </div>
+                        <b-button class="primary-btn w-100 text-center mt-3" type="submit" variant="warning"
+                                  v-on:click="registerUser" :disabled="isButtonDisabled">
+                            Sign Up
+                            <b-spinner small v-if="isButtonDisabled"></b-spinner>
+                        </b-button>
+                        <p class="mt-3 w-100 additional-links text-center">
+                            Already have an account ?
+                            <router-link to="/">Login</router-link>
+                        </p>
+                    </form>
+                </b-card>
+                <p class="mt-3 w-100 additional-links">
+                    How to user Custos?
+                    <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
+                        Tutorial
+                    </b-link>
+                    | All about
+                    <b-link href="http://airavata.apache.org/custos/">Custos</b-link>
+                </p>
+            </b-col>
+        </b-row>
+    </b-container>
 </template>
 
 <script>
@@ -111,20 +92,19 @@
             return {
                 username: "",
                 password: "",
-                confirmedPassword: null,
-                email: null,
-                firstName: null,
-                lastName: null,
+                confirmedPassword: "",
+                email: "",
+                firstName: "",
+                lastName: "",
                 custosId: null,
                 custosSec: null,
                 isButtonDisabled: false,
-                usernameError: false,
-                passwordError: false,
-                emailError: false,
-                firstNameError: false,
-                lastnameError: false
-
-
+                usernameValid: null,
+                passwordValid: null,
+                confirmedPasswordValid: null,
+                emailValid: null,
+                firstNameValid: null,
+                lastnameValid: null
             }
         },
 
@@ -139,40 +119,60 @@
                 let uppercase = /[A-Z].*$/
                 // eslint-disable-next-line no-useless-escape
                 let emailRegs = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-                if (this.username == null || regex.test(this.username) == false || regexPucn.test(this.username) ||
-                    uppercase.test(this.username)) {
-                    this.usernameError = true
-                    this.isButtonDisabled = false
-                }
+
+
                 let par = {
                     'client_id': this.custosId,
                     'client_sec': this.custosSec,
                     'username': this.username,
                 }
 
-                let avilable = await this.$store.dispatch('user/checkUsernameIsValid', par)
-                if (!avilable) {
-                    this.usernameError = true
-                    this.isButtonDisabled = false
+                if (this.username == null || regex.test(this.username) == false || regexPucn.test(this.username) ||
+                    uppercase.test(this.username)) {
+                    this.usernameValid = false
+                } else {
+                    try {
+                        let isUsernameAvailable = await this.$store.dispatch('user/checkUsernameIsValid', par)
+                        if (!isUsernameAvailable) {
+                            this.usernameValid = false
+                        } else {
+                            this.usernameValid = true
+                        }
+                    } catch (e) {
+                        this.usernameValid = false
+                    }
                 }
 
-                if (this.password == null || this.confirmedPassword == null || this.password !== this.confirmedPassword || !passwordRegex.test(this.password)) {
-                    this.passwordError = true
-                    this.isButtonDisabled = false
+
+                if (this.password == null || !passwordRegex.test(this.password)) {
+                    this.passwordValid = false
+                } else {
+                    this.passwordValid = true
                 }
+
+
+                if (this.password !== this.confirmedPassword) {
+                    this.confirmedPasswordValid = false
+                } else {
+                    this.confirmedPasswordValid = true
+                }
+
                 if (this.email == null || !emailRegs.test(this.email)) {
-                    this.emailError = true
-                    this.isButtonDisabled = false
+                    this.emailValid = false
+                } else {
+                    this.emailValid = true
                 }
 
-                if (this.firstName == null || this.firstName == '' || this.firstName.length>20) {
-                    this.firstNameError = true
-                    this.isButtonDisabled = false
+                if (this.firstName == null || this.firstName == '' || this.firstName.length > 20) {
+                    this.firstNameValid = false
+                } else {
+                    this.firstNameValid = true
                 }
 
-                if (this.lastName == null || this.lastName == '' || this.lastName.length>20) {
-                    this.lastnameError = true
-                    this.isButtonDisabled = false
+                if (this.lastName == null || this.lastName == '' || this.lastName.length > 20) {
+                    this.lastnameValid = false
+                } else {
+                    this.lastnameValid = true
                 }
 
 
@@ -187,12 +187,12 @@
                     'email': this.email
                 }
 
-                if (avilable && !this.passwordError & !this.lastnameError & !this.firstNameError & !this.emailError) {
+                if (this.usernameValid && this.passwordValid & this.lastnameValid & this.firstNameValid & this.emailValid) {
                     let status = await this.$store.dispatch('user/registerUser', body)
                     if (status) {
                         await this.$router.push("/")
                     } else {
-                        this.usernameError = true
+                        this.usernameValid = false
                     }
                 }
 
@@ -200,18 +200,18 @@
             },
 
             async callDismissed() {
-                this.usernameError = false
-                this.passwordError = false
-                this.emailError = false
-                this.firstNameError = false
-                this.lastnameError = false
+                this.usernameValid = true
+                this.passwordValid = true
+                this.emailValid = true
+                this.firstNameValid = true
+                this.lastnameValid = true
                 this.isButtonDisabled = false
             },
 
 
         },
 
-       async mounted() {
+        async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
             let data = {
@@ -229,77 +229,80 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     h2 {
-        margin: 40px 0 0;
-        font-size: xx-large;
-        font-family: "Arial";;
+        text-align: left;
+        font-family: Avenir;
+        font-size: 35px;
+        font-weight: 900;
+        color: #203a43;
     }
 
-    p {
-        font-size: medium;
-        font-family: "Arial";
+    .h2-sub {
+        font-family: Avenir-Roman;
+        font-size: 22px;
+        text-align: left;
+        color: #203a43;
+    }
+
+    h3 {
+        font-family: Avenir;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+        color: #203a43;
+    }
+
+    .h3-sub {
+        font-family: Avenir-Roman;
+        font-size: 20px;
+        text-align: left;
+        color: #203a43;
+    }
+
+    .form-input-label {
+        font-family: Avenir;
+        font-weight: 900;
+        text-align: left;
+        float: left;
+        color: #203a43;
+    }
+
+    .primary-btn {
+        background-color: #ea6a0a;
+
+        font-family: Avenir;
+        font-size: 14px;
+        font-weight: 900;
+        text-align: left;
+        color: #ffffff;
+    }
+
+    .primary-btn:hover {
+        background-color: #da640b;
+    }
+
+    .form-error-message {
+        font-family: Avenir;
+        font-size: 14px;
+        font-weight: 900;
         text-align: left;
     }
 
-    ul {
-        list-style-type: none;
-        padding: 0;
+    .login-card {
+        box-shadow: -1px 1px 6px 2px #ebebeb;
+        border-radius: 10px;
+        border: none;
     }
 
-    li {
-        display: inline-block;
-        margin: 0 10px;
+    .login-card .form-input-label {
+        font-weight: 500;
+        font-size: 15px;
     }
 
-    a {
-        color: #42b983;
+    .additional-links {
+        font-size: 13px;
     }
 
-    * {
-        box-sizing: border-box;
+    .additional-links a {
+        color: #ea6a0a;
     }
-
-    /* Create two equal columns that floats next to each other */
-    .column {
-        float: left;
-        width: 50%;
-        padding: 10px;
-        height: 300px; /* Should be removed. Only for demonstration */
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .login {
-        height: 10%;
-        position: relative;
-        margin-top: 5%;
-        z-index: 2;
-        width: 60%;
-        left: 20%;
-    }
-
-    .exlogin {
-        background-color: whitesmoke;
-        box-sizing: border-box;
-        margin-top: 20%;
-    }
-
-    .locallogin {
-        background-color: whitesmoke;
-        box-sizing: border-box;
-        position: relative;
-        margin-top: 7%;
-    }
-
-    .logininput {
-        width: 60%;
-        position: relative;
-        left: 20%;
-        margin-top: 2%;
-    }
-
 </style>

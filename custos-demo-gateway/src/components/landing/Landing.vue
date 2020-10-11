@@ -1,53 +1,59 @@
 <template>
-    <div class="landing mt-5">
-
-        <div class="d-md-inline-flex">
-
-            <div class="p-2 flex-fill">
+    <b-container>
+        <b-row align-v="top" align-h="center">
+            <b-col style="min-width: 300px; max-width: 100%">
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <img class="w-100" src="./../../assets/custos_home.png">
-            </div>
-
-            <form v-on:submit="this.login" class="p-2" style="width: 300px;">
-                <p class="h3-sub mb-5">
-                    Not registered ?
-                    <router-link to="/register">Create Account</router-link>
+            </b-col>
+            <b-col style="max-width: 300px;min-width: 400px;" align-h="center">
+                <b-card class="w-100 login-card">
+                    <div class="p-2">
+                        <h3 class="mb-2">Do you have a Federated Identity ?</h3>
+                        <b-button class="primary-btn w-100 text-center mt-2" variant="warning"
+                                  v-on:click="this.loadAuthURL">
+                            Register or Login with Federated Identity
+                        </b-button>
+                    </div>
+                </b-card>
+                <b-card class="w-100 mt-3 login-card">
+                    <form v-on:submit.prevent="this.login" class="p-2">
+                        <h3 class="mb-3">LOGIN WITH CUSTOS EXPLORER</h3>
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-username">Username</label>
+                            <b-form-input id="form-input-username" v-model="username"
+                                          placeholder="Username"></b-form-input>
+                        </div>
+                        <div class="p-2">
+                            <label class="form-input-label" for="form-input-password">Password</label>
+                            <b-form-input id="form-input-password" type="password" v-model="password"
+                                          placeholder="Password"></b-form-input>
+                        </div>
+                        <b-button class="primary-btn w-100 text-center mt-3" type="submit" variant="warning"
+                                  v-on:click="this.login" :disabled="this.loginDisabled">
+                            Login
+                            <b-spinner small v-if="this.loginDisabled"></b-spinner>
+                        </b-button>
+                        <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
+                            Invalid Username or Password
+                        </div>
+                        <p class="mt-3 w-100 additional-links text-center">
+                            Don't have an account?
+                            <router-link to="/register">Create an account</router-link>
+                        </p>
+                    </form>
+                </b-card>
+                <p class="mt-3 w-100 additional-links">
+                    How to user Custos?
+                    <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
+                        Tutorial
+                    </b-link>
+                    | All about
+                    <b-link href="http://airavata.apache.org/custos/">Custos</b-link>
                 </p>
-
-                <h3>Login with Custos Explorer</h3>
-
-                <div class="m-1">
-                    <label class="form-input-label" for="form-input-username">Username</label>
-                    <b-form-input id="form-input-username" v-model="username" placeholder="Username"></b-form-input>
-                </div>
-
-                <div class="m-1">
-                    <label class="form-input-label" for="form-input-password">Password</label>
-                    <b-form-input id="form-input-password" type="password" v-model="password"
-                                  placeholder="Password"></b-form-input>
-                </div>
-
-                <div class="mt-4 d-inline-flex w-100">
-                    <b-button class="primary-btn" variant="warning" v-on:click="this.login" type="submit"
-                              :disabled="this.loginDisabled">
-                        Login
-                        <b-spinner small v-if="this.loginDisabled"></b-spinner>
-                    </b-button>
-                    <p class="ml-2 mr-2"> or </p>
-                    <b-button class="primary-btn" variant="warning" v-on:click="this.loadAuthURL">Login with
-                        Institution
-                    </b-button>
-                </div>
-
-                <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
-                    Invalid Username or Password
-                </div>
-            </form>
-
-        </div>
-
-    </div>
+            </b-col>
+        </b-row>
+    </b-container>
 </template>
 
 <script>
@@ -146,23 +152,23 @@
     h2 {
         text-align: left;
         font-family: Avenir;
-        font-size: 40px;
+        font-size: 35px;
         font-weight: 900;
         color: #203a43;
     }
 
     .h2-sub {
         font-family: Avenir-Roman;
-        font-size: 25px;
+        font-size: 22px;
         text-align: left;
         color: #203a43;
     }
 
     h3 {
         font-family: Avenir;
-        font-size: 28px;
-        font-weight: 900;
-        text-align: left;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
         color: #203a43;
     }
 
@@ -200,5 +206,24 @@
         font-size: 14px;
         font-weight: 900;
         text-align: left;
+    }
+
+    .login-card {
+        box-shadow: -1px 1px 6px 2px #ebebeb;
+        border-radius: 10px;
+        border: none;
+    }
+
+    .login-card .form-input-label {
+        font-weight: 500;
+        font-size: 15px;
+    }
+
+    .additional-links {
+        font-size: 13px;
+    }
+
+    .additional-links a {
+        color: #ea6a0a;
     }
 </style>
