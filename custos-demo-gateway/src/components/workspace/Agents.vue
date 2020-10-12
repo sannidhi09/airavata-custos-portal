@@ -15,6 +15,7 @@
             </div>
             <b-table small striped hover responsive :items="communityAccounts" :fields="community_fields" selectable
                      ref="selectableTable" select-mode="single" @row-selected="onCommunityAcSelected" caption-top>
+                <template v-slot:head(id)>Service Account ID</template>
                 <template v-slot:cell(status)="data">
                     <b-badge v-if="data.value == 'ACTIVE'" variant="success">Active</b-badge>
                     <b-badge v-else-if="data.value == 'DEACTIVE'" variant="danger">Inactive</b-badge>

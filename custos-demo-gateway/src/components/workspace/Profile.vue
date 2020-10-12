@@ -28,7 +28,7 @@
                 </b-col>
 
                 <b-col style="max-width: 300px; min-width: 200px;" class="p-2">
-                    <label class="form-input-label" for="form-input-last-name">First Name</label>
+                    <label class="form-input-label" for="form-input-last-name">Last Name</label>
                     <div>
                         <b-alert v-model="lastnameError" variant="danger" dismissible
                                  @dismissed="this.callDismissed">

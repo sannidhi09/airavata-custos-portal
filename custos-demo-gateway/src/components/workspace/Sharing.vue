@@ -5,7 +5,7 @@
         </div>
         <b-container class="text-left">
             <div v-if="this.isAdminUser" class="w-100">
-                Do you wanna evaluate if a specific user has a specific permission to a specific entity ?
+                Do you want to evaluate if a specific user has a specific permission to a specific entity ?
                 <b-button variant="link" v-on:click="checkPermissions">Evaluate Permissions</b-button>
             </div>
             <div>
@@ -25,6 +25,7 @@
                     </div>
                     <b-table small striped hover responsive :items="permissionTypes" :fields="fields" selectable
                              ref="selectableTable" select-mode="single" @row-selected="onPrTySelected">
+                        <template v-slot:head(id)>Permission Type ID</template>
                     </b-table>
                 </div>
                 <div class="mt-5">
@@ -43,6 +44,7 @@
                     </div>
                     <b-table small striped hover responsive :items="entityTypes" :fields="fields" selectable
                              ref="selectableTable" select-mode="single" @row-selected="onEnTySelected" caption-top>
+                        <template v-slot:head(id)>Entity Type ID</template>
                     </b-table>
                 </div>
                 <div class="mt-5">
@@ -61,6 +63,8 @@
                     </div>
                     <b-table small striped hover responsive :items="entities" :fields="entityFields" selectable
                              ref="selectableTable" select-mode="single" @row-selected="onEntitySelected">
+                        <template v-slot:head(id)>Entity ID</template>
+                        <template v-slot:head(type)>Entity Type ID</template>
                     </b-table>
                 </div>
                 <div class="mt-5">
@@ -81,6 +85,10 @@
                              ref="selectableTable"
                              select-mode="single"
                              @row-selected="onSharingSelected">
+                        <template v-slot:head(entity_id)>Entity ID</template>
+                        <template v-slot:head(permission_type_id)>Permission Type ID</template>
+                        <template v-slot:head(owner_id)>Group / User ID</template>
+                        <template v-slot:head(type)>Group / User</template>
                     </b-table>
                 </div>
 
@@ -268,11 +276,11 @@
                                   disabled></b-form-input>
                 </div>
                 <div class="p-2">
-                    <label class="form-input-label" for="form-input-owner-id">Owner ID</label>
+                    <label class="form-input-label" for="form-input-owner-id">Group / User ID</label>
                     <b-form-input id="form-input-owner-id" size="sm" v-model="selectedShOwId" disabled></b-form-input>
                 </div>
                 <div class="p-2">
-                    <label class="form-input-label" for="form-input-type">Type</label>
+                    <label class="form-input-label" for="form-input-type">Group / User</label>
                     <b-form-input id="form-input-type" size="sm" v-model="selectedShOwType" disabled></b-form-input>
                 </div>
             </div>
