@@ -14,9 +14,9 @@
                 <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
             <b-table small striped hover responsive :items="groupItems" :fields="fields" selectable
-                     ref="selectableTable"
-                     select-mode="single"
-                     @row-selected="onRowSelected" caption-top>
+                     ref="selectableTable" select-mode="single" @row-selected="onRowSelected" caption-top>
+                <template v-slot:head(id)>ID</template>
+                <template v-slot:head(ownerId)>Owner</template>
             </b-table>
             <div class="addGr">
                 <b-button variant="outline-primary" v-on:click="addGr">Add Group</b-button>
@@ -51,6 +51,8 @@
                              selectable
                              select-mode="single"
                              @row-selected="onMemberShipSelected">
+                        <template v-slot:head(user_id)>Username</template>
+                        <template v-slot:head(type)>Permission Type</template>
                     </b-table>
                 </div>
 
@@ -66,6 +68,8 @@
                              :fields="memberGroupsFields"
                              selectable select-mode="single"
                              @row-selected="onGroupMemberShipSelected">
+                        <template v-slot:head(name)>Group Name</template>
+                        <template v-slot:head(id)>ID</template>
                     </b-table>
                 </div>
 
@@ -88,14 +92,15 @@
             </template>
         </b-modal>
         <b-modal ref="membershipModel" id="update-membership-modal" title="Update Membership" ok-title="Update">
-            <div class="groupform">
-                <div class="groupformItem">
-                    <p>Owner</p>
-                    <b-form-input v-model="selectedMembershipUsername" disabled></b-form-input>
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-username">User</label>
+                    <b-form-input id="form-input-username" size="sm" v-model="selectedMembershipUsername"
+                                  disabled></b-form-input>
                 </div>
-                <div class="groupformItem">
-                    <p>Type</p>
-                    <b-form-select v-model="selectedMembershipType">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-permission-type">Permission Type</label>
+                    <b-form-select id="form-input-permission-type" size="sm" v-model="selectedMembershipType">
                         <option v-for="(selectOption, indexOpt) in memberTypes"
                                 :key="indexOpt"
                                 :value="selectOption"
@@ -104,7 +109,6 @@
                         </option>
                     </b-form-select>
                 </div>
-
             </div>
             <template v-slot:modal-footer>
                 <div class="w-100">
@@ -164,7 +168,7 @@
             </template>
         </b-modal>
         <b-modal ref="addGrModel" id="add-group-modal" title="Add Group" ok-title="Add" @ok="addGroupOKPressed">
-            <div class="groupform">
+            <div>
                 <div class="p-2">
                     <label class="form-input-label" for="form-input-group-name">Name</label>
                     <b-form-input id="form-input-group-name" size="sm"

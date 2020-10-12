@@ -97,6 +97,7 @@
                     <b-table small striped hover responsive :items="selectedRoles" class="mt-2" selectable
                              select-mode="single"
                              @row-selected="onRoleSelected">
+                        <template v-slot:head(name)>Role</template>
                     </b-table>
                 </div>
             </div>

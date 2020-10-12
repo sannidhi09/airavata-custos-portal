@@ -9,16 +9,22 @@
                 <div class="email">{{user.email}}</div>
             </div>
 
-            <b-dropdown v-if="user" right class="ml-2" text="" no-caret toggle-class="user-avatar-button">
-                <template slot="button-content">
+            <b-dropdown right class="ml-2" text="" no-caret toggle-class="user-avatar-button">
+                <template v-slot:button-content v-if="user">
                     <b-icon icon="person-fill"></b-icon>
                 </template>
-                <b-dropdown-item href="#" v-on:click="$router.push('/workspace/profile')">Profile</b-dropdown-item>
-                <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
+                <template v-slot:button-content v-else>
+                    <b-spinner small label="Spinning"></b-spinner>
+                </template>
+
+                <template v-slot:default v-if="user">
+                    <b-dropdown-item href="#" v-on:click="$router.push('/workspace/profile')">Profile</b-dropdown-item>
+                    <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
+                </template>
             </b-dropdown>
 
         </div>
-        <div class="navigation text-left" v-if="user">
+        <div class="navigation text-left">
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">
                 <b-icon icon="house-door-fill"></b-icon>
             </b-button>
@@ -47,6 +53,7 @@
 <script>
 
     import config from "@/config";
+    import store from "../store";
 
     export default {
         name: "Header",
@@ -56,13 +63,13 @@
                 custosSec: null,
                 isAdmin: false,
                 user: null,
-                currentUserName: null
+                currentUserName: null,
+                authenticated: false
             }
         },
         methods: {
             showHeader() {
-                console.log("--- this.currentUserName --- ", this.currentUserName)
-                return this.currentUserName !== null
+                return this.authenticated
             },
             async logout() {
                 let data = {
@@ -81,21 +88,32 @@
                 // await this.$store.dispatch('secret/reset')
                 // await this.$store.dispatch('sharing/reset')
                 // await this.$store.dispatch('user/reset')
+            },
+            async validateAuthentication() {
+                this.authenticated = await store.dispatch('identity/isAuthenticated', {
+                    client_id: process.env.VUE_APP_CLIENT_ID,
+                    client_sec: process.env.VUE_APP_CLIENT_SEC
+                }) === true
+
+                return this.authenticated
             }
         },
 
+
         async mounted() {
-            try {
+            if (await this.validateAuthentication()) {
                 this.custosId = config.value('clientId')
                 this.custosSec = config.value('clientSec')
                 this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
-
                 this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
-                let data = {
-                    offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+
+                let resp = await this.$store.dispatch('user/users', {
+                    offset: 0,
+                    limit: 1,
+                    client_id: this.custosId,
+                    client_sec: this.custosSec,
                     username: this.currentUserName
-                }
-                let resp = await this.$store.dispatch('user/users', data)
+                })
                 if (Array.isArray(resp) && resp.length > 0) {
                     resp.forEach(obj => {
                         this.user = {
@@ -109,8 +127,6 @@
                         }
                     })
                 }
-            } catch (e) {
-                console.log("ERRRRRR==== ", e)
             }
         }
     }
