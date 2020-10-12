@@ -5,7 +5,7 @@
         </div>
         <b-container class="text-left">
             <div v-if="this.isAdminUser" class="w-100">
-                Do you wanna evaluate if a specific user has a specific permission to a specific entity ?
+                Do you want to evaluate if a specific user has a specific permission to a specific entity ?
                 <b-button variant="link" v-on:click="checkPermissions">Evaluate Permissions</b-button>
             </div>
             <div>
