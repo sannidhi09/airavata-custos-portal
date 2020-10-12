@@ -35,8 +35,8 @@
                 </div>
                 <div v-if="defaultMemType==='Password'" class="p-2">
                     <label class="form-input-label" for="form-input-secret-password">Password</label>
-                    <b-form-input id="form-input-secret-password" size="sm"
-                                  v-model="selectedPassword"></b-form-input>
+                    <Password id="form-input-secret-password" size="sm" v-model="selectedPassword">
+                    </Password>
                 </div>
             </div>
             <template slot="modal-footer">
@@ -74,8 +74,8 @@
                 </div>
                 <div v-if="selectedExType ==='PASSWORD'" class="secformItem">
                     <label class="form-input-label" for="form-input-secret-password">Password</label>
-                    <b-form-input id="form-input-secret-password" size="sm" v-model="selectedExPassword"
-                                  disabled></b-form-input>
+                    <Password id="form-input-secret-password" size="sm" v-model="selectedExPassword" disabled>
+                    </Password>
                 </div>
                 <div v-if="selectedExType ==='SSH'" class="secformItem">
                     <label class="form-input-label" for="form-input-secret-public-key">Public Key</label>
@@ -103,9 +103,11 @@
 
 <script>
     import config from "@/config";
+    import Password from "../Password";
 
     export default {
         name: "Secrets",
+        components: {Password},
         data: function () {
             return {
                 fields: ['token', 'description', 'type', 'owner_id'],
