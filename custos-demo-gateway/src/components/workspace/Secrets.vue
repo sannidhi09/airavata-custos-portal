@@ -8,8 +8,8 @@
                 <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
             <b-table small striped hover responsive :items="secItems" :fields="fields" selectable
-                     select-mode="single"
-                     @row-selected="onRowSelected" caption-top>
+                     select-mode="single" @row-selected="onRowSelected" caption-top>
+                <template v-slot:head(owner_id)>Owner</template>
             </b-table>
             <div class="w-100">
                 <b-button variant="outline-primary" v-on:click="addSec">Add Secret</b-button>

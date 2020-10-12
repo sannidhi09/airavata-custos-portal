@@ -14,9 +14,9 @@
                 <b-spinner variant="primary" label="Text Centered"></b-spinner>
             </div>
             <b-table small striped hover responsive :items="groupItems" :fields="fields" selectable
-                     ref="selectableTable"
-                     select-mode="single"
-                     @row-selected="onRowSelected" caption-top>
+                     ref="selectableTable" select-mode="single" @row-selected="onRowSelected" caption-top>
+                <template v-slot:head(id)>ID</template>
+                <template v-slot:head(ownerId)>Owner</template>
             </b-table>
             <div class="addGr">
                 <b-button variant="outline-primary" v-on:click="addGr">Add Group</b-button>
@@ -51,6 +51,8 @@
                              selectable
                              select-mode="single"
                              @row-selected="onMemberShipSelected">
+                        <template v-slot:head(user_id)>Username</template>
+                        <template v-slot:head(type)>Permission Type</template>
                     </b-table>
                 </div>
 
@@ -66,6 +68,8 @@
                              :fields="memberGroupsFields"
                              selectable select-mode="single"
                              @row-selected="onGroupMemberShipSelected">
+                        <template v-slot:head(name)>Group Name</template>
+                        <template v-slot:head(id)>ID</template>
                     </b-table>
                 </div>
 
@@ -104,7 +108,6 @@
                         </option>
                     </b-form-select>
                 </div>
-
             </div>
             <template v-slot:modal-footer>
                 <div class="w-100">

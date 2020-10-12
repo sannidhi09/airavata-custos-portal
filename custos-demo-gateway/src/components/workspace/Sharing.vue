@@ -25,6 +25,7 @@
                     </div>
                     <b-table small striped hover responsive :items="permissionTypes" :fields="fields" selectable
                              ref="selectableTable" select-mode="single" @row-selected="onPrTySelected">
+                        <template v-slot:head(id)>Permission Type ID</template>
                     </b-table>
                 </div>
                 <div class="mt-5">
@@ -43,6 +44,7 @@
                     </div>
                     <b-table small striped hover responsive :items="entityTypes" :fields="fields" selectable
                              ref="selectableTable" select-mode="single" @row-selected="onEnTySelected" caption-top>
+                        <template v-slot:head(id)>Entity Type ID</template>
                     </b-table>
                 </div>
                 <div class="mt-5">
@@ -61,6 +63,8 @@
                     </div>
                     <b-table small striped hover responsive :items="entities" :fields="entityFields" selectable
                              ref="selectableTable" select-mode="single" @row-selected="onEntitySelected">
+                        <template v-slot:head(id)>Entity ID</template>
+                        <template v-slot:head(type)>Entity Type ID</template>
                     </b-table>
                 </div>
                 <div class="mt-5">
@@ -81,6 +85,14 @@
                              ref="selectableTable"
                              select-mode="single"
                              @row-selected="onSharingSelected">
+                        <template v-slot:head(entity_id)>Entity ID</template>
+                        <template v-slot:head(permission_type_id)>Permission Type ID</template>
+                        <template v-slot:head(owner_id)>Owner</template>
+                        <template v-slot:head(type)>Group/User</template>
+                        <template v-slot:cell(type)="data">
+                            <span v-if="data.value == 'GROUP'" variant="success">Group</span>
+                            <span v-else-if="data.value == 'USER'" variant="danger">User</span>
+                        </template>
                     </b-table>
                 </div>
 
