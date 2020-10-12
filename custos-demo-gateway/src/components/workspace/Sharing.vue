@@ -87,12 +87,8 @@
                              @row-selected="onSharingSelected">
                         <template v-slot:head(entity_id)>Entity ID</template>
                         <template v-slot:head(permission_type_id)>Permission Type ID</template>
-                        <template v-slot:head(owner_id)>Owner</template>
-                        <template v-slot:head(type)>Group/User</template>
-                        <template v-slot:cell(type)="data">
-                            <span v-if="data.value == 'GROUP'" variant="success">Group</span>
-                            <span v-else-if="data.value == 'USER'" variant="danger">User</span>
-                        </template>
+                        <template v-slot:head(owner_id)>Group / User ID</template>
+                        <template v-slot:head(type)>Group / User</template>
                     </b-table>
                 </div>
 
@@ -280,11 +276,11 @@
                                   disabled></b-form-input>
                 </div>
                 <div class="p-2">
-                    <label class="form-input-label" for="form-input-owner-id">Owner ID</label>
+                    <label class="form-input-label" for="form-input-owner-id">Group / User ID</label>
                     <b-form-input id="form-input-owner-id" size="sm" v-model="selectedShOwId" disabled></b-form-input>
                 </div>
                 <div class="p-2">
-                    <label class="form-input-label" for="form-input-type">Type</label>
+                    <label class="form-input-label" for="form-input-type">Group / User</label>
                     <b-form-input id="form-input-type" size="sm" v-model="selectedShOwType" disabled></b-form-input>
                 </div>
             </div>
