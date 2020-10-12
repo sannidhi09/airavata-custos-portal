@@ -9,16 +9,16 @@
             <b-col style="max-width: 300px;min-width: 400px;" align-h="center">
                 <b-card class="w-100 login-card">
                     <div class="p-2">
-                        <h3 class="mb-2">Do you have a Federated Identity ?</h3>
+                        <h3 class="mb-2">Do you have an Institution Login ?</h3>
                         <b-button class="primary-btn w-100 text-center mt-2" variant="warning"
                                   v-on:click="this.loadAuthURL">
-                            Register or Login with Federated Identity
+                            Register or Login with the Institution Login
                         </b-button>
                     </div>
                 </b-card>
                 <b-card class="w-100 mt-3 login-card">
                     <form v-on:submit.prevent="this.login" class="p-2">
-                        <h3 class="mb-3">LOGIN WITH CUSTOS EXPLORER</h3>
+                        <h3 class="mb-3">Login with Custos Explorer</h3>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-username">Username</label>
                             <b-form-input id="form-input-username" v-model="username"
@@ -166,7 +166,7 @@
 
     h3 {
         font-family: Avenir;
-        font-size: 13px;
+        font-size: 15px;
         font-weight: 600;
         text-align: center;
         color: #203a43;
