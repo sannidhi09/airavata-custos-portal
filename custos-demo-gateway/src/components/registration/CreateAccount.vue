@@ -1,13 +1,20 @@
 <template>
     <b-container>
         <b-row align-v="top" align-h="center">
-            <b-col style="min-width: 300px; max-width: 100%">
+            <b-col style="min-width: 300px; max-width: 100%" class="text-center">
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
+                <div class="main-links">
+                    <b-link href="http://airavata.apache.org/custos/">Learn more</b-link>
+                    <b-link class="ml-5"
+                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
+                        Get started
+                    </b-link>
+                </div>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
             <b-col style="max-width: 600px;min-width: 300px;" align-h="center">
-                <b-card class="w-100 mt-3 login-card">
+                <b-card class="w-100 login-card">
                     <form v-on:submit.prevent="registerUser" class="p-2 text-left">
                         <h3 class="mb-3">Create Account</h3>
                         <div class="p-2">
@@ -229,7 +236,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     h2 {
-        text-align: left;
         font-family: Avenir;
         font-size: 35px;
         font-weight: 900;
@@ -239,7 +245,6 @@
     .h2-sub {
         font-family: Avenir-Roman;
         font-size: 22px;
-        text-align: left;
         color: #203a43;
     }
 
@@ -296,6 +301,13 @@
     .login-card .form-input-label {
         font-weight: 500;
         font-size: 15px;
+    }
+
+    .main-links a {
+        font-family: Avenir;
+        font-size: 20px;
+        font-weight: 600;
+        color: #ea6a0a;
     }
 
     .additional-links {
