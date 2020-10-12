@@ -28,14 +28,14 @@
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/groups')">
                 Groups
             </b-button>
-            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
-                Service Accounts
-            </b-button>
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">
                 Secrets
             </b-button>
             <b-button href="#" variant="link" v-on:click="$router.push('/workspace/sharings')">
                 Sharing
+            </b-button>
+            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
+                Service Accounts
             </b-button>
             <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/logs')">
                 Logs

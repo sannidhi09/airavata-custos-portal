@@ -44,7 +44,7 @@
                     </form>
                 </b-card>
                 <p class="mt-3 w-100 additional-links">
-                    How to user Custos?
+                    How to use Custos?
                     <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
                         Tutorial
                     </b-link>
