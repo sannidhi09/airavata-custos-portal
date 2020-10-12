@@ -9,7 +9,7 @@
             <b-col style="max-width: 600px;min-width: 300px;" align-h="center">
                 <b-card class="w-100 mt-3 login-card">
                     <form v-on:submit.prevent="registerUser" class="p-2 text-left">
-                        <h3 class="mb-3">CREATE ACCOUNT</h3>
+                        <h3 class="mb-3">Create Account</h3>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-username">Username</label>
                             <b-form-input size="sm" id="form-input-username" v-model="username" :state="usernameValid"
@@ -245,7 +245,7 @@
 
     h3 {
         font-family: Avenir;
-        font-size: 13px;
+        font-size: 15px;
         font-weight: 600;
         text-align: center;
         color: #203a43;
