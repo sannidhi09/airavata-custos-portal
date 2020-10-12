@@ -92,14 +92,15 @@
             </template>
         </b-modal>
         <b-modal ref="membershipModel" id="update-membership-modal" title="Update Membership" ok-title="Update">
-            <div class="groupform">
-                <div class="groupformItem">
-                    <p>Owner</p>
-                    <b-form-input v-model="selectedMembershipUsername" disabled></b-form-input>
+            <div>
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-username">User</label>
+                    <b-form-input id="form-input-username" size="sm" v-model="selectedMembershipUsername"
+                                  disabled></b-form-input>
                 </div>
-                <div class="groupformItem">
-                    <p>Type</p>
-                    <b-form-select v-model="selectedMembershipType">
+                <div class="p-2">
+                    <label class="form-input-label" for="form-input-permission-type">Permission Type</label>
+                    <b-form-select id="form-input-permission-type" size="sm" v-model="selectedMembershipType">
                         <option v-for="(selectOption, indexOpt) in memberTypes"
                                 :key="indexOpt"
                                 :value="selectOption"
@@ -167,7 +168,7 @@
             </template>
         </b-modal>
         <b-modal ref="addGrModel" id="add-group-modal" title="Add Group" ok-title="Add" @ok="addGroupOKPressed">
-            <div class="groupform">
+            <div>
                 <div class="p-2">
                     <label class="form-input-label" for="form-input-group-name">Name</label>
                     <b-form-input id="form-input-group-name" size="sm"
