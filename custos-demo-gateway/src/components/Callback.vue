@@ -46,37 +46,9 @@
             this.custosSec = config.value('clientSec')
             this.redirectURI = config.value('redirectURI')
             this.tokenEndpoint = "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
+
             await this.authenticate()
-            console.log("calling authenticate")
-            if (this.isAuthenticated) {
-                console.log("calling authenticated")
-                let username = await this.$store.dispatch('identity/getCurrentUserName')
-                await this.$router.push('workspace')
-                let data = {
-                    offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
-                    username: username
-                }
-                let resp = await this.$store.dispatch('user/users', data)
-                console.log(resp)
-                if (Array.isArray(resp) && resp.length > 0) {
-                    resp.forEach(user => {
-                        let dat = {
-                            client_id: this.custosId,
-                            client_sec: this.custosSec,
-                            body: {
-                                username: user.username,
-                                first_name: user.first_name,
-                                last_name: user.last_name,
-                                email: user.email,
-                            }
-                        }
-                        console.log(dat)
-                        this.$store.dispatch('user/updateUserProfile', dat)
-                    })
-                }
-            } else {
-                await this.$router.push('home')
-            }
+            await this.$router.push('workspace')
         }
     }
 </script>

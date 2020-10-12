@@ -44,8 +44,6 @@
 </template>
 
 <script>
-    import config from "@/config";
-
     export default {
         name: "Workspace",
         data: function () {
@@ -75,30 +73,8 @@
                 await this.$store.dispatch('user/reset')
             }
         },
-
         async mounted() {
-            this.custosId = config.value('clientId')
-            this.custosSec = config.value('clientSec')
             this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
-            this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
-            let data = {
-                offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
-                username: this.currentUserName
-            }
-            let resp = await this.$store.dispatch('user/users', data)
-            if (Array.isArray(resp) && resp.length > 0) {
-                resp.forEach(obj => {
-                    this.user = {
-                        username: obj.username,
-                        first_name: obj.first_name,
-                        last_name: obj.last_name,
-                        email: obj.email,
-                        status: obj.state,
-                        attributes: [],
-                        roles: []
-                    }
-                })
-            }
         }
     }
 </script>

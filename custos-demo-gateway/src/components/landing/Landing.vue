@@ -87,7 +87,6 @@
             }
         },
         methods: {
-
             async login() {
                 this.loginDisabled = true
                 if (this.username != null && this.username != '' && this.password != null && this.password != '') {
@@ -102,11 +101,7 @@
                     await this.$store.dispatch('identity/authenticateLocally', params)
                     let resp = await this.$store.dispatch('identity/isAuthenticated', data)
                     if (resp) {
-
-                        // TODO fix in https://github.com/apache/airavata-custos-portal/issues/37
-                        window.location.reload()
-
-                        // await this.$router.push('workspace')
+                        await this.$router.push('workspace')
                     } else {
                         this.loginError = true
                     }
@@ -115,8 +110,6 @@
                 }
                 this.loginDisabled = false
             },
-
-
             async callDismissed() {
                 this.loginError = false
             },
@@ -126,7 +119,6 @@
                 window.location.href = this.$store.getters['identity/getAuthorizationEndpoint']
             }
         },
-
         async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
@@ -136,20 +128,10 @@
                 client_id: this.custosId,
                 client_sec: this.custosSec
             }
-            if (await store.dispatch('identity/isAuthenticated', data) == true) {
-
+            if (await store.dispatch('identity/isAuthenticated', data) === true) {
                 await this.$router.push('workspace')
             }
-
-        },
-
-        computed: {
-            // ...mapGetters({
-            //
-            // })
         }
-
-
     }
 </script>
 
