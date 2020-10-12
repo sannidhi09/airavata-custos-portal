@@ -51,19 +51,14 @@
 </template>
 
 <script>
-
     import config from "@/config";
-    import store from "../store";
 
     export default {
         name: "Header",
         data: function () {
             return {
-                custosId: null,
-                custosSec: null,
                 isAdmin: false,
                 user: null,
-                currentUserName: null,
                 authenticated: false
             }
         },
@@ -72,62 +67,63 @@
                 return this.authenticated
             },
             async logout() {
-                let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec
-                }
-                await this.$store.dispatch('identity/logout', data)
+                await this.$store.dispatch('identity/logout', {
+                    client_id: config.value('clientId'),
+                    client_sec: config.value('clientSec'),
+                })
 
-
-                // TODO fix in https://github.com/apache/airavata-custos-portal/issues/37
-                window.location.reload()
-
-                // await this.$router.push("/")
-                // await this.$store.dispatch('agent/reset')
-                // await this.$store.dispatch('group/reset')
-                // await this.$store.dispatch('secret/reset')
-                // await this.$store.dispatch('sharing/reset')
-                // await this.$store.dispatch('user/reset')
+                await this.$router.push("/")
+                await this.$store.dispatch('agent/reset')
+                await this.$store.dispatch('group/reset')
+                await this.$store.dispatch('secret/reset')
+                await this.$store.dispatch('sharing/reset')
+                await this.$store.dispatch('user/reset')
             },
             async validateAuthentication() {
-                this.authenticated = await store.dispatch('identity/isAuthenticated', {
-                    client_id: process.env.VUE_APP_CLIENT_ID,
-                    client_sec: process.env.VUE_APP_CLIENT_SEC
+                this.authenticated = await this.$store.dispatch('identity/isAuthenticated', {
+                    client_id: config.value('clientId'),
+                    client_sec: config.value('clientSec')
                 }) === true
 
                 return this.authenticated
-            }
-        },
-
-
-        async mounted() {
-            if (await this.validateAuthentication()) {
-                this.custosId = config.value('clientId')
-                this.custosSec = config.value('clientSec')
+            },
+            async fetchAuthenticatedUser() {
                 this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
-                this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
+                let currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
 
-                let resp = await this.$store.dispatch('user/users', {
-                    offset: 0,
-                    limit: 1,
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
-                    username: this.currentUserName
-                })
-                if (Array.isArray(resp) && resp.length > 0) {
-                    resp.forEach(obj => {
-                        this.user = {
-                            username: obj.username,
-                            first_name: obj.first_name,
-                            last_name: obj.last_name,
-                            email: obj.email,
-                            status: obj.state,
-                            attributes: [],
-                            roles: []
-                        }
+                if (await this.validateAuthentication() && (!this.user || this.user.username !== currentUserName)) {
+                    let resp = await this.$store.dispatch('user/users', {
+                        offset: 0,
+                        limit: 1,
+                        client_id: config.value('clientId'),
+                        client_sec: config.value('clientSec'),
+                        username: currentUserName
                     })
+                    if (Array.isArray(resp) && resp.length > 0) {
+                        resp.forEach(obj => {
+                            this.user = {
+                                username: obj.username,
+                                first_name: obj.first_name,
+                                last_name: obj.last_name,
+                                email: obj.email,
+                                status: obj.state,
+                                attributes: [],
+                                roles: []
+                            }
+                        })
+                    }
                 }
             }
+        },
+        watch: {
+            $route(to, from) {
+                this.authenticated = false
+                console.log("=== route  ", [to, from])
+                this.fetchAuthenticatedUser()
+            }
+        },
+        async beforeMount() {
+            this.fetchAuthenticatedUser()
         }
     }
 </script>
