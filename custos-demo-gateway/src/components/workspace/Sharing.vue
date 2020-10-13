@@ -409,7 +409,7 @@
                 </b-button>
             </template>
         </b-modal>
-        <b-modal ref="evalutionResultPopup" id="evaluate-permission-results-modal" hide-footer>
+        <b-modal ref="evalutionResultPopup" id="evaluate-permission-results-modal">
             <div v-if="this.evaluating">
                 <b-spinner small type="grow"></b-spinner>
                 Evaluating...
@@ -945,6 +945,9 @@
                 client_sec: this.custosSec
             }
 
+            this.users = await this.loadUsers()
+            this.groups = await this.loadGroups()
+
             this.permissionTypes = await this.$store.dispatch('sharing/getPermissionTypes', permTypesData)
 
             if (this.permissionTypes.length == 0) {
@@ -986,10 +989,6 @@
             this.entities = await this.$store.dispatch('sharing/getEntities', searchEntitiesData)
 
             this.sharings = await this.loadSharings()
-
-            this.users = await this.loadUsers()
-            this.groups = await this.loadGroups()
-
         }
     }
 
