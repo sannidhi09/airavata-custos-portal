@@ -126,9 +126,8 @@
             }
         },
         watch: {
-            $route(to, from) {
+            $route() {
                 this.authenticated = false
-                console.log("=== route  ", [to, from])
                 this.fetchAuthenticatedUser()
             }
         },
