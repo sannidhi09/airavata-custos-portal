@@ -125,7 +125,7 @@ export default {
     },
 
     updateProfile(params) {
-        let authHeader = {'Authorization': 'Bearer '  + btoa(params.client_id + ':' + params.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = usermgtEndpoint + "/user/profile";
         console.log(authHeader)
         return api().put(endpoint, params.body
@@ -155,6 +155,32 @@ export default {
                 headers: authHeader
             })
 
+    },
+
+    grantAdminPrivilages(params) {
+        let authHeader = {'Authorization': 'Bearer ' + params.user_token}
+        let endpoint = usermgtEndpoint + "/user/admin"
+        return api().post(endpoint, params.body
+            , {
+                headers: authHeader
+            })
+    },
+
+    removeAdminPrivilages(params) {
+        let authHeader = {'Authorization': 'Bearer ' + params.user_token}
+        let endpoint = usermgtEndpoint + "/user/admin"
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'delete',
+                url: endpoint,
+                data: params.body,
+                headers: authHeader
+            }).then((resp) => {
+                resolve(resp)
+            }).catch(errr => {
+                reject(errr)
+            })
+        })
     }
 
 

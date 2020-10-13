@@ -7,7 +7,7 @@
             <div>
                 <b-alert v-model="groupError" variant="danger" dismissible
                          @dismissed="callDismissed">
-                    Group name not available
+                    Group name already exists
                 </b-alert>
             </div>
             <div v-if="this.groupsLoading" class="d-flex justify-content-center mb-3">
@@ -312,7 +312,9 @@
                     })
 
                     let response = await this.$store.dispatch('group/getAllChildGroups', data)
+
                     this.childGroupMembers = response.groups
+
 
                     if (!this.isAdminUser && this.selectedOwnerId != this.currentUser) {
 
@@ -366,7 +368,7 @@
                 }
 
                 let parentGroups = await this.$store.dispatch('group/getAllParentGroups', dat)
-                this.groupItems.forEach(gr => {
+                for (const gr of this.groupItems) {
                     let addToGroup = true
                     this.childGroupMembers.forEach(lx => {
                         if (gr.id === lx.id) {
@@ -388,9 +390,30 @@
                     }
 
                     if (addToGroup) {
-                        grs.push(gr)
+
+                        if (gr.ownerId != this.currentUser) {
+                            let data = {
+                                client_id: this.custosId,
+                                client_sec: this.custosSec,
+                                groupId: gr.id,
+                                username: this.currentUser,
+                                type: 'ADMIN'
+                            }
+
+                            let resp = await this.$store.dispatch('group/hasAccess', data)
+
+                            if (resp.status) {
+                                grs.push(gr)
+
+                            }
+                        } else {
+                            grs.push(gr)
+                        }
+
+
                     }
-                })
+                }
+
 
                 this.feasibleGroupMembers = grs
                 this.$refs.addGrMembershipModel.show()
@@ -434,6 +457,8 @@
             },
 
             addGr: function () {
+                this.selectedNewGrName = null
+                this.selectedNewGrDesc = null
                 this.$refs.addGrModel.show()
             },
 
@@ -457,7 +482,6 @@
                     }
                 }
                 let response = await this.$store.dispatch('group/createGroup', data)
-                console.log(response)
                 if (!response) {
                     this.groupError = true
                     this.groupsLoading = false

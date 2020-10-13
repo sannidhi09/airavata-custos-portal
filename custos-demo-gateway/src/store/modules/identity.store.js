@@ -17,7 +17,7 @@ const actions = {
         let resp = await identity_management.getOpenIdConfig(data)
         let baseURL = resp.data.authorization_endpoint
         this.authorizartionURL = baseURL + "?response_type=code&client_id=" + data.client_id + "&" +
-            "redirect_uri="+data.redirect_uri+"&scope=openid&kc_idp_hint=oidc"
+            "redirect_uri=" + data.redirect_uri + "&scope=openid&kc_idp_hint=oidc"
         commit('SET_AUTH_ENDPOINT', this.authorizartionURL)
 
     },
@@ -31,7 +31,7 @@ const actions = {
         try {
             let resp = await identity_management.localLogin(data)
             commit('SET_AUTH_TOKEN', resp.data)
-        }catch (e) {
+        } catch (e) {
             return false
         }
     },
@@ -51,14 +51,18 @@ const actions = {
         try {
             let resp = auth.isLoggedIn()
             if (!resp) {
-                let dat = {
-                    client_id: data.client_id,
-                    client_sec: data.client_sec,
-                    refresh_token: auth.getRefreshToken()
+                if (auth.getRefreshToken() != null && auth.getRefreshToken() != '') {
+
+                    let dat = {
+                        client_id: data.client_id,
+                        client_sec: data.client_sec,
+                        refresh_token: auth.getRefreshToken()
+                    }
+                    let response = await identity_management.getTokenUsingRefreshToken(dat)
+                    commit('SET_AUTH_TOKEN', response.data)
+                    return auth.isLoggedIn()
                 }
-                let response = await identity_management.getTokenUsingRefreshToken(dat)
-                commit('SET_AUTH_TOKEN', response.data)
-                return auth.isLoggedIn()
+                return false
             }
             return true
         } catch (e) {
@@ -69,14 +73,14 @@ const actions = {
 
 
     // eslint-disable-next-line no-unused-vars
-    async isLoggedUserHasAdminAccess({commit, data}){
+    async isLoggedUserHasAdminAccess({commit, data}) {
         return auth.isUserHasAdminAccess()
     },
 
     // eslint-disable-next-line no-unused-vars
-      async getCurrentUserName({commit}, data){
-          return auth.getLoggedUsername()
-      }
+    async getCurrentUserName({commit}, data) {
+        return auth.getLoggedUsername()
+    }
 
 }
 

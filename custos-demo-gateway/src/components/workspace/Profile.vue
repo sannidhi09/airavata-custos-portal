@@ -225,7 +225,7 @@
 
                 // eslint-disable-next-line no-useless-escape
                 let emailRegs = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-                let regexPucn = /[~!" "@#$%^&*()+=;"'<>,.]/
+                let regexPucn = /[~!@#$%^&*()+=;"'<>.]/
 
                 if (this.first_name == null || this.first_name == '' || regexPucn.test(this.first_name) || this.first_name.length > 20) {
                     this.firstNameError = true

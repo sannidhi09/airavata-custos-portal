@@ -158,7 +158,7 @@
             return {
                 community_fields: ["id", "status"],
                 communityAccounts: [],
-                statusOptions: ['ACTIVE', 'DISABLED'],
+                statusOptions: ['ACTIVE', 'DEACTIVE'],
                 scopes: ['TENANT', 'CLIENT'],
                 checked: true,
                 newAccountName: null,
@@ -242,6 +242,7 @@
             },
 
             async registerAgent() {
+                this.loadingAgents = true
                 let accessToken = await this.$store.getters['identity/getAccessToken']
                 let data = {
                     user_token: accessToken,
@@ -250,11 +251,19 @@
                     }
                 }
                 let response = await this.$store.dispatch('agent/registerAgent', data)
-                let agents = await this.$store.getters['agent/getAgents']
-                this.communityAccounts = agents
                 this.agentId = response.id
                 this.agentSec = response.secret
                 this.$refs.enablePopOver.show()
+                this.loadingAgents = false
+                this.communityAccounts = await this.$store.dispatch('agent/get_all_agents', data)
+                this.communityAccounts.forEach(com=>{
+                    if (com.isEnabled){
+                        com.status = 'ACTIVE'
+                    } else {
+                        com.status = 'DEACTIVE'
+                    }
+                })
+
             },
 
             async addAtrOkPressed() {
@@ -332,6 +341,13 @@
             this.loadingAgents = true
             await this.enableAgents()
             this.communityAccounts = await this.$store.dispatch('agent/get_all_agents', data)
+            this.communityAccounts.forEach(com=>{
+                if (com.isEnabled){
+                    com.status = 'ACTIVE'
+                } else {
+                    com.status = 'DEACTIVE'
+                }
+            })
             this.loadingAgents = false
         }
     }
