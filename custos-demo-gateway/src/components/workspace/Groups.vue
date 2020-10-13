@@ -462,7 +462,7 @@
                 } else {
                     await this.loadGroups(data)
                     this.groupsLoading = false
-                    this.this.selectedNewGrName = null
+                    this.selectedNewGrName = null
                     this.selectedNewGrDesc = null
                 }
             },
