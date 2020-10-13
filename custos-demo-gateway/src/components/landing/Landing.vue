@@ -1,6 +1,6 @@
 <template>
     <b-container>
-        <b-row align-v="top" align-h="center">
+        <b-row align-v="start" align-h="center">
             <b-col style="min-width: 300px; max-width: 100%" class="text-center">
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
