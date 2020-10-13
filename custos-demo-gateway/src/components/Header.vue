@@ -25,27 +25,37 @@
 
         </div>
         <div class="navigation text-left">
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">
+            <router-link to="/workspace">
                 <b-icon icon="house-door-fill"></b-icon>
-            </b-button>
-            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/users')">
-                Users
-            </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/groups')">
-                Groups
-            </b-button>
-            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
-                Service Accounts
-            </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">
-                Secrets
-            </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/sharings')">
-                Sharing
-            </b-button>
-            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/logs')">
-                Logs
-            </b-button>
+            </router-link>
+            <router-link to="/workspace/users" v-if="this.isAdmin">Users</router-link>
+            <router-link to="/workspace/groups">Groups</router-link>
+            <router-link to="/workspace/agents" v-if="this.isAdmin">Service Accounts</router-link>
+            <router-link to="/workspace/secrets">Secrets</router-link>
+            <router-link to="/workspace/sharings">Sharing</router-link>
+            <router-link to="/workspace/logs" v-if="this.isAdmin">logs</router-link>
+
+            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">-->
+            <!--                <b-icon icon="house-door-fill"></b-icon>-->
+            <!--            </b-button>-->
+            <!--            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/users')">-->
+            <!--                Users-->
+            <!--            </b-button>-->
+            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/groups')">-->
+            <!--                Groups-->
+            <!--            </b-button>-->
+            <!--            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/agents')">-->
+            <!--                Service Accounts-->
+            <!--            </b-button>-->
+            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">-->
+            <!--                Secrets-->
+            <!--            </b-button>-->
+            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/sharings')">-->
+            <!--                Sharing-->
+            <!--            </b-button>-->
+            <!--            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/logs')">-->
+            <!--                Logs-->
+            <!--            </b-button>-->
         </div>
     </div>
 </template>
