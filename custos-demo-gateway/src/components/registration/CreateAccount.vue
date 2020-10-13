@@ -19,10 +19,14 @@
                         <h3 class="mb-3">Create Account</h3>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-username">Username</label>
-                            <b-form-input size="sm" id="form-input-username" v-model="username" :state="usernameValid"
+                            <b-form-input size="sm" id="form-input-username" v-model="username"
+                                          :state="usernameValid && usernameIsAvailable"
                                           placeholder="Username"></b-form-input>
-                            <b-form-invalid-feedback>
+                            <b-form-invalid-feedback v-if="!usernameValid">
                                 Username should only have lowercase letters and numbers.
+                            </b-form-invalid-feedback>
+                            <b-form-invalid-feedback v-else-if="!usernameIsAvailable">
+                                Username is not available.
                             </b-form-invalid-feedback>
                         </div>
                         <div class="p-2">
@@ -106,6 +110,7 @@
                 custosId: null,
                 custosSec: null,
                 isButtonDisabled: false,
+                usernameIsAvailable: null,
                 usernameValid: null,
                 passwordValid: null,
                 confirmedPasswordValid: null,
@@ -138,15 +143,16 @@
                     uppercase.test(this.username)) {
                     this.usernameValid = false
                 } else {
+                    this.usernameValid = true
                     try {
-                        let isUsernameAvailable = await this.$store.dispatch('user/checkUsernameIsValid', par)
-                        if (!isUsernameAvailable) {
-                            this.usernameValid = false
+                        let usernameIsAvailable = await this.$store.dispatch('user/checkUsernameIsValid', par)
+                        if (!usernameIsAvailable) {
+                            this.usernameIsAvailable = false
                         } else {
-                            this.usernameValid = true
+                            this.usernameIsAvailable = true
                         }
                     } catch (e) {
-                        this.usernameValid = false
+                        this.usernameIsAvailable = false
                     }
                 }
 
@@ -194,12 +200,10 @@
                     'email': this.email
                 }
 
-                if (this.usernameValid && this.passwordValid & this.lastnameValid & this.firstNameValid & this.emailValid) {
+                if (this.usernameIsAvailable && this.usernameValid && this.passwordValid && this.confirmedPasswordValid && this.lastnameValid && this.firstNameValid && this.emailValid) {
                     let status = await this.$store.dispatch('user/registerUser', body)
                     if (status) {
                         await this.$router.push("/")
-                    } else {
-                        this.usernameValid = false
                     }
                 }
 
@@ -207,6 +211,7 @@
             },
 
             async callDismissed() {
+                this.usernameIsAvailable = true
                 this.usernameValid = true
                 this.passwordValid = true
                 this.emailValid = true
