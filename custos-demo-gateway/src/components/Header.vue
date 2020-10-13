@@ -190,26 +190,35 @@
         padding: 0px;
         line-height: 0px;
         font-size: 15px;
+        background-color: #4a4a4a;
     }
 
     .navigation {
-        background-color: #fff9cc;
+        background: #fe8c00;
+        background: -webkit-linear-gradient(to right, #f83600, #fe8c00);
+        background: linear-gradient(to right, #f83600, #fe8c00);
     }
 
     .navigation a {
         font-family: Avenir;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         text-align: left;
-        color: #203a43;
+        color: white;
+        padding: 5px 15px;
+        display: inline-block;
+        transition: all 0.1s;
     }
 
     .navigation a:hover {
-        color: #203a43;
+        color: white;
     }
 
     .navigation a:focus {
-        outline: none;
-        box-shadow: none;
+        color: white;
+    }
+
+    .navigation a.router-link-exact-active {
+        background-color: #00000047;
     }
 </style>
