@@ -4,14 +4,14 @@
             <h2>Sharing</h2>
         </div>
         <b-container class="text-left">
-            <div v-if="this.isAdminUser" class="w-100">
+            <div v-if="isAdminUser" class="w-100">
                 Do you want to evaluate if a specific user has a specific permission to a specific entity ?
                 <b-button variant="link" v-on:click="checkPermissions">Evaluate Permissions</b-button>
             </div>
             <div>
                 <div class="mt-5">
                     <strong>Permission Types</strong>
-                    <b-button v-if="this.isAdminUser" variant="link" v-on:click="onNewPrTyAdd">
+                    <b-button v-if="isAdminUser" variant="link" v-on:click="onNewPrTyAdd">
                         + Add Permission Type
                     </b-button>
                     <div>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="mt-5">
                     <strong>Entity Types</strong>
-                    <b-button v-if="this.isAdminUser" variant="link" v-on:click="onNewEnTyAdd">
+                    <b-button v-if="isAdminUser" variant="link" v-on:click="onNewEnTyAdd">
                         + Add Entity Type
                     </b-button>
                     <div v-if="this.entityTypesLoading" class="d-flex justify-content-center mb-3">
@@ -409,7 +409,7 @@
                 </b-button>
             </template>
         </b-modal>
-        <b-modal ref="evalutionResultPopup" id="evaluate-permission-results-modal" hide-footer>
+        <b-modal ref="evalutionResultPopup" id="evaluate-permission-results-modal">
             <div v-if="this.evaluating">
                 <b-spinner small type="grow"></b-spinner>
                 Evaluating...
@@ -442,6 +442,7 @@
         name: "Sharing",
         data: function () {
             return {
+                isAdminUser: false,
                 fields: ['id', 'name', 'description'],
                 sharingFields: ['entity_id', 'permission_type_id', 'type', 'id'],
                 entityFields: ['id', 'name', 'type', 'description'],
@@ -955,6 +956,9 @@
                 client_sec: this.custosSec
             }
 
+            this.users = await this.loadUsers()
+            this.groups = await this.loadGroups()
+
             this.permissionTypes = await this.$store.dispatch('sharing/getPermissionTypes', permTypesData)
 
             if (this.permissionTypes.length == 0) {
@@ -1008,10 +1012,6 @@
 
 
             this.sharings = await this.loadSharings()
-
-            this.users = await this.loadUsers()
-            this.groups = await this.loadGroups()
-
         }
     }
 

@@ -25,27 +25,17 @@
 
         </div>
         <div class="navigation text-left">
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">
+            <router-link to="/workspace">
                 <b-icon icon="house-door-fill"></b-icon>
-            </b-button>
-            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/users')">
-                Users
-            </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/groups')">
-                Groups
-            </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">
-                Secrets
-            </b-button>
-            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/sharings')">
-                Sharing
-            </b-button>
-            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/agents')">
-                Service Accounts
-            </b-button>
-            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/logs')">
-                Logs
-            </b-button>
+
+            </router-link>
+            <router-link to="/workspace/users" v-if="this.isAdmin">Users</router-link>
+            <router-link to="/workspace/groups">Groups</router-link>
+            <router-link to="/workspace/agents" v-if="this.isAdmin">Service Accounts</router-link>
+            <router-link to="/workspace/secrets">Secrets</router-link>
+            <router-link to="/workspace/sharings">Sharing</router-link>
+            <router-link to="/workspace/logs" v-if="this.isAdmin">logs</router-link>
+
         </div>
     </div>
 </template>
@@ -116,9 +106,8 @@
             }
         },
         watch: {
-            $route(to, from) {
+            $route() {
                 this.authenticated = false
-                console.log("=== route  ", [to, from])
                 this.fetchAuthenticatedUser()
             }
         },
@@ -180,26 +169,35 @@
         padding: 0px;
         line-height: 0px;
         font-size: 15px;
+        background-color: #4a4a4a;
     }
 
     .navigation {
-        background-color: #fff9cc;
+        background: #fe8c00;
+        background: -webkit-linear-gradient(to right, #f83600, #fe8c00);
+        background: linear-gradient(to right, #f83600, #fe8c00);
     }
 
     .navigation a {
         font-family: Avenir;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 600;
         text-align: left;
-        color: #203a43;
+        color: white;
+        padding: 5px 15px;
+        display: inline-block;
+        transition: all 0.1s;
     }
 
     .navigation a:hover {
-        color: #203a43;
+        color: white;
     }
 
     .navigation a:focus {
-        outline: none;
-        box-shadow: none;
+        color: white;
+    }
+
+    .navigation a.router-link-exact-active {
+        background-color: #00000047;
     }
 </style>

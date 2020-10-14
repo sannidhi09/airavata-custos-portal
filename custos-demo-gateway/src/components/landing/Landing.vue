@@ -1,14 +1,14 @@
 <template>
     <b-container>
-        <b-row align-v="top" align-h="center">
+        <b-row align-v="start" align-h="center">
             <b-col style="min-width: 300px; max-width: 100%" class="text-center">
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <div class="main-links">
-                    <b-link href="http://airavata.apache.org/custos/">Learn more</b-link>
+                    <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>
                     <b-link class="ml-5"
-                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
-                        Get started
+                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial" target="_blank">
+                        Tutorial Instructions
                     </b-link>
                 </div>
                 <img class="w-100" src="./../../assets/custos_home.png">
@@ -25,7 +25,7 @@
                 </b-card>
                 <b-card class="w-100 mt-3 login-card">
                     <form v-on:submit.prevent="this.login" class="p-2">
-                        <h3 class="mb-3">Login with Custos Explorer</h3>
+                        <h3 class="mb-3">Login with a Custos Account</h3>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-username">Username</label>
                             <b-form-input id="form-input-username" v-model="username"
