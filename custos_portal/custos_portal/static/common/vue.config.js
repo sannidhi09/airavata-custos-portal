@@ -1,7 +1,8 @@
 const BundleTracker = require("webpack-bundle-tracker");
 
 module.exports = {
-  publicPath: "http://localhost:9000/static/common/dist/",
+  // publicPath: "http://localhost:9000/static/common/dist/",
+  publicPath: "/static/common/dist/",
   productionSourceMap: false,
   pages: {
     app: "./js/main.js",
@@ -31,7 +32,7 @@ module.exports = {
       })
     ],
     devtool: 'source-map',
-    optimization: {
+    /*optimization: {
       /*
        * Force creating a vendor bundle so we can load the 'app' and 'vendor'
        * bundles on development as well as production using django-webpack-loader.
@@ -39,7 +40,7 @@ module.exports = {
        * some template logic to skip trying to load it.
        * See also: https://bitbucket.org/calidae/dejavu/src/d63d10b0030a951c3cafa6b574dad25b3bef3fe9/%7B%7Bcookiecutter.project_slug%7D%7D/frontend/vue.config.js?at=master&fileviewer=file-view-default#vue.config.js-27
        */
-      splitChunks: {
+     /* splitChunks: {
         chunks: 'all',
         cacheGroups: {
           vendors: {
@@ -58,15 +59,15 @@ module.exports = {
           }
         }
       }
-    },
+    },*/
 
-  devServer: {
+  /*devServer: {
     port: 9000,
     headers: {
       "Access-Control-Allow-Origin": "*"
     },
     hot: true,
     hotOnly: true
-  }
+  }*/
   }
 };

@@ -25,6 +25,7 @@ def list_new_tenant_requests(request):
 
 
 def view_tenant_request(request, client_id):
+    print("Admin view Tenant request Id: {}".format(client_id))
     token = request.COOKIES['token']
 
     return render(request, 'workspace/view_tenant_request.html', {
@@ -35,6 +36,7 @@ def view_tenant_request(request, client_id):
 
 
 def edit_tenant_request(request, client_id):
+    print("Edit Tenant request Id: {}".format(client_id))
     token = request.COOKIES['token']
 
     return render(request, 'workspace/view_tenant_request.html', {

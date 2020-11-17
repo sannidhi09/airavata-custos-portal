@@ -25,9 +25,12 @@ entry(Vue => {
       };
     },
     beforeMount() {
+      console.log(this.$el);
       let token = this.$el.dataset.token;
       
       this.decodedEmail = VueJwtDecode.decode(token).email;
+      console.log(this.decodedEmail);
+      console.log("Entry is executed");
     }
   }).$mount("#request-new-tenant");
 });

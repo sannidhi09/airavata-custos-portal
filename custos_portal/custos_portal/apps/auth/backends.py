@@ -69,7 +69,10 @@ class CustosAuthBackend(ModelBackend):
 
         if state == saved_state:
             response = identity_management_client.token(settings.CUSTOS_TOKEN, redirect_uri, code)
+            logger.debug(response)
             token = MessageToDict(response)
+
+            logger.debug(token["access_token"])
             return token
 
         return
