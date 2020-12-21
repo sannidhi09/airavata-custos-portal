@@ -1,3 +1,5 @@
-
-node_modules
 .idea*
+venv
+db.sqlite3
+*pycache*/
+node_modules/
