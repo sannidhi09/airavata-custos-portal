@@ -49,7 +49,7 @@
 
             await this.authenticate()
 
-            await this.$router.push('workspace')
+            await this.$router.push('tenants')
             let username = await this.$store.dispatch('identity/getCurrentUserName')
             let data = {
                 offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,

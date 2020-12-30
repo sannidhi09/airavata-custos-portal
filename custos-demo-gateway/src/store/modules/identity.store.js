@@ -67,10 +67,32 @@ const actions = {
             return true
         } catch (e) {
             commit('CLEAR_AUTH_TOKEN')
+            return false
         }
 
     },
 
+
+    async authenticateTenantAdmin({commit}, data) {
+        try {
+            let resp = await identity_management.localLogin(data)
+            commit('SET_TENANT_CACHED_TOKENS', data)
+            commit('SET_AUTH_TOKEN', resp.data)
+            return true
+        } catch (e) {
+            return false
+        }
+    },
+
+    async logoutTenantAdmin({commit}, data) {
+        let dat = {
+            client_id: auth.getClientId(),
+            client_sec: auth.getClientSec(),
+            refresh_token: auth.getRefreshToken()
+        }
+        await identity_management.logout(dat)
+        commit('RESET_TENANT_CACHED_TOKENS', data)
+    },
 
     // eslint-disable-next-line no-unused-vars
     async isLoggedUserHasAdminAccess({commit, data}) {
@@ -103,11 +125,44 @@ const mutations = {
         state.refreshToken = data.refresh_token
     },
 
+
+    // eslint-disable-next-line no-unused-vars
+    SET_TENANT_CACHED_TOKENS(state, data) {
+        auth.clearTenantAdminCachedAccessToken()
+        auth.clearTenantAdminCachedIdToken()
+        auth.clearTenantAdminCachedRefreshToken()
+        auth.setTenantAdminCachedIdToken(auth.getIdToken())
+        auth.setTenantAdminCachedAccessToken(auth.getAccessToken())
+        auth.setTenantAdminCachedRefreshToken(auth.getRefreshToken())
+        auth.setClientId(data.client_id)
+        auth.setClientSec(data.client_sec)
+    },
+
+    // eslint-disable-next-line no-unused-vars
+    RESET_TENANT_CACHED_TOKENS(state, data) {
+        auth.clearIdToken()
+        auth.clearAccessToken()
+        auth.clearRefreshToken()
+        auth.setIdToken(auth.getTenantAdminCachedIdToken())
+        auth.setAccessToken(auth.getTenantAdminCachedAccessToken())
+        auth.setRefreshToken(auth.getTenantAdminCachedRefreshToken())
+        auth.clearTenantAdminCachedAccessToken()
+        auth.clearTenantAdminCachedIdToken()
+        auth.clearTenantAdminCachedRefreshToken()
+        auth.clearActiveClientID()
+        auth.clearActiveClientSec()
+    },
+
     // eslint-disable-next-line no-unused-vars
     CLEAR_AUTH_TOKEN(state, data) {
         auth.clearIdToken()
         auth.clearAccessToken()
         auth.clearRefreshToken()
+        auth.clearTenantAdminCachedAccessToken()
+        auth.clearTenantAdminCachedIdToken()
+        auth.clearTenantAdminCachedRefreshToken()
+        auth.clearActiveClientID()
+        auth.clearActiveClientSec()
         state.idToken = ''
         state.accessToken = ''
         state.refreshToken = ''

@@ -470,7 +470,7 @@
                     client_sec: this.custosSec,
                     username: this.currentUser,
                     body: {
-                        groups: [{
+                        group: {
                             name: this.selectedNewGrName,
                             description: this.selectedNewGrDesc,
                             ownerId: username,
@@ -478,7 +478,7 @@
                             client_roles: [],
                             attributes: [],
                             sub_groups: []
-                        }]
+                        }
                     }
                 }
                 let response = await this.$store.dispatch('group/createGroup', data)
@@ -692,6 +692,13 @@
             this.groupsLoading = true
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            if (this.tenantModeactivated) {
+                this.custosId = await this.$store.dispatch('tenant/getActivatedClientId')
+                this.custosSec = await  this.$store.dispatch('tenant/getActivatedClientSecret');
+            } else {
+                await this.$router.push({name:'tenants'})
+            }
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
             this.currentUser = await this.$store.dispatch('identity/getCurrentUserName')
             let data = {

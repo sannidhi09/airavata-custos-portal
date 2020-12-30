@@ -127,7 +127,7 @@ export default {
     updateProfile(params) {
         let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
         let endpoint = usermgtEndpoint + "/user/profile";
-        console.log(authHeader)
+
         return api().put(endpoint, params.body
             , {
                 headers: authHeader
