@@ -393,13 +393,12 @@
                     "scope": this.$v.form.$model.scope.join(' ')
                 }
 
+                let accessToken = await this.$store.getters['identity/getAccessToken']
                 let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
+                    usertoken:accessToken,
                     body: body
                 }
 
-                console.log(body)
                 await this.$store.dispatch('tenant/updateTenant', data)
 
                 this.$emit('reloadParent')

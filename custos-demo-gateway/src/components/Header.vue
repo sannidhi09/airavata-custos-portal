@@ -119,23 +119,13 @@
                 this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
                 let currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
                 this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
-                let client_id = null
-                let client_sec = null
-                if (!this.tenantModeactivated) {
-                    client_id = config.value('clientId')
-                    client_sec = config.value('clientSec')
-                } else {
-                    client_id = auth.getClientId(),
-                        client_sec = auth.getClientSec()
-                }
-
 
                 if (await this.validateAuthentication() && (!this.user || this.user.username !== currentUserName)) {
+                    let accessToken = await this.$store.getters['identity/getAccessToken']
                     let resp = await this.$store.dispatch('user/users', {
                         offset: 0,
                         limit: 1,
-                        client_id: client_id,
-                        client_sec: client_sec,
+                        usertoken:accessToken,
                         username: currentUserName
                     })
                     if (Array.isArray(resp) && resp.length > 0) {

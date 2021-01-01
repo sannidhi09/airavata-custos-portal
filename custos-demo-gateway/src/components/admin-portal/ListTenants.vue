@@ -257,10 +257,9 @@
                     return
                 }
                 this.searchInd = true;
-
+                let accessToken = await this.$store.getters['identity/getAccessToken']
                 let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
+                    usertoken:accessToken,
                     requesting_client_id: this.searchID
                 }
 
@@ -291,13 +290,11 @@
 
             // eslint-disable-next-line no-unused-vars
             async loginToTenant(item, index, target) {
-                console.log(item.client_id)
                 await this.$emit('loginToTenant', {tenantId: item.client_id, tenantName: item.client_name})
             },
 
             // eslint-disable-next-line no-unused-vars
             async createChildTenant(item, index, target) {
-                console.log(item)
                 await this.$emit('createChildTenant', {tenantId: item.client_id})
             },
 
@@ -307,9 +304,9 @@
                     container = []
                 }
                 let limit = 50
+                let accessToken = await this.$store.getters['identity/getAccessToken']
                 let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
+                    usertoken:accessToken,
                     status: status,
                     limit: 50,
                     offset: offset
@@ -334,9 +331,9 @@
 
             async getAllTenants(status, requester_email) {
                 let container = [];
+                let accessToken = await this.$store.getters['identity/getAccessToken']
                 let data = {
-                    client_id: this.custosId,
-                    client_sec: this.custosSec,
+                    usertoken:accessToken,
                     status: status,
                     requester_email: requester_email
                 }

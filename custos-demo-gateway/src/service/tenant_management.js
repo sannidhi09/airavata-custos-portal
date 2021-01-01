@@ -18,7 +18,7 @@ export default {
 
 
     getTenants(data) {
-        let authHeader = {'Authorization': 'Bearer ' + btoa(data.client_id + ':' + data.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + data.usertoken}
         let endpoint = tenantMgtEndpoint + "/tenants"
         let params = {
             limit: data.limit,
@@ -30,7 +30,7 @@ export default {
     },
 
     getTenantByClientId(data) {
-        let authHeader = {'Authorization': 'Bearer ' + btoa(data.client_id + ':' + data.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + data.usertoken}
         let endpoint = tenantMgtEndpoint + "/oauth2/tenant"
         let params = {
             client_id: data.requesting_client_id
@@ -49,7 +49,7 @@ export default {
     },
 
     updateTenant(data) {
-        let authHeader = {'Authorization': 'Bearer ' + btoa(data.client_id + ':' + data.client_sec)}
+        let authHeader = {'Authorization': 'Bearer ' + data.usertoken}
         let endpoint = tenantMgtEndpoint + "/oauth2/tenant"
         return api().put(endpoint, data.body, {headers: authHeader})
     },

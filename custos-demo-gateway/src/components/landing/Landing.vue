@@ -44,10 +44,10 @@
                         <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
                             Invalid Username or Password
                         </div>
-                        <p class="mt-3 w-100 additional-links text-center">
-                            Don't have an account?
-                            <router-link to="/register">Create an account</router-link>
-                        </p>
+<!--                        <p class="mt-3 w-100 additional-links text-center">-->
+<!--                            Don't have an account?-->
+<!--                            <router-link to="/register">Create an account</router-link>-->
+<!--                        </p>-->
                     </form>
                 </b-card>
                 <p class="mt-3 w-100 additional-links">
@@ -107,11 +107,11 @@
                             username: this.username
                         }
                         let resp = await this.$store.dispatch('user/users', data)
+                        let accessToken = await this.$store.getters['identity/getAccessToken']
                         if (Array.isArray(resp) && resp.length > 0) {
                             resp.forEach(user => {
                                 let data = {
-                                    client_id: this.custosId,
-                                    client_sec: this.custosSec,
+                                    usertoken:accessToken,
                                     body: {
                                         username: user.username,
                                         first_name: user.first_name,

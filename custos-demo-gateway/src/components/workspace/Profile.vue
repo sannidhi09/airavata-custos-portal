@@ -253,10 +253,9 @@
                 }
 
                 if (!(this.firstNameError || this.lastnameError || this.emailError)) {
-
+                    let accessToken = await this.$store.getters['identity/getAccessToken']
                     let data = {
-                        client_id: this.custosId,
-                        client_sec: this.custosSec,
+                        usertoken:accessToken,
                         body: {
                             username: this.currentUserName,
                             first_name: this.first_name,
@@ -292,8 +291,9 @@
             }
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
             this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
+            let accessToken = await this.$store.getters['identity/getAccessToken']
                 let data = {
-                    offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                    offset: 0, limit: 1, usertoken:accessToken,
                     username: this.currentUserName
                 }
                 let resp = await this.$store.dispatch('user/users', data)

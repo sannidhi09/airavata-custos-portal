@@ -51,6 +51,7 @@
 
             await this.$router.push('tenants')
             let username = await this.$store.dispatch('identity/getCurrentUserName')
+            let accessToken = await this.$store.getters['identity/getAccessToken']
             let data = {
                 offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
                 username: username
@@ -59,8 +60,7 @@
             if (Array.isArray(resp) && resp.length > 0) {
                 resp.forEach(user => {
                     let dat = {
-                        client_id: this.custosId,
-                        client_sec: this.custosSec,
+                        usertoken:accessToken,
                         body: {
                             username: user.username,
                             first_name: user.first_name,
