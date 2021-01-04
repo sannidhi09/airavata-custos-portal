@@ -294,7 +294,7 @@
                     this.selectedId = this.selectedItem[0].id
                     this.selectedName = this.selectedItem[0].name
                     this.selectedDescription = this.selectedItem[0].description
-                    this.selectedOwnerId = this.selectedItem[0].ownerId
+                    this.selectedOwnerId = this.selectedItem[0].owner_id
 
                     let data = {
                         client_id: this.custosId,
@@ -391,7 +391,8 @@
 
                     if (addToGroup) {
 
-                        if (gr.ownerId != this.currentUser) {
+
+                        if (gr.owner_id != this.currentUser) {
                             let data = {
                                 client_id: this.custosId,
                                 client_sec: this.custosSec,
@@ -664,18 +665,18 @@
 
 
             async loadGroups(data) {
+                let grs = []
                 if (this.isAdminUser) {
-                    this.groupItems = await this.$store.dispatch('group/loadAllGroups', data)
+                    grs = await this.$store.dispatch('group/loadAllGroups', data)
                 } else {
-                    let grs = []
                     grs = await this.$store.dispatch('group/getAllGroupsOfUser', data)
-                    let groups = []
-                    grs.forEach(gr => {
-                        gr.ownerId = gr.owner_id
-                        groups.push(gr)
-                    })
-                    this.groupItems = groups
                 }
+                let groups = []
+                grs.forEach(gr => {
+                    gr.ownerId = gr.owner_id
+                    groups.push(gr)
+                })
+                this.groupItems = groups
             },
 
             async goToWorkspace() {

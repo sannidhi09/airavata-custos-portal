@@ -43,7 +43,7 @@ const actions = {
             refresh_token: auth.getRefreshToken()
         }
         await identity_management.logout(dat)
-        commit('CLEAR_AUTH_TOKEN', data)
+        await commit('CLEAR_AUTH_TOKEN', data)
     },
 
     // eslint-disable-next-line no-unused-vars
@@ -91,7 +91,7 @@ const actions = {
             refresh_token: auth.getRefreshToken()
         }
         await identity_management.logout(dat)
-        commit('RESET_TENANT_CACHED_TOKENS', data)
+        await commit('RESET_TENANT_CACHED_TOKENS', data)
     },
 
     // eslint-disable-next-line no-unused-vars
@@ -177,8 +177,9 @@ const getters = {
         return auth.isLoggedIn()
     },
 
+    // eslint-disable-next-line no-unused-vars
     getAccessToken(state) {
-        return state.accessToken;
+        return auth.getAccessToken()
     },
 
 

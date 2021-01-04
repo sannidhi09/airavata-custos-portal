@@ -145,7 +145,6 @@ async function validate(next) {
             client_id: auth.getClientId(),
             client_sec: auth.getClientSec()
         }
-        console.log(data)
     }
     if (await store.dispatch('identity/isAuthenticated', data) == true) {
         // You can use store variable here to access globalError or commit mutation

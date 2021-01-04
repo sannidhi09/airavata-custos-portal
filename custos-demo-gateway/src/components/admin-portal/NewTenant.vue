@@ -586,7 +586,6 @@
                     let logo_uri = this.$v.form.tab2.logo_uri.$model;
                     let comment = this.$v.form.tab2.comment.$model;
                     let application_type = this.$v.form.tab2.application_type.$model;
-                    console.log(application_type);
                     let scopeString = '';
                     for (var i = 0; i < scope.length; i++) {
                         scopeString += scope[i] + " "

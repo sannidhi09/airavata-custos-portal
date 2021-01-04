@@ -223,8 +223,10 @@
             this.custosSec = config.value('clientSec')
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
             this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
+            let accessToken = await this.$store.getters['identity/getAccessToken']
+
             let data = {
-                offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                offset: 0, limit: 1, usertoken:accessToken,
                 username: this.currentUserName
             }
             let resp = await this.$store.dispatch('user/users', data)
@@ -272,7 +274,7 @@
 
             onRowSelected: function (items) {
                 if (items != null && items.length > 0) {
-                    console.log(items[0].client_name)
+
                     this.view_tenant = true
                     this.selectedTenant = items[0];
                 }

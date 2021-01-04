@@ -98,7 +98,6 @@
                        let tokenResp =  await this.$store.dispatch('identity/authenticateTenantAdmin', params)
                         if (tokenResp) {
                             let resp = await this.$store.dispatch('identity/isAuthenticated', data)
-                            console.log(resp)
                             if (resp) {
 
                                 let data = {

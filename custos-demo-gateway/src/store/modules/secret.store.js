@@ -64,7 +64,7 @@ const actions = {
                 accessible_tokens: data.accessible_tokens
             }
         }
-        console.log(dat)
+
         let response = await secret_management.getAllCredentials(dat)
         return response.data.metadata
     },

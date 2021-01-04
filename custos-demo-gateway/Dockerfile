@@ -10,8 +10,6 @@ RUN npm run build
 FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY privkey.pem /etc/nginx/privkey.pem
-COPY fullchain.pem /etc/nginx/fullchain.pem
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 EXPOSE 8080 443
