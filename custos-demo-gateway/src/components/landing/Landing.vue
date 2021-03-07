@@ -6,10 +6,10 @@
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <div class="main-links">
                     <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>
-                    <b-link class="ml-5"
-                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial" target="_blank">
-                        Tutorial Instructions
-                    </b-link>
+<!--                    <b-link class="ml-5"-->
+<!--                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial" target="_blank">-->
+<!--                        Tutorial Instructions-->
+<!--                    </b-link>-->
                 </div>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
@@ -44,12 +44,20 @@
                         <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
                             Invalid Username or Password
                         </div>
-                        <p class="mt-3 w-100 additional-links text-center">
-                            Don't have an account?
-                            <router-link to="/register">Create an account</router-link>
-                        </p>
+<!--                        <p class="mt-3 w-100 additional-links text-center">-->
+<!--                            Don't have an account?-->
+<!--                            <router-link to="/register">Create an account</router-link>-->
+<!--                        </p>-->
                     </form>
                 </b-card>
+                <p class="mt-3 w-100 additional-links">
+<!--                    How to use Custos?-->
+<!--                    <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">-->
+<!--                        Tutorial-->
+<!--                    </b-link>-->
+                    All about
+                    <b-link href="http://airavata.apache.org/custos/">Custos</b-link>
+                </p>
             </b-col>
         </b-row>
     </b-container>
@@ -93,7 +101,31 @@
                     await this.$store.dispatch('identity/authenticateLocally', params)
                     let resp = await this.$store.dispatch('identity/isAuthenticated', data)
                     if (resp) {
-                        await this.$router.push('workspace')
+
+                        let data = {
+                            offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                            username: this.username
+                        }
+                        let resp = await this.$store.dispatch('user/users', data)
+                        let accessToken = await this.$store.getters['identity/getAccessToken']
+                        if (Array.isArray(resp) && resp.length > 0) {
+                            resp.forEach(user => {
+                                let data = {
+                                    usertoken:accessToken,
+                                    body: {
+                                        username: user.username,
+                                        first_name: user.first_name,
+                                        last_name: user.last_name,
+                                        email: user.email,
+                                    }
+                                }
+                                this.$store.dispatch('user/updateUserProfile', data)
+
+                            })
+                        }
+
+                        await this.$router.push('tenants')
+
                     } else {
                         this.loginError = true
                     }
@@ -121,7 +153,7 @@
                 client_sec: this.custosSec
             }
             if (await store.dispatch('identity/isAuthenticated', data) === true) {
-                await this.$router.push('workspace')
+                await this.$router.push('tenants')
             }
         }
     }

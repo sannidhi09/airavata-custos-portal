@@ -6,10 +6,10 @@
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <div class="main-links">
                     <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>
-                    <b-link class="ml-5"
-                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial" target="_blank">
-                        Tutorial Instructions
-                    </b-link>
+<!--                    <b-link class="ml-5"-->
+<!--                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial" target="_blank">-->
+<!--                        Tutorial Instructions-->
+<!--                    </b-link>-->
                 </div>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
