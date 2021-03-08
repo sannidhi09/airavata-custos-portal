@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <Header/>
-        <div class="p-3" id="nav">
+        <div class="w-100" id="nav">
             <router-view/>
         </div>
     </div>
@@ -18,11 +18,11 @@
 
 <style>
     #app {
-        font-family: Avenir, Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        color: #2c3e50;
+        /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
+        /*-webkit-font-smoothing: antialiased;*/
+        /*-moz-osx-font-smoothing: grayscale;*/
+        /*text-align: center;*/
+        /*color: #2c3e50;*/
         /*margin-top: 60px;*/
     }
 </style>
