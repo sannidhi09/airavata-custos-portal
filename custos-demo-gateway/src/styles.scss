@@ -7,16 +7,60 @@ $font-family-base: BentonSans Regular, $font-family-sans-serif !default;
 $primary: #EA6A0A;
 //$primary: #9a0002;
 //$secondary: $gray-600 !default;
-//$success: $green !default;
+$success: #CDF0C2 !default;
 //$info: $cyan !default;
-//$warning: $yellow !default;
+$warning: #FFCF4B !default;
 //$danger: $red !default;
 $light: #F9F9F9 !default;
 //$dark: $gray-800 !default;
+
+
+//$table-cell-padding:          .75rem !default;
+$table-cell-padding-sm: .6rem !default;
+//
+//$table-color:                 $body-color !default;
+$table-bg: $light !default;
+//$table-accent-bg:             rgba($black, .05) !default;
+//$table-hover-color:           $table-color !default;
+//$table-hover-bg:              rgba($black, .075) !default;
+//$table-active-bg:             $table-hover-bg !default;
+
+//$table-border-width: $border-width !default;
+$table-border-color: white !default;
+
+
+$table-thead-border-color: black !default;
+
+//$table-head-bg:               white !default;
+//$table-head-color:            $gray-700 !default;
+$table-th-font-weight: null !default;
+
+//$table-dark-color:            $white !default;
+//$table-dark-bg:               $gray-800 !default;
+//$table-dark-accent-bg:        rgba($white, .05) !default;
+//$table-dark-hover-color:      $table-dark-color !default;
+//$table-dark-hover-bg:         rgba($white, .075) !default;
+//$table-dark-border-color:     lighten($table-dark-bg, 7.5%) !default;
+
+//$table-striped-order:         odd !default;
+
+//$table-caption-color:         $text-muted !default;
+
+//$table-bg-level:              -9 !default;
+//$table-border-level:          -6 !default;
 
 
 // Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap';
 // BootstrapVue and its default variables
 @import '~bootstrap-vue/src/index.scss';
+
+table.table thead th {
+  border-bottom: 1px solid $table-thead-border-color;
+  background-color: white;
+}
+
+table.table {
+  font-size: 0.9rem;
+}
 

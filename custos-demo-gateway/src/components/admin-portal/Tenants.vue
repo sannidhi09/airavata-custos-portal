@@ -2,7 +2,7 @@
   <div class="w-100">
     <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">
       <div style="flex: 1;">
-        <div style="font-size: 1.4rem;font-weight: 800;">Tenants</div>
+        <div style="font-size: 1.4rem;">Tenants</div>
       </div>
       <div>
         <b-button variant="primary" v-on:click="this.createNewTenant">Create New Tenant</b-button>

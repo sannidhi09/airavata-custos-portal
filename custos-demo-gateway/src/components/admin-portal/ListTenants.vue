@@ -1,195 +1,244 @@
 <template>
-  <div v-if="active_display.length === 0 || requested_display.length === 0 || deactivated_display.length === 0"
-       class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
 
-    <p style="max-width: 600px;display: inline-block;">
-      <img :src="svgNotFound" style="width: 70px;margin-bottom: 30px;"/><br/>
-      You have no tenants. Start by clicking on Create New Tenant Button.
-      Visit
-      <b-link href="#">documentation</b-link>
-      more information.
-    </p>
-  </div>
-  <div v-else-if="!this.view_tenant">
 
-    <b-table-simple>
-      <b-thead>
-        <b-tr>
-          <b-th>Tenant ID</b-th>
-          <b-th>Name</b-th>
-          <b-th>Domain</b-th>
-          <b-th>Status</b-th>
-          <b-th></b-th>
-        </b-tr>
-      </b-thead>
-      <b-tbody>
-        <tr>
+  <div>
+    <div
+        v-if="!active_display || !requested_display || !deactivated_display"
+        class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
 
-        </tr>
-      </b-tbody>
-    </b-table-simple>
-
-    <div class="row">
-      <div class="col">
-        <h1 class="h4 mb-4 heading">Manage Tenants</h1>
-      </div>
+      Loading ...
     </div>
-    <div class="card">
-      <div class="searchBoxDiv">
-        <b-row>
-          <b-col cols="1">
-            <b-form-input v-model="searchID" class="searchBox" placeholder="Enter TenantId"></b-form-input>
-          </b-col>
-          <b-button variant="primary" @click="searchHandler" class="btnCustom"><span>
-                        <i class="fas fa-search"></i>
-                        </span> Search
-          </b-button>
-        </b-row>
-      </div>
-      <div v-if="this.searchInd === true" class="table" align="center">
+    <div
+        v-else-if="(active_display.length + requested_display.length + deactivated_display.length) === 0"
+        class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
 
-        <b-table v-if="this.searchList[0].tenant_status ==='ACTIVE'" style="width: 70%" striped hover responsive
-                 :items="searchList" :fields="fields" selectable
-                 small
-                 ref="selectableTable"
-                 select-mode="single"
-                 @row-selected="onRowSelected">
-          <template #cell(actions)="row">
-            <b-button pill size="sm" @click="loginToTenant(row.item, row.index, $event.target)"
-                      class="tenantLogin">
-              Tenant Explorer
-            </b-button>
-
-            <b-dropdown :disabled="row.item.parent_tenant_id>0" right class="ml-2" text="..." no-caret
-                        toggle-class="list-button">
-              <template v-slot:button-content>
-                <b-icon icon="three-dots-vertical"></b-icon>
-              </template>
-              <template v-slot:default>
-                <b-dropdown-item href="#"
-                                 v-on:click="createChildTenant(row.item, row.index, $event.target)">
-                  Create Child Tenant
-                </b-dropdown-item>
-              </template>
-            </b-dropdown>
-          </template>
-        </b-table>
-        <b-table v-else style="width: 70%" striped hover responsive :items="searchList"
-                 :fields="nonActionFields" selectable
-                 small
-                 ref="selectableTable"
-                 select-mode="single"
-                 @row-selected="onRowSelected">
-        </b-table>
-      </div>
-      <div class="h-tabs" v-if="this.searchInd === false">
-        <div class="h-tab">
-          <div align="center" v-on:click="onClickHandler(1)"
-               v-bind:class="[value===1 ? 'tab-content-active' : 'tab-content' ]">Active
-          </div>
-          <div align="center" v-on:click="onClickHandler(2)"
-               v-bind:class="[value===2 ? 'tab-content-active' : 'tab-content' ]">Requested
-          </div>
-          <div align="center" v-on:click="onClickHandler(3)"
-               v-bind:class="[value===3 ? 'tab-content-active' : 'tab-content' ]">Deactivated
-          </div>
-        </div>
-        <div v-if="value === 1" class="content card-body">
-          <b-table striped hover responsive :items="active_display" :fields="fields" selectable small
-                   ref="selectableTable"
-                   select-mode="single"
-                   :per-page="perPage"
-                   :current-page="currentActivePage"
-                   @row-selected="onRowSelected">
-            <template #cell(actions)="row">
-              <b-button pill size="sm" @click="loginToTenant(row.item, row.index, $event.target)"
-                        class="tenantLogin">
-                Tenant Explorer
-              </b-button>
-
-              <b-dropdown :disabled="row.item.parent_tenant_id>0" right class="ml-2" text="..." no-caret
-                          toggle-class="list-button">
-                <template v-slot:button-content>
-                  <b-icon icon="three-dots-vertical"></b-icon>
-                </template>
-                <template v-slot:default>
-                  <b-dropdown-item href="#"
-                                   v-on:click="createChildTenant(row.item, row.index, $event.target)">
-                    Create Child Tenant
-                  </b-dropdown-item>
-                </template>
-              </b-dropdown>
-            </template>
-
-          </b-table>
-          <div>
-            <b-pagination
-                size="sm"
-                class="float-right"
-                v-model="currentActivePage"
-                :total-rows="activeRows"
-                :per-page="perPage"
-                aria-controls="my-table"
-            ></b-pagination>
-          </div>
-        </div>
-        <div v-if="value === 2" class="content card-body">
-          <b-table striped hover responsive :items="requested_display" :fields="nonActionFields" selectable
-                   small
-                   ref="selectableTable"
-                   select-mode="single"
-                   :per-page="perPage"
-                   :current-page="currentRequestedPage"
-                   @row-selected="onRowSelected">
-          </b-table>
-          <div>
-            <b-pagination
-                size="sm"
-                class="float-right"
-                v-model="currentRequestedPage"
-                :total-rows="requestedRows"
-                :per-page="perPage"
-                aria-controls="my-table"
-            ></b-pagination>
-          </div>
-        </div>
-        <div v-if="value === 3" class="content card-body">
-          <b-table striped hover responsive :items="deactivated_display" :fields="nonActionFields" selectable
-                   small
-                   ref="selectableTable"
-                   select-mode="single"
-                   :per-page="perPage"
-                   :current-page="currentDeactivatedPage"
-                   @row-selected="onRowSelected">
-          </b-table>
-          <div>
-            <b-pagination
-                size="sm"
-                class="float-right"
-                v-model="currentDeactivatedPage"
-                :total-rows="requestedRows"
-                :per-page="perPage"
-                aria-controls="my-table"
-            ></b-pagination>
-          </div>
-        </div>
-      </div>
+      <p style="max-width: 600px;display: inline-block;">
+        <img :src="svgNotFound" style="width: 70px;margin-bottom: 30px;"/><br/>
+        You have no tenants. Start by clicking on Create New Tenant Button.
+        Visit
+        <b-link href="#">documentation</b-link>
+        more information.
+      </p>
     </div>
+    <div v-else style="padding: 30px 100px;">
 
+      <b-table-simple small>
+        <b-thead>
+          <b-tr>
+            <b-th>
+              <b-checkbox/>
+            </b-th>
+            <b-th>Tenant ID</b-th>
+            <b-th>Name</b-th>
+            <b-th>Domain</b-th>
+            <b-th>Status</b-th>
+            <b-th></b-th>
+          </b-tr>
+        </b-thead>
+        <b-tbody>
+          <b-tr v-for="tenant in active_display" :key="tenant.client_id">
+            <b-td>
+              <b-checkbox/>
+            </b-td>
+            <b-td>{{ tenant.client_id }}</b-td>
+            <b-td>{{ tenant.client_name }}</b-td>
+            <b-td>{{ tenant.domain }}</b-td>
+            <b-td>
+              <b-form-tag no-remove variant="success">Active</b-form-tag>
+            </b-td>
+          </b-tr>
+
+          <b-tr v-for="tenant in requested_display" :key="tenant.client_id">
+            <b-td>
+              <b-checkbox/>
+            </b-td>
+            <b-td>{{ tenant.client_id }}</b-td>
+            <b-td>{{ tenant.client_name }}</b-td>
+            <b-td>{{ tenant.domain }}</b-td>
+            <b-td>
+              <b-form-tag no-remove variant="warning">Requested</b-form-tag>
+            </b-td>
+          </b-tr>
+
+          <b-tr v-for="tenant in deactivated_display" :key="tenant.client_id">
+            <b-td>
+              <b-checkbox/>
+            </b-td>
+            <b-td>{{ tenant.client_id }}</b-td>
+            <b-td>{{ tenant.client_name }}</b-td>
+            <b-td>{{ tenant.domain }}</b-td>
+            <b-td>
+              <b-form-tag no-remove variant="secondary">Deactivated</b-form-tag>
+            </b-td>
+          </b-tr>
+        </b-tbody>
+      </b-table-simple>
+
+      <!--      <div class="row">-->
+      <!--        <div class="col">-->
+      <!--          <h1 class="h4 mb-4 heading">Manage Tenants</h1>-->
+      <!--        </div>-->
+      <!--      </div>-->
+      <!--      <div class="card">-->
+      <!--        <div class="searchBoxDiv">-->
+      <!--          <b-row>-->
+      <!--            <b-col cols="1">-->
+      <!--              <b-form-input v-model="searchID" class="searchBox" placeholder="Enter TenantId"></b-form-input>-->
+      <!--            </b-col>-->
+      <!--            <b-button variant="primary" @click="searchHandler" class="btnCustom"><span>-->
+      <!--                        <i class="fas fa-search"></i>-->
+      <!--                        </span> Search-->
+      <!--            </b-button>-->
+      <!--          </b-row>-->
+      <!--        </div>-->
+      <!--        <div v-if="this.searchInd === true" class="table" align="center">-->
+
+      <!--          <b-table v-if="this.searchList[0].tenant_status ==='ACTIVE'" style="width: 70%" striped hover responsive-->
+      <!--                   :items="searchList" :fields="fields" selectable-->
+      <!--                   small-->
+      <!--                   ref="selectableTable"-->
+      <!--                   select-mode="single"-->
+      <!--                   @row-selected="onRowSelected">-->
+      <!--            <template #cell(actions)="row">-->
+      <!--              <b-button pill size="sm" @click="loginToTenant(row.item, row.index, $event.target)"-->
+      <!--                        class="tenantLogin">-->
+      <!--                Tenant Explorer-->
+      <!--              </b-button>-->
+
+      <!--              <b-dropdown :disabled="row.item.parent_tenant_id>0" right class="ml-2" text="..." no-caret-->
+      <!--                          toggle-class="list-button">-->
+      <!--                <template v-slot:button-content>-->
+      <!--                  <b-icon icon="three-dots-vertical"></b-icon>-->
+      <!--                </template>-->
+      <!--                <template v-slot:default>-->
+      <!--                  <b-dropdown-item href="#"-->
+      <!--                                   v-on:click="createChildTenant(row.item, row.index, $event.target)">-->
+      <!--                    Create Child Tenant-->
+      <!--                  </b-dropdown-item>-->
+      <!--                </template>-->
+      <!--              </b-dropdown>-->
+      <!--            </template>-->
+      <!--          </b-table>-->
+      <!--          <b-table v-else style="width: 70%" striped hover responsive :items="searchList"-->
+      <!--                   :fields="nonActionFields" selectable-->
+      <!--                   small-->
+      <!--                   ref="selectableTable"-->
+      <!--                   select-mode="single"-->
+      <!--                   @row-selected="onRowSelected">-->
+      <!--          </b-table>-->
+      <!--        </div>-->
+      <!--        <div class="h-tabs" v-if="this.searchInd === false">-->
+      <!--          <div class="h-tab">-->
+      <!--            <div align="center" v-on:click="onClickHandler(1)"-->
+      <!--                 v-bind:class="[value===1 ? 'tab-content-active' : 'tab-content' ]">Active-->
+      <!--            </div>-->
+      <!--            <div align="center" v-on:click="onClickHandler(2)"-->
+      <!--                 v-bind:class="[value===2 ? 'tab-content-active' : 'tab-content' ]">Requested-->
+      <!--            </div>-->
+      <!--            <div align="center" v-on:click="onClickHandler(3)"-->
+      <!--                 v-bind:class="[value===3 ? 'tab-content-active' : 'tab-content' ]">Deactivated-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div v-if="value === 1" class="content card-body">-->
+      <!--            <b-table striped hover responsive :items="active_display" :fields="fields" selectable small-->
+      <!--                     ref="selectableTable"-->
+      <!--                     select-mode="single"-->
+      <!--                     :per-page="perPage"-->
+      <!--                     :current-page="currentActivePage"-->
+      <!--                     @row-selected="onRowSelected">-->
+      <!--              <template #cell(actions)="row">-->
+      <!--                <b-button pill size="sm" @click="loginToTenant(row.item, row.index, $event.target)"-->
+      <!--                          class="tenantLogin">-->
+      <!--                  Tenant Explorer-->
+      <!--                </b-button>-->
+
+      <!--                <b-dropdown :disabled="row.item.parent_tenant_id>0" right class="ml-2" text="..." no-caret-->
+      <!--                            toggle-class="list-button">-->
+      <!--                  <template v-slot:button-content>-->
+      <!--                    <b-icon icon="three-dots-vertical"></b-icon>-->
+      <!--                  </template>-->
+      <!--                  <template v-slot:default>-->
+      <!--                    <b-dropdown-item href="#"-->
+      <!--                                     v-on:click="createChildTenant(row.item, row.index, $event.target)">-->
+      <!--                      Create Child Tenant-->
+      <!--                    </b-dropdown-item>-->
+      <!--                  </template>-->
+      <!--                </b-dropdown>-->
+      <!--              </template>-->
+
+      <!--            </b-table>-->
+      <!--            <div>-->
+      <!--              <b-pagination-->
+      <!--                  size="sm"-->
+      <!--                  class="float-right"-->
+      <!--                  v-model="currentActivePage"-->
+      <!--                  :total-rows="activeRows"-->
+      <!--                  :per-page="perPage"-->
+      <!--                  aria-controls="my-table"-->
+      <!--              ></b-pagination>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div v-if="value === 2" class="content card-body">-->
+      <!--            <b-table striped hover responsive :items="requested_display" :fields="nonActionFields" selectable-->
+      <!--                     small-->
+      <!--                     ref="selectableTable"-->
+      <!--                     select-mode="single"-->
+      <!--                     :per-page="perPage"-->
+      <!--                     :current-page="currentRequestedPage"-->
+      <!--                     @row-selected="onRowSelected">-->
+      <!--            </b-table>-->
+      <!--            <div>-->
+      <!--              <b-pagination-->
+      <!--                  size="sm"-->
+      <!--                  class="float-right"-->
+      <!--                  v-model="currentRequestedPage"-->
+      <!--                  :total-rows="requestedRows"-->
+      <!--                  :per-page="perPage"-->
+      <!--                  aria-controls="my-table"-->
+      <!--              ></b-pagination>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div v-if="value === 3" class="content card-body">-->
+      <!--            <b-table striped hover responsive :items="deactivated_display" :fields="nonActionFields" selectable-->
+      <!--                     small-->
+      <!--                     ref="selectableTable"-->
+      <!--                     select-mode="single"-->
+      <!--                     :per-page="perPage"-->
+      <!--                     :current-page="currentDeactivatedPage"-->
+      <!--                     @row-selected="onRowSelected">-->
+      <!--            </b-table>-->
+      <!--            <div>-->
+      <!--              <b-pagination-->
+      <!--                  size="sm"-->
+      <!--                  class="float-right"-->
+      <!--                  v-model="currentDeactivatedPage"-->
+      <!--                  :total-rows="requestedRows"-->
+      <!--                  :per-page="perPage"-->
+      <!--                  aria-controls="my-table"-->
+      <!--              ></b-pagination>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+    </div>
   </div>
-  <div v-else>
-    <Tenant :tenantRequest="selectedTenant" @reloadParent="reloadMe"></Tenant>
-  </div>
+  <!--  <div v-else>-->
+  <!--    active_display {{active_display}}<br/>-->
+  <!--    active_display {{requested_display}}<br/>-->
+  <!--    active_display {{deactivated_display}}<br/>-->
+  <!--    <Tenant :tenantRequest="selectedTenant" @reloadParent="reloadMe"></Tenant>-->
+  <!--  </div>-->
 </template>
 
 <script>
 
-import Tenant from "@/components/admin-portal/Tenant";
+// import Tenant from "@/components/admin-portal/Tenant";
 import config from "@/config";
 import svgNotFound from "../../assets/not-found-icon.svg"
 
 export default {
-  components: {Tenant},
+  components: {},
   props: {
     tokenData: {
       type: String
@@ -225,13 +274,13 @@ export default {
         key: 'domain',
         label: 'Domain'
       }],
-      active_display: [],
+      active_display: null,
       requested_page: 1,
       requested_pages: [],
-      requested_display: [],
+      requested_display: null,
       deactivated_page: 1,
       deactivated_pages: [],
-      deactivated_display: [],
+      deactivated_display: null,
       req_offset: 0,
       active_offset: 0,
       deactivated_offset: 0,
