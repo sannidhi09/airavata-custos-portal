@@ -55,12 +55,12 @@ $table-th-font-weight: null !default;
 // BootstrapVue and its default variables
 @import '~bootstrap-vue/src/index.scss';
 
-table.table thead th {
+.table thead th {
   border-bottom: 1px solid $table-thead-border-color;
-  background-color: white;
+  background-color: #f7f7f7;
 }
 
-table.table {
+.table {
   font-size: 0.9rem;
 }
 
