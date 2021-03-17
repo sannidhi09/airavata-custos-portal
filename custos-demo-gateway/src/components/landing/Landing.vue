@@ -1,56 +1,67 @@
 <template>
-  <b-container>
+  <b-container style="padding-top: 60px;">
     <b-row align-v="start" align-h="center">
-      <b-col style="min-width: 300px; max-width: 100%" class="text-center">
+      <b-col style="min-width: 300px; max-width: 600px;" class="text-center">
         <h2>Welcome to Custos</h2>
         <p class="h2-sub">Sign up and start authenticating</p>
-        <div class="main-links">
-          <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>
-          <b-link class="ml-5"
-                  href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial"
-                  target="_blank">
-            Tutorial Instructions
-          </b-link>
-        </div>
+        <!--        <div class="main-links">-->
+        <!--          <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>-->
+        <!--          <b-link class="ml-5"-->
+        <!--                  href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial"-->
+        <!--                  target="_blank">-->
+        <!--            Tutorial Instructions-->
+        <!--          </b-link>-->
+        <!--        </div>-->
         <img class="w-100" src="../../assets/custos_home.png">
       </b-col>
-      <b-col style="max-width: 600px;min-width: 300px;" align-h="center">
-        <b-card class="w-100 login-card">
+      <b-col style="max-width: 350px;min-width: 300px;" align-h="center">
+        <div class="w-100">
           <div class="p-2">
-            <h3 class="mb-2">(Recommended Option)</h3>
-            <b-button class="primary-btn w-100 text-center mt-2" variant="warning"
-                      v-on:click="this.loadAuthURL">
-              Register or Login with your Institution Identity
-            </b-button>
-          </div>
-        </b-card>
-        <b-card class="w-100 mt-3 login-card">
-          <form v-on:submit.prevent="this.login" class="p-2">
-            <h3 class="mb-3">Login with a Custos Account</h3>
-            <div class="p-2">
-              <label class="form-input-label" for="form-input-username">Username</label>
-              <b-form-input id="form-input-username" v-model="username"
-                            placeholder="Username"></b-form-input>
+            <h3>Login</h3>
+            <div>
+              New to Custos?
+              <b-link href="#">Sign Up</b-link>
             </div>
-            <div class="p-2">
+
+            <div class="mt-4">
+              <label class="form-input-label" for="form-input-institution">Choose your Institution Identity</label>
+              <b-select id="form-input-institution" size="sm">
+                <b-select-option>Indiana University Bloomington</b-select-option>
+              </b-select>
+            </div>
+            <b-button variant="primary" class="mt-3" v-on:click="this.loadAuthURL"> Login</b-button>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: row;" class="mt-3 mb-3">
+          <hr style="flex: 1;background-color: #203A43;"/>
+          <div style="padding: 5px 10px;">OR</div>
+          <hr style="flex: 1;background-color: #203A43;"/>
+        </div>
+        <div class="w-100 mt-3">
+          <form v-on:submit.prevent="this.login" class="p-2">
+            <div class="mb-2">
+              <label class="form-input-label" for="form-input-username">Username</label>
+              <b-form-input id="form-input-username" v-model="username" size="sm" placeholder="Username"></b-form-input>
+            </div>
+            <div class="mb-2">
               <label class="form-input-label" for="form-input-password">Password</label>
-              <b-form-input id="form-input-password" type="password" v-model="password"
+              <b-form-input id="form-input-password" type="password" v-model="password" size="sm"
                             placeholder="Password"></b-form-input>
             </div>
-            <b-button class="primary-btn w-100 text-center mt-3" type="submit" variant="warning"
-                      v-on:click="this.login" :disabled="this.loginDisabled">
+            <b-button type="submit" variant="secondary" class="mt-3" v-on:click="this.login"
+                      :disabled="this.loginDisabled">
               Login
               <b-spinner small v-if="this.loginDisabled"></b-spinner>
             </b-button>
             <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
               Invalid Username or Password
             </div>
-            <p class="mt-3 w-100 additional-links text-center">
-              Don't have an account?
-              <router-link to="/register">Create an account</router-link>
-            </p>
+            <!--            <p class="mt-3 w-100 additional-links text-center">-->
+            <!--              Don't have an account?-->
+            <!--              <router-link to="/register">Create an account</router-link>-->
+            <!--            </p>-->
           </form>
-        </b-card>
+        </div>
       </b-col>
     </b-row>
   </b-container>
@@ -120,73 +131,62 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+
 h2 {
-  font-family: Avenir;
+  /*font-family: Avenir;*/
   font-size: 35px;
   font-weight: 900;
   color: #203a43;
+  text-align: left;
 }
 
 .h2-sub {
-  font-family: Avenir-Roman;
+  /*font-family: Avenir-Roman;*/
   font-size: 22px;
   color: #203a43;
+  text-align: left;
 }
 
 h3 {
-  font-family: Avenir;
-  font-size: 15px;
-  font-weight: 600;
-  text-align: center;
+  /*font-family: Avenir;*/
+  font-size: 25px;
+  font-weight: 700;
   color: #203a43;
+  text-align: left;
 }
 
-.h3-sub {
-  font-family: Avenir-Roman;
-  font-size: 20px;
-  text-align: left;
-  color: #203a43;
-}
+/*.h3-sub {*/
+/*  font-family: Avenir-Roman;*/
+/*  font-size: 20px;*/
+/*  text-align: left;*/
+/*  color: #203a43;*/
+/*}*/
 
 .form-input-label {
-  font-family: Avenir;
-  font-weight: 900;
+  font-weight: 700;
   text-align: left;
   float: left;
   color: #203a43;
 }
 
-.primary-btn {
-  background-color: #ea6a0a;
-
-  font-family: Avenir;
-  font-size: 14px;
-  font-weight: 900;
-  text-align: left;
-  color: #ffffff;
-}
-
-.primary-btn:hover {
-  background-color: #da640b;
-}
 
 .form-error-message {
-  font-family: Avenir;
   font-size: 14px;
   font-weight: 900;
   text-align: left;
 }
 
-.login-card {
-  box-shadow: -1px 1px 6px 2px #ebebeb;
-  border-radius: 10px;
-  border: none;
-}
+/*.login-card {*/
+/*  box-shadow: -1px 1px 6px 2px #ebebeb;*/
+/*  border-radius: 10px;*/
+/*  border: none;*/
+/*}*/
 
-.login-card .form-input-label {
-  font-weight: 500;
-  font-size: 15px;
-}
+/*.login-card .form-input-label {*/
+/*  font-weight: 500;*/
+/*  font-size: 15px;*/
+/*}*/
 
 .main-links a {
   font-family: Avenir;
