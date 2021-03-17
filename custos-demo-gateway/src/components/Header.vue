@@ -23,8 +23,15 @@
         </template>
       </b-dropdown>
       <div v-else right>
-        <b-button variant="outline-primary">Sign Up</b-button>
-        <b-button variant="primary" class="ml-3">Login</b-button>
+        <router-link to="/register" v-slot="{ href, route, navigate, isActive,isExactActive }" tag="">
+          <b-button v-if="!isActive || !isExactActive" v-on:click="navigate" variant="outline-primary">Sign Up
+          </b-button>
+        </router-link>
+        <router-link to="/" v-slot="{ href, route, navigate, isActive,isExactActive }" tag="">
+          <b-button v-if="!isActive || !isExactActive" v-on:click="navigate" variant="primary" class="ml-3">Login
+          </b-button>
+        </router-link>
+
       </div>
 
     </div>

@@ -1,7 +1,7 @@
 <template>
   <b-container style="padding-top: 60px;">
     <b-row align-v="start" align-h="center">
-      <b-col style="min-width: 300px; max-width: 600px;" class="text-center">
+      <b-col style="min-width: 300px; max-width: 600px;">
         <h2>Welcome to Custos</h2>
         <p class="h2-sub">Sign up and start authenticating</p>
         <!--        <div class="main-links">-->
@@ -12,7 +12,7 @@
         <!--            Tutorial Instructions-->
         <!--          </b-link>-->
         <!--        </div>-->
-        <img class="w-100" src="../../assets/custos_home.png">
+        <img style="width: 70%;" src="../../assets/custos_home.png">
       </b-col>
       <b-col style="max-width: 350px;min-width: 300px;" align-h="center">
         <div class="w-100">
@@ -20,7 +20,7 @@
             <h3>Login</h3>
             <div>
               New to Custos?
-              <b-link href="#">Sign Up</b-link>
+              <router-link to="/register">Sign Up</router-link>
             </div>
 
             <div class="mt-4">
