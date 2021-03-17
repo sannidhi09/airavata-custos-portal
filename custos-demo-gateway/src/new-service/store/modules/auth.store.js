@@ -38,8 +38,8 @@ const actions = {
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
     },
     async logout({commit}) {
-        commit("CLEAR_TOKENS");
         await custosService.identity.logout();
+        commit("CLEAR_TOKENS");
     },
     async refreshAuthentication({commit, state}) {
         if (state.refreshToken && hasTokenExpired(state.refreshToken)) {
@@ -54,18 +54,18 @@ const actions = {
 
 const mutations = {
     SET_TOKENS(state, {accessToken, idToken, refreshToken}) {
-        custosService.identity.accessToken = accessToken;
-        custosService.identity.idToken = idToken;
-        custosService.identity.refreshToken = refreshToken;
+        // custosService.identity.accessToken = accessToken;
+        // custosService.identity.idToken = idToken;
+        // custosService.identity.refreshToken = refreshToken;
 
         state.accessToken = accessToken;
         state.idToken = idToken;
         state.refreshToken = refreshToken;
     },
     CLEAR_TOKENS(state) {
-        custosService.identity.accessToken = null;
-        custosService.identity.idToken = null;
-        custosService.identity.refreshToken = null;
+        // custosService.identity.accessToken = null;
+        // custosService.identity.idToken = null;
+        // custosService.identity.refreshToken = null;
 
         state.accessToken = null;
         state.idToken = null;

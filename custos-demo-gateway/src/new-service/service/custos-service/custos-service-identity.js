@@ -102,7 +102,11 @@ export default class CustosIdentity {
         return this.custosService.axiosInstanceWithClientAuthorization.post(
             `${CustosService.ENDPOINTS.IDENTITY}/user/logout`,
             {refresh_token: this.refreshToken}
-        );
+        ).then(() => {
+            this.accessToken = null;
+            this.idToken = null;
+            this.refreshToken = null;
+        })
     }
 
     getTokenUsingRefreshToken() {

@@ -1,8 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Landing from "./components/landing/Landing.vue";
-import store from './store/index'
-import auth from "@/service/auth";
+import store from './new-service/store'
 
 Vue.use(Router)
 
@@ -24,7 +23,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace",
             name: "workspace",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"workspace"*/  "./components/workspace/Workspace")
@@ -33,7 +32,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace/groups",
             name: "groups",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"groups"*/  "./components/workspace/Groups")
@@ -42,7 +41,7 @@ export default new Router({
             path: "/workspace/profile",
             name: "profile",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"groups"*/  "./components/workspace/Profile")
@@ -51,7 +50,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace/profile",
             name: "tenantUserProfile",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"groups"*/  "./components/workspace/Profile")
@@ -60,7 +59,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace/logs",
             name: "logs",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"logs"*/  "./components/workspace/Logs")
@@ -69,7 +68,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace/secrets",
             name: "secrets",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"secrets"*/  "./components/workspace/Secrets")
@@ -78,7 +77,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace/sharings",
             name: "sharings",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"sharings"*/  "./components/workspace/Sharing")
@@ -87,7 +86,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace/users",
             name: "users",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"users"*/  "./components/workspace/Users")
@@ -96,7 +95,7 @@ export default new Router({
             path: "/tenant/:tenantId/workspace/agents",
             name: "agents",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"account"*/  "./components/workspace/Agents")
@@ -105,7 +104,7 @@ export default new Router({
             path: "/tenants",
             name: "tenants",
             beforeEnter: async (to, from, next) => {
-                await validate(next)
+                await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/Tenants")
@@ -119,7 +118,7 @@ export default new Router({
         {
             path: "*",
             name: "notFound",
-            component:()=>
+            component: () =>
                 import(/*webpackChunkName:"users"*/  "./components/404")
         },
         {
@@ -135,22 +134,28 @@ export default new Router({
 
 })
 
-async function validate(next) {
-    let data = {
-        client_id: process.env.VUE_APP_CLIENT_ID,
-        client_sec: process.env.VUE_APP_CLIENT_SEC
-    }
-    if (auth.isTenantModeActivated()) {
-        data = {
-            client_id: auth.getClientId(),
-            client_sec: auth.getClientSec()
-        }
-    }
-    if (await store.dispatch('identity/isAuthenticated', data) == true) {
-        // You can use store variable here to access globalError or commit mutation
-        console.log("Authenticationed")
-        next(true)
+// async function validate(next) {
+//     if (await store.getters["auth/authenticated"] === true) {
+//         // You can use store variable here to access globalError or commit mutation
+//         console.log("Authenticationed")
+//         next(true)
+//     } else {
+//         console.log("NOT Authenticationed")
+//         next('/')
+//     }
+// }
+
+async function _validateAuthenticationBeforeEnter(to, from, next) {
+    await store.dispatch('auth/refreshAuthentication');
+    const authenticated = store.getters['auth/authenticated'];
+
+    console.log("store ", store)
+    if (!authenticated) {
+        console.log("NOT authenticated")
+        // next(true);
+        next('/');
     } else {
-        next('/')
+        console.log("YES authenticated")
+        next(true);
     }
 }

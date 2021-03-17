@@ -64,6 +64,7 @@ import store from "../../new-service/store"
 import svgNotFound from "../../assets/not-found-icon.svg"
 
 export default {
+  name: "ListTenants",
   store: store,
   components: {},
   data() {
