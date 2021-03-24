@@ -5,7 +5,7 @@
         <img src="../assets/custos-logo_custos-logo-color-v1.png" style="width: 140px;">
       </div>
       <div class="user-details" v-if="this.authenticated && user">
-        <div class="username">{{ user.first_name + " " + user.last_name }}</div>
+        <div class="username">{{ user.firstName + " " + user.lastName }}</div>
         <div class="email">{{ user.email }}</div>
       </div>
 

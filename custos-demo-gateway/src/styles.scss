@@ -49,6 +49,20 @@ $table-th-font-weight: null !default;
 //$table-bg-level:              -9 !default;
 //$table-border-level:          -6 !default;
 
+//$nav-tabs-border-color:             $gray-300 !default;
+$nav-tabs-border-width: 0px !default;
+$nav-tabs-border-radius: 0px !default;
+$nav-tabs-link-hover-border-color: #707070 !default;
+//$nav-tabs-link-active-color: red !default;
+//$nav-tabs-link-active-bg:           $body-bg !default;
+$nav-tabs-link-active-border-color: $primary !default;
+
+.nav-tabs .nav-item .nav-link {
+  color: #203A43;
+  border-color: #0B0B0B;
+  font-size: 18px;
+}
+
 
 // Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap';
@@ -64,3 +78,16 @@ $table-th-font-weight: null !default;
   font-size: 0.9rem;
 }
 
+.nav-tabs .nav-item .nav-link {
+  border-bottom-width: 3px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.btn .btn-primary {
+  padding: 5px 30px;
+}

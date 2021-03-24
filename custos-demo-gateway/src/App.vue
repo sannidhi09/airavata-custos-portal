@@ -28,10 +28,12 @@ export default {
     }
   },
   computed: {
-    authenticated: () => store.getters["auth/authenticated"]
+    authenticated: () => store.getters["auth/authenticated"],
+    currentUsername: () => store.getters["auth/currentUsername"]
   },
   mounted() {
     this.redirectToLoginIfNotAuthenticated()
+    this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
   }
 }
 </script>
