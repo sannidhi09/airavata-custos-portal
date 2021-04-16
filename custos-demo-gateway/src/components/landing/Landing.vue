@@ -26,7 +26,9 @@
             <div class="mt-4">
               <label class="form-input-label" for="form-input-institution">Choose your Institution Identity</label>
               <b-select id="form-input-institution" size="sm">
-                <b-select-option>Indiana University Bloomington</b-select-option>
+                <b-select-option v-for="ciLogonInstitution in ciLogonInstitutions" :key="ciLogonInstitution.entityId">
+                  {{ ciLogonInstitution.displayName }}
+                </b-select-option>
               </b-select>
             </div>
             <b-button variant="primary" class="mt-3" v-on:click="this.loadAuthURL"> Login</b-button>
@@ -88,7 +90,8 @@ export default {
     }
   },
   computed: {
-    authenticated: () => store.getters["auth/authenticated"]
+    authenticated: () => store.getters["auth/authenticated"],
+    ciLogonInstitutions: () => store.getters["ciLogon/getInstitutions"]()
   },
   methods: {
     async login() {
@@ -125,6 +128,7 @@ export default {
   },
   mounted() {
     this.redirectIfAuthenticated();
+    store.dispatch("ciLogon/fetchInstitutions")
   }
 }
 </script>

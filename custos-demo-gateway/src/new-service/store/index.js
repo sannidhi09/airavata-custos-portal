@@ -5,9 +5,9 @@ import user from "./modules/user.store";
 import group from "./modules/group.store";
 import tenant from "./modules/tenant.store";
 import auth from "./modules/auth.store";
+import ciLogon from "./modules/ci-logon.store";
 
 import {custosService} from "./util/custos.util";
-
 
 Vue.use(Vuex);
 
@@ -23,7 +23,8 @@ export default new Vuex.Store({
         auth,
         user,
         group,
-        tenant
+        tenant,
+        ciLogon
     },
     strict: debug,
     plugins: debug ? [createLogger(), custosSessionPlugin] : [custosSessionPlugin],
