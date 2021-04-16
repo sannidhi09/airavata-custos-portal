@@ -1,6 +1,6 @@
 <template>
   <div class="w-100 text-center">
-    <b-form  @submit="onSubmit" class="pr-3 pl-3 text-left" style="width: 800px;display: inline-block;">
+    <b-form @submit="onSubmit" class="pr-3 pl-3 text-left" style="width: 800px;display: inline-block;">
       <b-tabs align="center" justified>
         <b-tab title="Step 1" :active="tabIndex===1" v-on:click="onTabClick(1)">
 
@@ -317,18 +317,18 @@
             <!--              </b-form-input>-->
             <!--            </b-form-group>-->
 
-            <div class="pt-3">
-              <label for="clientId">Parent Tenant ID</label>
-              <b-form-input
-                  v-model="clientId"
-                  :state="inputState.clientId"
-                  id="clientId"
-                  trim
-                  size="sm">
-              </b-form-input>
-              <b-form-invalid-feedback>
-              </b-form-invalid-feedback>
-            </div>
+            <!--            <div class="pt-3">-->
+            <!--              <label for="clientId">Parent Tenant ID</label>-->
+            <!--              <b-form-input-->
+            <!--                  v-model="clientId"-->
+            <!--                  :state="inputState.clientId"-->
+            <!--                  id="clientId"-->
+            <!--                  trim-->
+            <!--                  size="sm">-->
+            <!--              </b-form-input>-->
+            <!--              <b-form-invalid-feedback>-->
+            <!--              </b-form-invalid-feedback>-->
+            <!--            </div>-->
 
             <!--            <b-form-group-->
             <!--                :invalid-feedback="invalidFeedback"-->
@@ -352,18 +352,18 @@
             <!--              </b-form-input>-->
             <!--            </b-form-group>-->
 
-            <div class="pt-3">
-              <label for="parentSecret">Parent Tenant Secret</label>
-              <b-form-input
-                  v-model="parentSecret"
-                  :state="inputState.parentSecret"
-                  id="parentSecret"
-                  trim
-                  size="sm">
-              </b-form-input>
-              <b-form-invalid-feedback>
-              </b-form-invalid-feedback>
-            </div>
+            <!--            <div class="pt-3">-->
+            <!--              <label for="parentSecret">Parent Tenant Secret</label>-->
+            <!--              <b-form-input-->
+            <!--                  v-model="parentSecret"-->
+            <!--                  :state="inputState.parentSecret"-->
+            <!--                  id="parentSecret"-->
+            <!--                  trim-->
+            <!--                  size="sm">-->
+            <!--              </b-form-input>-->
+            <!--              <b-form-invalid-feedback>-->
+            <!--              </b-form-invalid-feedback>-->
+            <!--            </div>-->
 
             <!--            <b-form-group-->
             <!--                :invalid-feedback="invalidFeedback"-->
@@ -443,6 +443,14 @@
           </div>
         </b-tab>
         <b-tab title="Step 3" :active="tabIndex===3" v-on:click="onTabClick(3)">
+          <div style="padding: 20px;text-align: center;">
+            <div>
+              <strong>Client ID</strong> : {{ clientId }}
+            </div>
+            <div>
+              <strong>Client Secret</strong> : {{ clientSecret }}
+            </div>
+          </div>
           <!--        <div class="content">-->
           <!--          <div v-if="(this.clientID === ''&& !this.requestingTenant)">-->
           <!--            <div class="row">-->
@@ -499,7 +507,7 @@
           </b-button>
           <b-button v-if="tabIndex === 1" variant="primary" v-on:click="onClickNext">Next
           </b-button>
-          <b-button v-if="tabIndex === 2" variant="primary" type="submit" v-on:submit.prevent="onClickNext">Create
+          <b-button v-if="tabIndex === 2" variant="primary" v-on:click="onClickNext">Create
             Tenant
           </b-button>
         </b-button-group>
@@ -544,8 +552,8 @@ export default {
         domain: null,
         clientUri: null,
         logoUri: null,
-        clientId: null,
-        parentSecret: null,
+        // clientId: null,
+        // parentSecret: null,
         comment: null,
         applicationType: null
       }
@@ -568,8 +576,8 @@ export default {
         domain: false,
         clientUri: false,
         logoUri: false,
-        clientId: false,
-        parentSecret: false,
+        // clientId: false,
+        // parentSecret: false,
         comment: false,
         applicationType: false
       }
@@ -609,10 +617,13 @@ export default {
       domain: null,
       clientUri: null,
       logoUri: null,
-      clientId: null,
-      parentSecret: null,
+      // clientId: null,
+      // parentSecret: null,
       comment: null,
-      applicationType: null
+      applicationType: null,
+
+      clientId: null,
+      clientSecret: null
 
       // custosId: "",
       // custosSec: "",
@@ -879,9 +890,35 @@ export default {
     //   }
     // },
 
-    onClickNext() {
+    async onClickNext() {
       this.makeTabVisited();
-      if (this.isTabValid) this.tabIndex++;
+
+      if (this.isTabValid) {
+        if (this.tabIndex === 2) {
+          const {clientId, clientSecret} = await this.$store.dispatch("tenant/createChildTenant", {
+            username: this.username,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            password: this.password,
+
+            tenantName: this.tenantName,
+            redirectUris: this.redirectUris,
+            scope: this.scope,
+            domain: this.domain,
+            clientUri: this.clientUri,
+            logoUri: this.logoUri,
+            comment: this.comment,
+            applicationType: this.applicationType
+          });
+
+          this.clientId = clientId;
+          this.clientSecret = clientSecret;
+        }
+
+        this.tabIndex++;
+      }
+
     },
     onClickPrev() {
       this.tabIndex--;

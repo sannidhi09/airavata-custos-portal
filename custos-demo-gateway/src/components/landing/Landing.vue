@@ -26,7 +26,8 @@
             <div class="mt-4">
               <label class="form-input-label" for="form-input-institution">Choose your Institution Identity</label>
               <b-select id="form-input-institution" size="sm">
-                <b-select-option v-for="ciLogonInstitution in ciLogonInstitutions" :key="ciLogonInstitution.entityId">
+                <b-select-option v-for="ciLogonInstitution in ciLogonInstitutions" :key="ciLogonInstitution.entityId"
+                                 :value="ciLogonInstitution.entityId">
                   {{ ciLogonInstitution.displayName }}
                 </b-select-option>
               </b-select>
