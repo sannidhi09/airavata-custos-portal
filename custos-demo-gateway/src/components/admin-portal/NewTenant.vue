@@ -1,6 +1,7 @@
 <template>
   <div class="w-100 text-center">
-    <b-form @submit="onSubmit" class="pr-3 pl-3 text-left" style="width: 800px;display: inline-block;">
+    <b-form @submit="onSubmit" class="pr-3 pl-3 text-left" style="width: 800px;display: inline-block;"
+            autocomplete="off">
       <b-tabs align="center" justified>
         <b-tab title="Step 1" :active="tabIndex===1" v-on:click="onTabClick(1)">
 
@@ -64,11 +65,11 @@
           </div>
 
           <div class="pt-3">
-            <label for="password">Password</label>
+            <label for="new-password">Password</label>
             <b-form-input
                 v-model="password"
                 :state="inputState.password"
-                id="password"
+                id="new-password"
                 type="password"
                 size="sm"
                 aria-describedby="password-help-block">
@@ -502,15 +503,15 @@
         </b-tab>
       </b-tabs>
       <div class="pt-3 text-center">
-        <b-button-group class="mt-2">
-          <b-button v-if="tabIndex > 1 && tabIndex <= 2" variant="primary" v-on:click="onClickPrev">Previous
-          </b-button>
-          <b-button v-if="tabIndex === 1" variant="primary" v-on:click="onClickNext">Next
-          </b-button>
-          <b-button v-if="tabIndex === 2" variant="primary" v-on:click="onClickNext">Create
-            Tenant
-          </b-button>
-        </b-button-group>
+        <b-button v-if="tabIndex > 1 && tabIndex <= 2" variant="secondary" v-on:click="onClickPrev" class="mr-3">
+          Back
+        </b-button>
+        <b-button v-if="tabIndex === 1" variant="primary" v-on:click="onClickNext">
+          Next
+        </b-button>
+        <b-button v-if="tabIndex === 2" variant="primary" v-on:click="onClickNext">
+          Create Tenant
+        </b-button>
       </div>
     </b-form>
   </div>
