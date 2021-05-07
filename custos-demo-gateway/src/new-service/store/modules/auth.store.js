@@ -45,8 +45,17 @@ const actions = {
         if (state.refreshToken && hasTokenExpired(state.refreshToken)) {
             await custosService.identity.getTokenUsingRefreshToken()
                 .catch(() => commit("CLEAR_TOKENS"))
-                .then(({data: {access_token, id_token, refresh_token}}) => {
-                    commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
+                .then((res) => {
+                    if (!res || !res.data) {
+                        commit("CLEAR_TOKENS")
+                    } else {
+                        const {data: {access_token, id_token, refresh_token}} = res;
+                        commit("SET_TOKENS", {
+                            accessToken: access_token,
+                            idToken: id_token,
+                            refreshToken: refresh_token
+                        });
+                    }
                 });
         }
     }
