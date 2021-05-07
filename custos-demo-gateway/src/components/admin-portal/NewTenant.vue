@@ -69,7 +69,7 @@
                 v-model="password"
                 :state="inputState.password"
                 id="password"
-                trim
+                type="password"
                 size="sm"
                 aria-describedby="password-help-block">
             </b-form-input>
@@ -87,7 +87,7 @@
                 v-model="confirmPassword"
                 :state="inputState.confirmPassword"
                 id="confirm-password"
-                trim
+                type="password"
                 size="sm">
             </b-form-input>
             <b-form-invalid-feedback>
