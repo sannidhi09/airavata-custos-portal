@@ -1,61 +1,73 @@
 <template>
-  <div>
-    <div v-if="!tenants" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
-      Loading ...
+  <div class="w-100">
+    <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">
+      <div style="flex: 1;">
+        <div style="font-size: 1.4rem;">Tenants</div>
+      </div>
+      <div>
+        <router-link to="/tenants-new" v-slot="{ href, route, navigate}" tag="">
+          <b-button variant="primary" @click="navigate">Create New Tenant</b-button>
+        </router-link>
+      </div>
     </div>
-    <div v-else-if="tenants.length === 0" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
-      <p style="max-width: 600px;display: inline-block;">
-        <img :src="svgNotFound" style="width: 70px;margin-bottom: 30px;"/><br/>
-        You have no tenants. Start by clicking on Create New Tenant Button.
-        Visit
-        <b-link href="#">documentation</b-link>
-        more information.
-      </p>
-    </div>
-    <div v-else style="padding: 30px 100px;">
-      <b-table-simple small>
-        <b-thead>
-          <b-tr>
-            <b-th>
-              <b-checkbox/>
-            </b-th>
-            <b-th>Tenant ID</b-th>
-            <b-th>Name</b-th>
-            <b-th>Domain</b-th>
-            <b-th>Status</b-th>
-            <b-th></b-th>
-          </b-tr>
-        </b-thead>
-        <b-tbody>
-          <b-tr v-for="tenant in tenants" :key="tenant.tenantId">
-            <b-td>
-              <b-checkbox/>
-            </b-td>
-            <b-td>{{ tenant.tenantId }}</b-td>
-            <b-td>{{ tenant.name }}</b-td>
-            <b-td>{{ tenant.domain }}</b-td>
-            <b-td>
-              <b-form-tag v-if="tenant.status === 'ACTIVE'" no-remove variant="success">Active</b-form-tag>
-              <b-form-tag v-else-if="tenant.status === 'REQUESTED'" no-remove variant="warning">Requested</b-form-tag>
-              <b-form-tag v-else-if="tenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
-              </b-form-tag>
-            </b-td>
-          </b-tr>
 
-        </b-tbody>
-      </b-table-simple>
-      <!--      <b-pagination-->
-      <!--          size="sm"-->
-      <!--          class="float-right"-->
-      <!--          v-model="currentActivePage"-->
-      <!--          :total-rows="activeRows"-->
-      <!--          :per-page="perPage"-->
-      <!--          aria-controls="my-table"-->
-      <!--          :value="currentActivePage"-->
-      <!--      ></b-pagination>-->
+    <div class="w-100">
+      <div v-if="!tenants" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
+        Loading ...
+      </div>
+      <div v-else-if="tenants.length === 0" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
+        <p style="max-width: 600px;display: inline-block;">
+          <img :src="svgNotFound" style="width: 70px;margin-bottom: 30px;"/><br/>
+          You have no tenants. Start by clicking on Create New Tenant Button.
+          Visit
+          <b-link href="#">documentation</b-link>
+          more information.
+        </p>
+      </div>
+      <div v-else style="padding: 30px 100px;">
+        <b-table-simple small>
+          <b-thead>
+            <b-tr>
+              <b-th>
+                <b-checkbox/>
+              </b-th>
+              <b-th>Tenant ID</b-th>
+              <b-th>Name</b-th>
+              <b-th>Domain</b-th>
+              <b-th>Status</b-th>
+              <b-th></b-th>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <b-tr v-for="tenant in tenants" :key="tenant.tenantId">
+              <b-td>
+                <b-checkbox/>
+              </b-td>
+              <b-td>{{ tenant.tenantId }}</b-td>
+              <b-td>{{ tenant.name }}</b-td>
+              <b-td>{{ tenant.domain }}</b-td>
+              <b-td>
+                <b-form-tag v-if="tenant.status === 'ACTIVE'" no-remove variant="success">Active</b-form-tag>
+                <b-form-tag v-else-if="tenant.status === 'REQUESTED'" no-remove variant="warning">Requested</b-form-tag>
+                <b-form-tag v-else-if="tenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
+                </b-form-tag>
+              </b-td>
+            </b-tr>
+
+          </b-tbody>
+        </b-table-simple>
+        <!--      <b-pagination-->
+        <!--          size="sm"-->
+        <!--          class="float-right"-->
+        <!--          v-model="currentActivePage"-->
+        <!--          :total-rows="activeRows"-->
+        <!--          :per-page="perPage"-->
+        <!--          aria-controls="my-table"-->
+        <!--          :value="currentActivePage"-->
+        <!--      ></b-pagination>-->
+      </div>
     </div>
   </div>
-
 </template>
 
 <script>
