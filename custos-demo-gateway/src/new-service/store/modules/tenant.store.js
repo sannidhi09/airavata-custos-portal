@@ -12,8 +12,8 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const actions = {
-    async fetchTenants({commit}, {limit, offset, status}) {
-        const params = {limit, offset, status};
+    async fetchTenants({commit}, {limit, offset, status, requesterEmail}) {
+        const params = {limit, offset, status, requesterEmail};
         const queryString = JSON.stringify(params);
 
         // const username = rootGetters["auth/currentUsername"];
@@ -122,8 +122,9 @@ const mutations = {
 
 const getters = {
     getTenants(state, getters) {
-        return ({limit, offset, status}) => {
-            const queryString = JSON.stringify({limit, offset, status});
+        return ({limit, offset, status, requesterEmail}) => {
+            const queryString = JSON.stringify({limit, offset, status, requesterEmail});
+            console.log("###### getTenants : ", queryString)
             if (state.tenantsListMap[queryString]) {
                 const r = state.tenantsListMap[queryString].map(tenantId => getters.getTenant({tenantId}));
                 console.log("getTenants ==== ", r)

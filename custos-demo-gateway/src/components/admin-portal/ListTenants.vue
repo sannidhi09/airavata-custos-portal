@@ -78,23 +78,26 @@ export default {
     }
   },
   computed: {
+    currentUsername() {
+      return this.$store.getters["auth/currentUsername"]
+    },
+    currentUserEmail() {
+      return this.$store.getters["user/getUser"]({username: this.currentUsername}).email
+    },
     tenants() {
       // TODO fix once the status param has been fixed.
 
       const activeTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit,
-        offset: this.offset,
-        status: "ACTIVE"
+        limit: this.limit, offset: this.offset, status: "ACTIVE",
+        requesterEmail: this.currentUserEmail
       })
       const requestedTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit,
-        offset: this.offset,
-        status: "REQUESTED"
+        limit: this.limit, offset: this.offset, status: "REQUESTED",
+        requesterEmail: this.currentUserEmail
       })
       const deactivatedTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit,
-        offset: this.offset,
-        status: "DEACTIVATED"
+        limit: this.limit, offset: this.offset, status: "DEACTIVATED",
+        requesterEmail: this.currentUserEmail
       })
 
       if (activeTenants && requestedTenants && deactivatedTenants) {
@@ -104,10 +107,22 @@ export default {
       }
     }
   },
-  beforeMount() {
-    this.$store.dispatch("tenant/fetchTenants", {limit: this.limit, offset: this.offset, status: "ACTIVE"});
-    this.$store.dispatch("tenant/fetchTenants", {limit: this.limit, offset: this.offset, status: "REQUESTED"});
-    this.$store.dispatch("tenant/fetchTenants", {limit: this.limit, offset: this.offset, status: "DEACTIVATED"});
+  async beforeMount() {
+    await this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
+  },
+  mounted() {
+    this.$store.dispatch("tenant/fetchTenants", {
+      limit: this.limit, offset: this.offset, status: "ACTIVE",
+      requesterEmail: this.currentUserEmail
+    });
+    this.$store.dispatch("tenant/fetchTenants", {
+      limit: this.limit, offset: this.offset, status: "REQUESTED",
+      requesterEmail: this.currentUserEmail
+    });
+    this.$store.dispatch("tenant/fetchTenants", {
+      limit: this.limit, offset: this.offset, status: "DEACTIVATED",
+      requesterEmail: this.currentUserEmail
+    });
   },
   methods: {}
 };
