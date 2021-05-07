@@ -14,7 +14,7 @@ export default class CustosTenants {
         return this._custosService;
     }
 
-    getTenants({limit, offset, status, requesterEmail}) {
+    getTenants({limit, offset, status}) {
         return this.custosService.axiosInstanceWithTokenAuthorization.get(
             `${CustosService.ENDPOINTS.TENANTS}/tenants`,
             {
@@ -22,7 +22,7 @@ export default class CustosTenants {
                     limit: limit,
                     offset: offset,
                     status: status,
-                    requester_email: requesterEmail
+                    // requester_email: requesterEmail
                 }
             }
         ).then(({data: {tenant}}) => tenant)

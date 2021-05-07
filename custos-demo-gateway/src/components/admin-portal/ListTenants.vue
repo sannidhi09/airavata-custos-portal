@@ -88,16 +88,13 @@ export default {
       // TODO fix once the status param has been fixed.
 
       const activeTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit, offset: this.offset, status: "ACTIVE",
-        requesterEmail: this.currentUserEmail
+        limit: this.limit, offset: this.offset, status: "ACTIVE"
       })
       const requestedTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit, offset: this.offset, status: "REQUESTED",
-        requesterEmail: this.currentUserEmail
+        limit: this.limit, offset: this.offset, status: "REQUESTED"
       })
       const deactivatedTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit, offset: this.offset, status: "DEACTIVATED",
-        requesterEmail: this.currentUserEmail
+        limit: this.limit, offset: this.offset, status: "DEACTIVATED"
       })
 
       if (activeTenants && requestedTenants && deactivatedTenants) {
@@ -109,19 +106,16 @@ export default {
   },
   async beforeMount() {
     await this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
-  },
-  mounted() {
+
+
     this.$store.dispatch("tenant/fetchTenants", {
-      limit: this.limit, offset: this.offset, status: "ACTIVE",
-      requesterEmail: this.currentUserEmail
+      limit: this.limit, offset: this.offset, status: "ACTIVE"
     });
     this.$store.dispatch("tenant/fetchTenants", {
-      limit: this.limit, offset: this.offset, status: "REQUESTED",
-      requesterEmail: this.currentUserEmail
+      limit: this.limit, offset: this.offset, status: "REQUESTED"
     });
     this.$store.dispatch("tenant/fetchTenants", {
-      limit: this.limit, offset: this.offset, status: "DEACTIVATED",
-      requesterEmail: this.currentUserEmail
+      limit: this.limit, offset: this.offset, status: "DEACTIVATED"
     });
   },
   methods: {}
