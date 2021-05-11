@@ -119,6 +119,15 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/NewTenant")
         },
         {
+            path: "/tenants/:clientId",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantHome")
+        },
+        {
             path: "/callback",
             name: "callback",
             component: () =>

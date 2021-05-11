@@ -43,7 +43,11 @@
               <b-td>
                 <b-checkbox/>
               </b-td>
-              <b-td>{{ tenant.tenantId }}</b-td>
+              <b-td>
+                <router-link :to="`/tenants/${tenant.clientId}`" v-slot="{ href, route, navigate}" tag="">
+                  <b-link @click="navigate" :href="href">{{ tenant.tenantId }}</b-link>
+                </router-link>
+              </b-td>
               <b-td>{{ tenant.name }}</b-td>
               <b-td>{{ tenant.domain }}</b-td>
               <b-td>

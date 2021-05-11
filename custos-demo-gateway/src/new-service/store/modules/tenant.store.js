@@ -3,6 +3,7 @@ import {custosService} from "../util/custos.util";
 const getDefaultState = () => {
     return {
         tenantsMap: {},
+        clientIdToTenantIdMap: {},
         tenantsListMap: {},
         tenantRolesMap: {},
         tenantRolesListMap: {}
@@ -20,13 +21,25 @@ const actions = {
         // await dispatch("user/fetchUsers", {username}, {root: true});
         // const requesterEmail = rootGetters["user/getUser"]({username}).email;
 
-        let tenants = await custosService.tenants.getTenants(params);
-        const tenantIds = tenants.map(({tenant_id, tenant_status, client_name, domain}) => {
-            commit('SET_TENANT', {tenantId: tenant_id, status: tenant_status, name: client_name, domain});
+        let tenants = await custosService.tenants.fetchTenants(params);
+        const tenantIds = tenants.map(({tenant_id, tenant_status, client_name, domain, client_id}) => {
+            commit('SET_TENANT', {
+                tenantId: tenant_id,
+                status: tenant_status,
+                name: client_name,
+                domain,
+                clientId: client_id
+            });
 
             return tenant_id;
         });
         commit('SET_TENANT_LIST', {queryString, tenantIds});
+    },
+    async fetchTenant({commit}, {clientId}) {
+        let tenant = await custosService.tenants.fetchTenant({clientId});
+        console.log("----- fetchTenant : ", tenant);
+        const {tenant_id, tenant_status, client_name, domain} = tenant;
+        commit('SET_TENANT', {tenantId: tenant_id, status: tenant_status, name: client_name, domain, clientId});
     },
     async createTenantRole({commit}, {name, description, composite = false}) {
         const {id} = await custosService.tenants.createTenantRole({name, description, composite});
@@ -95,10 +108,14 @@ const actions = {
 }
 
 const mutations = {
-    SET_TENANT(state, {tenantId, status, name, domain}) {
+    SET_TENANT(state, {tenantId, status, name, domain, clientId}) {
         state.tenantsMap = {
             ...state.tenantsMap,
-            [tenantId]: {tenantId, status, name, domain}
+            [tenantId]: {tenantId, status, name, domain, clientId}
+        };
+        state.clientIdToTenantIdMap = {
+            ...state.clientIdToTenantIdMap,
+            [clientId]: tenantId
         };
     },
     SET_TENANT_LIST(state, {queryString, tenantIds}) {
@@ -135,8 +152,10 @@ const getters = {
         }
     },
     getTenant(state) {
-        return ({tenantId}) => {
-            if (state.tenantsMap[tenantId]) {
+        return ({tenantId, clientId}) => {
+            if (state.clientIdToTenantIdMap[clientId]) {
+                return state.tenantsMap[state.clientIdToTenantIdMap[clientId]];
+            } else if (state.tenantsMap[tenantId]) {
                 return state.tenantsMap[tenantId];
             } else {
                 return null;
@@ -152,7 +171,8 @@ const getters = {
                 return null;
             }
         }
-    },
+    }
+    ,
     getTenantRole(state) {
         return ({tenantRoleId}) => {
             if (state.tenantRolesMap[tenantRoleId]) {

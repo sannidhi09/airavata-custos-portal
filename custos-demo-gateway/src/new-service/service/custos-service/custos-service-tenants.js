@@ -14,7 +14,7 @@ export default class CustosTenants {
         return this._custosService;
     }
 
-    getTenants({limit, offset, status}) {
+    fetchTenants({limit, offset, status}) {
         return this.custosService.axiosInstanceWithTokenAuthorization.get(
             `${CustosService.ENDPOINTS.TENANTS}/tenants`,
             {
@@ -74,44 +74,17 @@ export default class CustosTenants {
                 "comment": comment
             }
         );
+    }
 
-        // let body = {
-        //     "client_name": client_name,
-        //     "requester_email": requester_email,
-        //     "admin_username": admin_username,
-        //     "admin_first_name": admin_first_name,
-        //     "admin_last_name": admin_last_name,
-        //     "admin_email": admin_email,
-        //     "contacts": contacts,
-        //     "redirect_uris": redirect_uris,
-        //     "scope": scopeString,
-        //     "domain": domain,
-        //     "admin_password": admin_password,
-        //     "client_uri": client_uri,
-        //     "logo_uri": logo_uri,
-        //     "application_type": application_type,
-        //     "comment": comment
-        //   }
-
-        // let authHeader = {'Authorization': 'Bearer ' + btoa(data.client_id + ':' + data.client_sec)}
-        // let endpoint = tenantMgtEndpoint + "/oauth2/tenant"
-        // return api().post(endpoint, {
-        //     "client_name": clientName,
-        //     "requester_email": requesterEmail,
-        //     "admin_username": adminUsername,
-        //     "admin_first_name": adminFirstName,
-        //     "admin_last_name": adminLastName,
-        //     "admin_email": adminEmail,
-        //     "contacts": contacts,
-        //     "redirect_uris": redirectUris,
-        //     "scope": scope,
-        //     "domain": domain,
-        //     "admin_password": adminPassword,
-        //     "client_uri": clientUri,
-        //     "logo_uri": logoUri,
-        //     "application_type": applicationType,
-        //     "comment": comment
-        // }, {headers: authHeader})
+    fetchTenant({clientId}) {
+        return this.custosService.axiosInstanceWithTokenAuthorization.get(
+            `${CustosService.ENDPOINTS.TENANTS}/oauth2/tenant`,
+            {
+                params: {
+                    client_id: clientId
+                }
+            }
+        ).then(({data}) => data)
     }
 
 }
