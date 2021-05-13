@@ -5,6 +5,7 @@ const getDefaultState = () => {
         tenantsMap: {},
         clientIdToTenantIdMap: {},
         tenantsListMap: {},
+        tenantsListPaginationMap: {},
         tenantRolesMap: {},
         tenantRolesListMap: {}
     }
@@ -21,8 +22,8 @@ const actions = {
         // await dispatch("user/fetchUsers", {username}, {root: true});
         // const requesterEmail = rootGetters["user/getUser"]({username}).email;
 
-        let tenants = await custosService.tenants.fetchTenants(params);
-        const tenantIds = tenants.map(({tenant_id, tenant_status, client_name, domain, client_id}) => {
+        let {tenant, total_num_of_tenants} = await custosService.tenants.fetchTenants(params);
+        const tenantIds = tenant.map(({tenant_id, tenant_status, client_name, domain, client_id}) => {
             commit('SET_TENANT', {
                 tenantId: tenant_id,
                 status: tenant_status,
@@ -34,6 +35,9 @@ const actions = {
             return tenant_id;
         });
         commit('SET_TENANT_LIST', {queryString, tenantIds});
+
+        const pagination = {totalRows: total_num_of_tenants, perPage: limit, activePage: offset + 1};
+        commit('SET_TENANT_LIST_PAGINATION', {queryString, pagination});
     },
     async fetchTenant({commit}, {clientId}) {
         let tenant = await custosService.tenants.fetchTenant({clientId});
@@ -122,6 +126,12 @@ const mutations = {
             [queryString]: tenantIds
         }
     },
+    SET_TENANT_LIST_PAGINATION(state, {queryString, pagination}) {
+        state.tenantsListPaginationMap = {
+            ...state.tenantsListPaginationMap,
+            [queryString]: pagination
+        }
+    },
     SET_TENANT_ROLE(state, {tenantRoleId, name, description, composite}) {
         state.tenantRolesMap = {
             ...state.tenantRolesMap,
@@ -144,6 +154,16 @@ const getters = {
                 const r = state.tenantsListMap[queryString].map(tenantId => getters.getTenant({tenantId}));
                 console.log("getTenants ==== ", r)
                 return r
+            } else {
+                return null;
+            }
+        }
+    },
+    getTenantsPagination(state) {
+        return ({limit, offset, status, requesterEmail}) => {
+            const queryString = JSON.stringify({limit, offset, status, requesterEmail});
+            if (state.tenantsListPaginationMap[queryString]) {
+                return state.tenantsListPaginationMap[queryString];
             } else {
                 return null;
             }

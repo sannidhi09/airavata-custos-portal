@@ -60,15 +60,15 @@
 
           </b-tbody>
         </b-table-simple>
-        <!--      <b-pagination-->
-        <!--          size="sm"-->
-        <!--          class="float-right"-->
-        <!--          v-model="currentActivePage"-->
-        <!--          :total-rows="activeRows"-->
-        <!--          :per-page="perPage"-->
-        <!--          aria-controls="my-table"-->
-        <!--          :value="currentActivePage"-->
-        <!--      ></b-pagination>-->
+        <b-pagination
+            size="sm"
+            class="float-right"
+            v-model="activePage"
+            :total-rows="tenantsPagination.totalRows"
+            :per-page="tenantsPagination.perPage"
+            aria-controls="my-table"
+            :value="activePage"
+        ></b-pagination>
       </div>
     </div>
   </div>
@@ -85,39 +85,60 @@ export default {
   components: {},
   data() {
     return {
+      // currentActivePage: 3,
+      activePage: 1,
+      // perPage: 5,
+
       svgNotFound: svgNotFound,
 
       // TODO fix once the pagination is available.
-      limit: 1000,
+      limit: 10,
 
-      offset: 0
+      // offset: 0
     }
   },
   computed: {
+    offset() {
+      return this.activePage;
+    },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
     },
     currentUserEmail() {
       return this.$store.getters["user/getUser"]({username: this.currentUsername}).email
     },
+    tenantsPagination() {
+      return this.$store.getters["tenant/getTenantsPagination"]({
+        limit: this.limit, offset: this.offset, // status: "ACTIVE"
+      })
+    },
     tenants() {
       // TODO fix once the status param has been fixed.
 
       const activeTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit, offset: this.offset, status: "ACTIVE"
+        limit: this.limit, offset: this.offset, // status: "ACTIVE"
       })
-      const requestedTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit, offset: this.offset, status: "REQUESTED"
-      })
-      const deactivatedTenants = this.$store.getters["tenant/getTenants"]({
-        limit: this.limit, offset: this.offset, status: "DEACTIVATED"
-      })
+      // const requestedTenants = this.$store.getters["tenant/getTenants"]({
+      //   limit: this.limit, offset: this.offset, status: "REQUESTED"
+      // })
+      // const deactivatedTenants = this.$store.getters["tenant/getTenants"]({
+      //   limit: this.limit, offset: this.offset, status: "DEACTIVATED"
+      // })
 
-      if (activeTenants && requestedTenants && deactivatedTenants) {
-        return activeTenants.concat(requestedTenants).concat(deactivatedTenants);
-      } else {
-        return null;
-      }
+      return activeTenants;
+
+      // if (activeTenants && requestedTenants && deactivatedTenants) {
+      //   return activeTenants.concat(requestedTenants).concat(deactivatedTenants);
+      // } else {
+      //   return null;
+      // }
+    }
+  },
+  watch: {
+    activePage() {
+      this.$store.dispatch("tenant/fetchTenants", {
+        limit: this.limit, offset: this.offset, // status: "ACTIVE"
+      });
     }
   },
   async beforeMount() {
@@ -125,14 +146,14 @@ export default {
 
 
     this.$store.dispatch("tenant/fetchTenants", {
-      limit: this.limit, offset: this.offset, status: "ACTIVE"
+      limit: this.limit, offset: this.offset, // status: "ACTIVE"
     });
-    this.$store.dispatch("tenant/fetchTenants", {
-      limit: this.limit, offset: this.offset, status: "REQUESTED"
-    });
-    this.$store.dispatch("tenant/fetchTenants", {
-      limit: this.limit, offset: this.offset, status: "DEACTIVATED"
-    });
+    // this.$store.dispatch("tenant/fetchTenants", {
+    //   limit: this.limit, offset: this.offset, status: "REQUESTED"
+    // });
+    // this.$store.dispatch("tenant/fetchTenants", {
+    //   limit: this.limit, offset: this.offset, status: "DEACTIVATED"
+    // });
   },
   methods: {}
 };
