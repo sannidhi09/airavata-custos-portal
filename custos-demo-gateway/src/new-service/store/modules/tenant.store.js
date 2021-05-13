@@ -68,8 +68,8 @@ const actions = {
         });
         commit('SET_TENANT_ROLES_LIST', {queryString, tenantRoleIds});
     },
-    async createChildTenant(o, {username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
-        const res = await custosService.tenants.createChildTenant({
+    async createTenant(o, {username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+        const res = await custosService.tenants.createTenant({
             username,
             firstName,
             lastName,
@@ -84,8 +84,6 @@ const actions = {
             comment,
             applicationType
         });
-
-        console.log("createChildTenant ", res);
 
         const {client_id, client_secret} = res.data;
 

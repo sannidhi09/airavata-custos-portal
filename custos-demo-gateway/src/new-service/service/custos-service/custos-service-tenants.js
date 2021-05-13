@@ -52,9 +52,15 @@ export default class CustosTenants {
         );
     }
 
-    createChildTenant({username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+    createTenant({admin = true, username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+        let axiosInstance;
+        if (admin) {
+            axiosInstance = this.custosService.axiosInstance;
+        } else {
+            axiosInstance = this.custosService.axiosInstanceWithClientAuthorization
+        }
 
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.TENANTS}/oauth2/tenant`,
             {
                 "client_name": tenantName,
