@@ -99,7 +99,7 @@ export default {
   },
   computed: {
     offset() {
-      return this.activePage;
+      return (this.activePage - 1) * this.limit;
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
