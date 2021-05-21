@@ -11,11 +11,11 @@
       </div>
     </div>
 
-    <div class="w-100" v-if="tenant">
-      <div>
+    <div class="w-100" v-if="tenant" style="display: flex; flex-direction: row;">
+      <div style="width: 300px;">
         <ul>
           <li>
-            <router-link :to="`/tenants/${tenant.tenantId}`" v-slot="{ href, route, navigate}" tag="">
+            <router-link :to="`/tenants/${clientId}/profile`" v-slot="{ href, route, navigate}" tag="">
               <b-link @click="navigate" :href="href">Profile</b-link>
             </router-link>
           </li>
@@ -23,7 +23,7 @@
             <router-link :to="`/tenants/${tenant.tenantId}/user-management`" v-slot="{ href, route, navigate}" tag="">
               <b-link @click="navigate" :href="href">User Management</b-link>
             </router-link>
-            <ul>
+            <ul><!---->
               <li>
                 <router-link :to="`/tenants/${tenant.tenantId}/user-management/users`" v-slot="{ href, route, navigate}"
                              tag="">
@@ -57,6 +57,9 @@
           </li>
         </ul>
       </div>
+      <div style="flex: 1;">
+        <slot/>
+      </div>
     </div>
   </div>
 </template>
@@ -66,7 +69,7 @@
 import store from "../../new-service/store"
 
 export default {
-  name: "Tenant",
+  name: "TenantHome",
   store: store,
   components: {},
   data() {

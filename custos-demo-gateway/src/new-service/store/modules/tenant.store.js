@@ -39,11 +39,27 @@ const actions = {
         const pagination = {totalRows: total_num_of_tenants, perPage: limit, activePage: offset + 1};
         commit('SET_TENANT_LIST_PAGINATION', {queryString, pagination});
     },
+
+
     async fetchTenant({commit}, {clientId}) {
         let tenant = await custosService.tenants.fetchTenant({clientId});
         console.log("----- fetchTenant : ", tenant);
-        const {tenant_id, tenant_status, client_name, domain} = tenant;
-        commit('SET_TENANT', {tenantId: tenant_id, status: tenant_status, name: client_name, domain, clientId});
+//         admin_email: "hasithanjo2work@gmail.com"
+// admin_first_name: "Hasitha"
+// admin_last_name: "Jayasundara"
+// admin_password: ""
+// admin_username: "hasithanjo2work@gmail.com"
+        const {
+            admin_username, admin_first_name, admin_last_name, admin_email,
+            tenant_id, tenant_status, client_name, domain,
+            client_secret, redirect_uris, scope, client_uri, logo_uri, comment, application_type
+        } = tenant;
+        commit('SET_TENANT', {
+            username: admin_username, firstName: admin_first_name, lastName: admin_last_name, email: admin_email,
+            tenantId: tenant_id, status: tenant_status, name: client_name, domain, clientId,
+            clientSecret: client_secret, redirectUris: redirect_uris, scope: scope, clientUri: client_uri,
+            logoUri: logo_uri, comment: comment, applicationType: application_type
+        });
     },
     async createTenantRole({commit}, {name, description, composite = false}) {
         const {id} = await custosService.tenants.createTenantRole({name, description, composite});
@@ -105,15 +121,44 @@ const actions = {
         return {clientId: client_id, clientSecret: client_secret}
 
         // commit('SET_TENANT', {tenantId: client_id, status: "", clientSecret: client_secret, name: tenantName, domain});
+    },
+
+    async updateTenant(o, {tenantId, clientId, username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+        await custosService.tenants.updateTenant({
+            tenantId,
+            clientId,
+            username,
+            firstName,
+            lastName,
+            email,
+            password,
+            tenantName,
+            redirectUris,
+            scope,
+            domain,
+            clientUri,
+            logoUri,
+            comment,
+            applicationType
+        });
+
     }
 
 }
 
 const mutations = {
-    SET_TENANT(state, {tenantId, status, name, domain, clientId}) {
+    SET_TENANT(state, {
+        username = null, firstName = null, lastName = null, email = null,
+        tenantId, status, name, domain, clientId, clientSecret = null, redirectUris = null, scope = null,
+        clientUri = null, logoUri = null, comment = null, applicationType = null
+    }) {
         state.tenantsMap = {
             ...state.tenantsMap,
-            [tenantId]: {tenantId, status, name, domain, clientId}
+            [tenantId]: {
+                username, firstName, lastName, email,
+                tenantId, status, name, domain, clientId,
+                clientSecret, redirectUris, scope, clientUri, logoUri, comment, applicationType
+            }
         };
         state.clientIdToTenantIdMap = {
             ...state.clientIdToTenantIdMap,

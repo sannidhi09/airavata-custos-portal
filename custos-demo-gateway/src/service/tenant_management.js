@@ -65,5 +65,4 @@ export default {
         return api().post(endpoint, data.body, {headers: authHeader})
     }
 
-
 }

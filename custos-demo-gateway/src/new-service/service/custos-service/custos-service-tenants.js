@@ -83,6 +83,30 @@ export default class CustosTenants {
         );
     }
 
+    updateTenant({username, firstName, lastName, email, tenantId, clientId, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+        let axiosInstance = this.custosService.axiosInstanceWithTokenAuthorization;
+
+        return axiosInstance.put(
+            `${CustosService.ENDPOINTS.TENANTS}/oauth2/tenant`,
+            {
+                "admin_username": username,
+                "admin_first_name": firstName,
+                "admin_last_name": lastName,
+                "admin_email": email,
+                "id": tenantId,
+                "client_id": clientId,
+                "client_name": tenantName,
+                "redirect_uris": redirectUris,
+                "scope": scope.join(" ").trim(),
+                "domain": domain,
+                "client_uri": clientUri,
+                "logo_uri": logoUri,
+                "application_type": applicationType,
+                "comment": comment
+            }
+        );
+    }
+
     fetchTenant({clientId}) {
         return this.custosService.axiosInstanceWithTokenAuthorization.get(
             `${CustosService.ENDPOINTS.TENANTS}/oauth2/tenant`,
