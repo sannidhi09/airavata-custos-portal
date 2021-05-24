@@ -1,9 +1,7 @@
 <template>
-  <TenantHome>
+  <TenantHome title="Profile">
     <div>
       <div style="padding: 10px; max-width: 600px;">
-        tenant : {{ tenant }}
-
         <div class="pt-3" style="display: flex; flex-direction: row;">
 
           <div class="pt-3">
@@ -224,7 +222,7 @@
 </template>
 
 <script>
-import store from "../../new-service/store"
+import store from "../../new-service/store";
 import TenantHome from "@/components/admin-portal/TenantHome";
 
 export default {

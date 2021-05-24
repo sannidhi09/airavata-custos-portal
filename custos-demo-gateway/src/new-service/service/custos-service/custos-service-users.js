@@ -56,9 +56,9 @@ export default class CustosUsers {
         );
     }
 
-    findUsers({offset = 0, limit = 20, username = null, groupId = null}) {
+    findUsers({offset = 0, limit = 20, username = null, groupId = null, clientId = null}) {
         if (groupId) {
-            return this.custosService.axiosInstanceWithClientAuthorization.get(
+            return this.custosService.axiosInstanceWithTokenAuthorization.get(
                 `${CustosService.ENDPOINTS.GROUPS}/user/group/memberships/child`,
                 {
                     params: {"group.id": groupId}
@@ -67,10 +67,10 @@ export default class CustosUsers {
                 return profiles;
             });
         } else {
-            return this.custosService.axiosInstanceWithClientAuthorization.get(
+            return this.custosService.axiosInstanceWithTokenAuthorization.get(
                 `${CustosService.ENDPOINTS.USERS}/users`,
                 {
-                    params: {offset: offset, limit: limit, client_id: this.custosService.clientId, 'user.id': username}
+                    params: {offset: offset, limit: limit, client_id: clientId, 'user.id': username}
                 }
             ).then(({data: {users}}) => {
                 return users;

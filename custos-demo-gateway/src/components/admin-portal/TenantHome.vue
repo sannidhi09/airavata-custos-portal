@@ -20,12 +20,12 @@
             </router-link>
           </li>
           <li>
-            <router-link :to="`/tenants/${tenant.tenantId}/user-management`" v-slot="{ href, route, navigate}" tag="">
+            <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}" tag="">
               <b-link @click="navigate" :href="href">User Management</b-link>
             </router-link>
             <ul><!---->
               <li>
-                <router-link :to="`/tenants/${tenant.tenantId}/user-management/users`" v-slot="{ href, route, navigate}"
+                <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}"
                              tag="">
                   <b-link @click="navigate" :href="href">Users</b-link>
                 </router-link>
@@ -58,6 +58,7 @@
         </ul>
       </div>
       <div style="flex: 1;">
+        <div class="w-100" style="font-weight: 500;font-size: 23px;">{{ title }}</div>
         <slot/>
       </div>
     </div>
@@ -72,6 +73,9 @@ export default {
   name: "TenantHome",
   store: store,
   components: {},
+  props: {
+    title: {}
+  },
   data() {
     return {}
   },

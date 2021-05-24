@@ -10,8 +10,8 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const actions = {
-    async fetchUsers({commit}, {username = null, offset = 0, limit = 10, groupId = null}) {
-        const params = {username, offset, limit, groupId};
+    async fetchUsers({commit}, {username = null, offset = 0, limit = 10, groupId = null, tenantId = null, clientId = null}) {
+        const params = {username, offset, limit, groupId, tenantId, clientId};
         const queryString = JSON.stringify(params);
         const users = await custosService.users.findUsers(params);
 
@@ -63,9 +63,10 @@ const getters = {
         }
     },
     getUsers(state, getters) {
-        return ({username, offset, limit, groupId}) => {
-            const params = {username, offset, limit, groupId};
+        return ({username = null, offset = 0, limit = 10, groupId = null, tenantId = null, clientId = null}) => {
+            const params = {username, offset, limit, groupId, tenantId, clientId};
             const queryString = JSON.stringify(params);
+            console.log("######## getUsers ", queryString)
             if (state.userListMap[queryString]) {
                 const usernames = state.userListMap[queryString];
                 return usernames.map(username => getters.getUser({username}));
