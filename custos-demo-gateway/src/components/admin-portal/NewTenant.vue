@@ -8,7 +8,6 @@
         <router-link to="/tenants" v-slot="{ href, route, navigate}" tag="">
           <b-button variant="secondary" @click="navigate">Cancel</b-button>
         </router-link>
-
       </div>
     </div>
 
@@ -129,24 +128,6 @@
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
               </div>
-              <!--            <b-form-group-->
-              <!--                :invalid-feedback="invalidFeedback"-->
-              <!--                :valid-feedback="validFeedback"-->
-              <!--                id="fieldset-9"-->
-              <!--                description="The Client Name is displayed to end-users on the Identity Provider selection page."-->
-              <!--                label="Tenant Name"-->
-              <!--                label-for="client-name"-->
-              <!--                class="inputLabels"-->
-              <!--            >-->
-              <!--              <b-form-input-->
-              <!--                  :state="!$v.form.tab2.client_name.$invalid"-->
-              <!--                  id="client-name"-->
-              <!--                  name="client-name"-->
-              <!--                  trim-->
-              <!--                  placeholder="Name of your OAuth 2.0 client"-->
-              <!--                  v-model="form.tab2.client_name">-->
-              <!--              </b-form-input>-->
-              <!--            </b-form-group>-->
 
               <div class="pt-3">
                 <label>Redirect URI</label>
@@ -176,39 +157,6 @@
                 <b-button size="sm" variant="link" v-on:click="redirectUris.push('')">Add another URI</b-button>
               </div>
 
-              <!--            <div v-for="(redirect_uri, index) in form.tab2.redirect_uris" :key=index>-->
-              <!--              <b-form-row class="align-items-center">-->
-              <!--                <b-col>-->
-              <!--                  <b-form-group-->
-              <!--                      :invalid-feedback="invalidFeedback"-->
-              <!--                      :valid-feedback="validFeedback"-->
-              <!--                      id="fieldset-10"-->
-              <!--                      description="Enter your callback URL. The redirect_uri parameter must exactly match a URL in this list"-->
-              <!--                      label="Redirect URI"-->
-              <!--                      label-for="redirect-uri"-->
-              <!--                      class="inputLabels"-->
-              <!--                  >-->
-              <!--                    <b-input-group>-->
-              <!--                      <b-form-input-->
-              <!--                          :state="!$v.form.tab2.redirect_uris.$each[index].$invalid"-->
-              <!--                          id="redirect-uri"-->
-              <!--                          name='redirect-uri'-->
-              <!--                          trim-->
-              <!--                          type="url"-->
-              <!--                          v-model="form.tab2.redirect_uris[index]">-->
-              <!--                      </b-form-input>-->
-              <!--                      <b-input-group-append>-->
-              <!--                        <b-button v-if="index > 0" @click="deleteRedirectUri(index)">Delete URI-->
-              <!--                        </b-button>-->
-              <!--                        <b-button @click="addRedirectUri(index)">Add another URI</b-button>-->
-
-              <!--                      </b-input-group-append>-->
-              <!--                    </b-input-group>-->
-              <!--                  </b-form-group>-->
-              <!--                </b-col>-->
-              <!--              </b-form-row>-->
-              <!--            </div>-->
-
               <div class="pt-3">
                 <label for="scope">Scope</label>
                 <b-form-checkbox-group
@@ -227,17 +175,6 @@
                 </b-form-invalid-feedback>
               </div>
 
-              <!--            <b-form-group label="Scope:" class="inputLabels">-->
-              <!--              <b-form-checkbox-group-->
-              <!--                  :options="scopeOptions"-->
-              <!--                  id="scope"-->
-              <!--                  name="scope"-->
-              <!--                  v-model="form.tab2.scope"-->
-              <!--              >-->
-              <!--                <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm">Information on scopes</b-link>-->
-              <!--              </b-form-checkbox-group>-->
-              <!--            </b-form-group>-->
-
               <div class="pt-3">
                 <label for="domain">Domain</label>
                 <b-form-input
@@ -252,24 +189,6 @@
                 </b-form-invalid-feedback>
               </div>
 
-              <!--            <b-form-group-->
-              <!--                :invalid-feedback="invalidFeedback"-->
-              <!--                :valid-feedback="validFeedback"-->
-              <!--                description=""-->
-              <!--                id="fieldset-11"-->
-              <!--                label="Domain"-->
-              <!--                label-for="domain"-->
-              <!--                class="inputLabels"-->
-              <!--            >-->
-              <!--              <b-form-input-->
-              <!--                  :state="!$v.form.tab2.domain.$invalid"-->
-              <!--                  id="domain"-->
-              <!--                  placeholder="idp.htrc.indiana.edu"-->
-              <!--                  trim-->
-              <!--                  v-model="form.tab2.domain">-->
-              <!--              </b-form-input>-->
-              <!--            </b-form-group>-->
-
               <div class="pt-3">
                 <label for="clientUri">Client URI</label>
                 <b-form-input
@@ -283,23 +202,6 @@
                 </b-form-invalid-feedback>
               </div>
 
-              <!--            <b-form-group-->
-              <!--                :invalid-feedback="invalidFeedback"-->
-              <!--                :valid-feedback="validFeedback"-->
-              <!--                description=""-->
-              <!--                id="fieldset-1"-->
-              <!--                label="Client URI"-->
-              <!--                label-for="client-uri"-->
-              <!--                class="inputLabels"-->
-              <!--            >-->
-              <!--              <b-form-input-->
-              <!--                  :state="!$v.form.tab2.client_uri.$invalid"-->
-              <!--                  id="client-uri"-->
-              <!--                  trim-->
-              <!--                  v-model="form.tab2.client_uri">-->
-              <!--              </b-form-input>-->
-              <!--            </b-form-group>-->
-
               <div class="pt-3">
                 <label for="logoUri">Logo URI</label>
                 <b-form-input
@@ -312,93 +214,6 @@
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
               </div>
-
-              <!--            <b-form-group-->
-              <!--                :invalid-feedback="invalidFeedback"-->
-              <!--                :valid-feedback="validFeedback"-->
-              <!--                description=""-->
-              <!--                id="fieldset-12"-->
-              <!--                label="Logo URI"-->
-              <!--                label-for="logo-uri"-->
-              <!--                class="inputLabels"-->
-              <!--            >-->
-              <!--              <b-form-input-->
-              <!--                  :state="!$v.form.tab2.logo_uri.$invalid"-->
-              <!--                  id="logo-uri"-->
-              <!--                  trim-->
-              <!--                  type="url"-->
-              <!--                  v-model="form.tab2.logo_uri">-->
-              <!--              </b-form-input>-->
-              <!--            </b-form-group>-->
-
-              <!--            <div class="pt-3">-->
-              <!--              <label for="clientId">Parent Tenant ID</label>-->
-              <!--              <b-form-input-->
-              <!--                  v-model="clientId"-->
-              <!--                  :state="inputState.clientId"-->
-              <!--                  id="clientId"-->
-              <!--                  trim-->
-              <!--                  size="sm">-->
-              <!--              </b-form-input>-->
-              <!--              <b-form-invalid-feedback>-->
-              <!--              </b-form-invalid-feedback>-->
-              <!--            </div>-->
-
-              <!--            <b-form-group-->
-              <!--                :invalid-feedback="invalidFeedback"-->
-              <!--                :valid-feedback="validFeedback"-->
-              <!--                description=""-->
-              <!--                id="fieldset-8"-->
-              <!--                label="Parent Tenant ID"-->
-              <!--                label-for="client-id"-->
-              <!--                class="inputLabels"-->
-              <!--                :disabled="!form.tab2.parentID"-->
-              <!--            >-->
-              <!--              <b-form-input-->
-              <!--                  :state="!$v.form.tab2.parentID.$invalid"-->
-              <!--                  id="parent-id"-->
-              <!--                  name="parent-id"-->
-              <!--                  trim-->
-              <!--                  v-model="form.tab2.parentID"-->
-              <!--                  :disabled="!form.tab2.parentID"-->
-              <!--                  readonly-->
-              <!--              >-->
-              <!--              </b-form-input>-->
-              <!--            </b-form-group>-->
-
-              <!--            <div class="pt-3">-->
-              <!--              <label for="parentSecret">Parent Tenant Secret</label>-->
-              <!--              <b-form-input-->
-              <!--                  v-model="parentSecret"-->
-              <!--                  :state="inputState.parentSecret"-->
-              <!--                  id="parentSecret"-->
-              <!--                  trim-->
-              <!--                  size="sm">-->
-              <!--              </b-form-input>-->
-              <!--              <b-form-invalid-feedback>-->
-              <!--              </b-form-invalid-feedback>-->
-              <!--            </div>-->
-
-              <!--            <b-form-group-->
-              <!--                :invalid-feedback="invalidFeedback"-->
-              <!--                :valid-feedback="validFeedback"-->
-              <!--                description=""-->
-              <!--                id="fieldset-8"-->
-              <!--                label="Parent Tenant Secret"-->
-              <!--                label-for="parent-secret"-->
-              <!--                class="inputLabels"-->
-              <!--            >-->
-              <!--              <b-form-input-->
-              <!--                  :state="!$v.form.tab2.parentSecret.$invalid"-->
-              <!--                  id="parent-secret"-->
-              <!--                  name="parent-secret"-->
-              <!--                  trim-->
-              <!--                  v-model="form.tab2.parentSecret"-->
-              <!--                  :disabled="!form.tab2.parentID"-->
-              <!--              >-->
-              <!--              </b-form-input>-->
-              <!--            </b-form-group>-->
-
 
               <div class="pt-3">
                 <label for="comment">Comment</label>
@@ -414,23 +229,6 @@
                 </b-form-invalid-feedback>
               </div>
 
-              <!--            <b-form-group-->
-              <!--                :invalid-feedback="invalidFeedback"-->
-              <!--                :valid-feedback="validFeedback"-->
-              <!--                id="fieldset-13"-->
-              <!--                label="Comment"-->
-              <!--                label-for="comment"-->
-              <!--                class="inputLabels"-->
-              <!--            >-->
-              <!--              <b-form-textarea-->
-              <!--                  :state="!$v.form.tab2.comment.$invalid"-->
-              <!--                  id="comment"-->
-              <!--                  rows="3" textarea trim-->
-              <!--                  placeholder="Provide description of the new tenant and any other comments here (at least 15 characters long) "-->
-              <!--                  v-model="form.tab2.comment">-->
-              <!--              </b-form-textarea>-->
-              <!--            </b-form-group>-->
-
               <div class="pt-3">
                 <label for="applicationType">Application Type</label>
                 <b-form-radio-group
@@ -444,15 +242,6 @@
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
               </div>
-
-              <!--            <b-form-group label="Application Type">-->
-              <!--              <b-form-radio-group-->
-              <!--                  :options="application_typeOptions"-->
-              <!--                  id="application-type"-->
-              <!--                  name="application-type"-->
-              <!--                  v-model="form.tab2.application_type"-->
-              <!--              ></b-form-radio-group>-->
-              <!--            </b-form-group>-->
 
             </div>
           </b-tab>
@@ -910,7 +699,7 @@ export default {
 
       if (this.isTabValid) {
         if (this.tabIndex === 2) {
-          const {clientId, clientSecret} = await this.$store.dispatch("tenant/createChildTenant", {
+          const {clientId, clientSecret} = await this.$store.dispatch("tenant/createTenant", {
             username: this.username,
             firstName: this.firstName,
             lastName: this.lastName,

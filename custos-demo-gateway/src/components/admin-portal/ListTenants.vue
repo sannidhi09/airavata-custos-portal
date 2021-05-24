@@ -35,7 +35,6 @@
               <b-th>Name</b-th>
               <b-th>Domain</b-th>
               <b-th>Status</b-th>
-              <b-th></b-th>
             </b-tr>
           </b-thead>
           <b-tbody>

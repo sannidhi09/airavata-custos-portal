@@ -19,7 +19,7 @@ $light: #F9F9F9 !default;
 $table-cell-padding-sm: .6rem !default;
 //
 //$table-color:                 $body-color !default;
-$table-bg: $light !default;
+$table-bg: transparent !default;
 //$table-accent-bg:             rgba($black, .05) !default;
 //$table-hover-color:           $table-color !default;
 //$table-hover-bg:              rgba($black, .075) !default;
@@ -69,9 +69,22 @@ $nav-tabs-link-active-border-color: $primary !default;
 // BootstrapVue and its default variables
 @import '~bootstrap-vue/src/index.scss';
 
+//.table thead tr,
+.table tbody tr {
+  border: 5px solid white;
+}
+
+//.table thead th {
+//  border-bottom: 1px solid $table-thead-border-color;
+//}
+
+.table tbody tr td {
+  background-color: $light;
+}
+
 .table thead th {
   border-bottom: 1px solid $table-thead-border-color;
-  background-color: #f7f7f7;
+  //background-color: #f7f7f7;
 }
 
 .table {
