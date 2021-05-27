@@ -123,7 +123,7 @@ const actions = {
         // commit('SET_TENANT', {tenantId: client_id, status: "", clientSecret: client_secret, name: tenantName, domain});
     },
 
-    async updateTenant(o, {tenantId, clientId, username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+    async updateTenant(o, {tenantId, clientId, username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType, requesterEmail}) {
         await custosService.tenants.updateTenant({
             tenantId,
             clientId,
@@ -139,7 +139,8 @@ const actions = {
             clientUri,
             logoUri,
             comment,
-            applicationType
+            applicationType,
+            requesterEmail
         });
 
     }

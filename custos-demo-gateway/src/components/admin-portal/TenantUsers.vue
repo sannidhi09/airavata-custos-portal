@@ -14,6 +14,16 @@
         </b-tr>
       </b-tbody>
     </b-table-simple>
+
+<!--    <b-pagination-->
+<!--        size="sm"-->
+<!--        class="float-right"-->
+<!--        v-model="activePage"-->
+<!--        :total-rows="tenantsPagination.totalRows"-->
+<!--        :per-page="tenantsPagination.perPage"-->
+<!--        aria-controls="my-table"-->
+<!--        :value="activePage"-->
+<!--    ></b-pagination>-->
   </TenantHome>
 </template>
 

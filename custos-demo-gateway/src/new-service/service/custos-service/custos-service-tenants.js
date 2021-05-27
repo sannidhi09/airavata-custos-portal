@@ -83,7 +83,7 @@ export default class CustosTenants {
         );
     }
 
-    updateTenant({username, firstName, lastName, email, tenantId, clientId, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+    updateTenant({username, firstName, lastName, email, tenantId, clientId, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType, requesterEmail}) {
         let axiosInstance = this.custosService.axiosInstanceWithTokenAuthorization;
 
         return axiosInstance.put(
@@ -102,7 +102,8 @@ export default class CustosTenants {
                 "client_uri": clientUri,
                 "logo_uri": logoUri,
                 "application_type": applicationType,
-                "comment": comment
+                "comment": comment,
+                "requesterEmail": requesterEmail
             }
         );
     }

@@ -305,6 +305,9 @@ export default {
         comment: false,
         applicationType: false
       }
+    },
+    requesterEmail() {
+      return this.$store.getters["user/getUser"]({username: this.$store.getters["auth/currentUsername"]}).email;
     }
   },
   watch: {
@@ -348,7 +351,9 @@ export default {
         clientUri: this.clientUri,
         logoUri: this.logoUri,
         comment: this.comment,
-        applicationType: this.applicationType
+        applicationType: this.applicationType,
+
+        requesterEmail: this.requesterEmail
       });
     }
   }
