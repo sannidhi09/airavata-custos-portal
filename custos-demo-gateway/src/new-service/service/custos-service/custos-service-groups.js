@@ -25,10 +25,21 @@ export default class CustosGroups {
      * @param {string[]} sub_groups
      * @return {Promise<AxiosResponse<any>>}
      */
-    createGroup({name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    createGroup({clientId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}) {
+        return this.custosService.axiosInstanceWithTokenAuthorization.post(
             `${CustosService.ENDPOINTS.GROUPS}/group`,
-            {group: {name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}}
+            {
+                group: {
+                    client_id: clientId,
+                    name,
+                    description,
+                    ownerId,
+                    realm_roles,
+                    client_roles,
+                    attributes,
+                    sub_groups
+                }
+            }
         ).then(({data}) => data);
     }
 

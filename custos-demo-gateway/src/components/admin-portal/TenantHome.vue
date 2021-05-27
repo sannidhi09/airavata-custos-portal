@@ -58,7 +58,12 @@
         </ul>
       </div>
       <div style="flex: 1;">
-        <div class="w-100" style="font-weight: 500;font-size: 23px;">{{ title }}</div>
+        <div class="w-100" style="display: flex; flex-direction: row;">
+          <div style="flex: 1;font-weight: 500;font-size: 23px;">{{ title }}</div>
+          <div style="padding: 10px">
+            <slot name="header-right"></slot>
+          </div>
+        </div>
         <slot/>
       </div>
     </div>
