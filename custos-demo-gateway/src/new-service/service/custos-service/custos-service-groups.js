@@ -82,15 +82,16 @@ export default class CustosGroups {
      * GET All Groups
      * @return {Promise<AxiosResponse<any>>}
      */
-    getAllGroups({offset = 0, limit = 50, groupId = null} = {}) {
-        console.log("sfsdfsdf", {offset, limit, groupId})
-        return this.custosService.axiosInstanceWithClientAuthorization.get(
+    getAllGroups({offset = 0, limit = 50, groupId = null, tenantId = null, clientId = null} = {}) {
+        console.log("sfsdfsdf", {offset, limit, groupId, tenantId, clientId})
+        return this.custosService.axiosInstanceWithTokenAuthorization.get(
             `${CustosService.ENDPOINTS.GROUPS}/groups`,
             {
                 params: {
                     // offset: offset,
                     // limit: limit,
-                    "group.id": groupId
+                    "group.id": groupId,
+                    clientId
                 }
             }
         );

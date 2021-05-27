@@ -31,7 +31,7 @@
                 </router-link>
               </li>
               <li>
-                <router-link :to="`/tenants/${tenant.tenantId}/user-management/users`" v-slot="{ href, route, navigate}"
+                <router-link :to="`/tenants/${clientId}/groups`" v-slot="{ href, route, navigate}"
                              tag="">
                   <b-link @click="navigate" :href="href">Groups</b-link>
                 </router-link>

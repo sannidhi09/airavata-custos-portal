@@ -27,14 +27,14 @@ const actions = {
             sub_groups
         });
     },
-    async fetchGroups({commit}, {offset = 0, limit = 50, groupId = null} = {}) {
+    async fetchGroups({commit}, {offset = 0, limit = 50, groupId = null, tenantId = null, clientId = null} = {}) {
 
         // await new Promise(resolve => setTimeout(resolve, 1000));
 
         // TODO enable api filtering, pagination, etc.
-        let queryString = JSON.stringify({offset, limit, groupId});
+        let queryString = JSON.stringify({offset, limit, groupId, tenantId, clientId});
 
-        let {data: {groups}} = await custosService.groups.getAllGroups({offset, limit, groupId});
+        let {data: {groups}} = await custosService.groups.getAllGroups({offset, limit, groupId, tenantId, clientId});
         const groupIds = groups.map((
             {id, name, description, owner_id, realm_roles, client_roles, attributes, sub_groups}
         ) => {
@@ -154,8 +154,8 @@ const mutations = {
 
 const getters = {
     getGroups(state, getters) {
-        return ({offset = 0, limit = 50, groupId = null} = {}) => {
-            const queryString = JSON.stringify({offset, limit, groupId});
+        return ({offset = 0, limit = 50, groupId = null, tenantId = null, clientId = null} = {}) => {
+            const queryString = JSON.stringify({offset, limit, groupId, tenantId, clientId});
             if (state.groupListMap[queryString]) {
                 return state.groupListMap[queryString].map(groupId => getters.getGroup({groupId}));
             } else {

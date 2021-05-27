@@ -146,6 +146,15 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantUsers")
         },
         {
+            path: "/tenants/:clientId/groups",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantGroups")
+        },
+        {
             path: "/callback",
             name: "callback",
             component: () =>
@@ -191,6 +200,9 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
         // next(true);
         next('/');
     } else {
+        const username = store.getters["auth/currentUsername"];
+        await store.dispatch('user/fetchUsers', {username});
+
         console.log("YES authenticated")
         next(true);
     }
