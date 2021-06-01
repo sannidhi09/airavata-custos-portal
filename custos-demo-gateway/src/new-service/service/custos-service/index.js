@@ -125,7 +125,7 @@ export default class CustosService {
         });
     }
 
-    get axiosInstanceWithClientAuthorization() {
+    getAxiosInstanceWithClientAuthorization({clientId, clientSecret}) {
         return axios.create({
             httpAgent,
             httpsAgent,
@@ -134,9 +134,24 @@ export default class CustosService {
             headers: {
                 'Accept': '*/*',
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${btoa(`${this.clientId}:${this.clientSecret}`)}`
+                'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`
             }
         });
+    }
+
+    get axiosInstanceWithClientAuthorization() {
+        return this.getAxiosInstanceWithClientAuthorization({clientId: this.clientId, clientSecret: this.clientSecret});
+        // return axios.create({
+        //     httpAgent,
+        //     httpsAgent,
+        //     baseURL: this.baseURL,
+        //     withCredentials: false,
+        //     headers: {
+        //         'Accept': '*/*',
+        //         'Content-Type': 'application/json',
+        //         'Authorization': `Bearer ${btoa(`${this.clientId}:${this.clientSecret}`)}`
+        //     }
+        // });
     }
 
     get axiosInstanceWithTokenAuthorization() {

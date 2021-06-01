@@ -3,6 +3,7 @@
     <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">
       <div style="flex: 1;">
         <div style="font-size: 1.4rem;" v-if="tenant">{{ tenant.name }}</div>
+        <Breadcrumb :links="commonBreadcrumbLinks.concat(breadcrumbLinks)"/>
       </div>
       <div>
         <router-link to="/tenants" v-slot="{ href, route, navigate}" tag="">
@@ -73,18 +74,32 @@
 <script>
 
 import store from "../../new-service/store"
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default {
   name: "TenantHome",
   store: store,
-  components: {},
+  components: {Breadcrumb},
   props: {
-    title: {}
+    title: {},
+    breadcrumbLinks: {
+      default() {
+        return [];
+      }
+    }
   },
   data() {
     return {}
   },
   computed: {
+    commonBreadcrumbLinks() {
+      const _breadcrumbLinks = [{to: "/tenants", name: "Tenants"}];
+      if (this.tenant) {
+        _breadcrumbLinks.push({to: `/tenants/${this.clientId}`, name: this.tenant.name})
+      }
+
+      return _breadcrumbLinks;
+    },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
     },

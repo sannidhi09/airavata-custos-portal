@@ -254,6 +254,14 @@ export default {
     }
   },
   computed: {
+    breadcrumbLinks() {
+      const _breadcrumbLinks = [{to: "/tenants", name: "Tenants"}];
+      if (this.parentTenant) {
+        _breadcrumbLinks.push({to: `/tenants?parentClientId=${this.parentTenant}`, name: this.parentTenant.name})
+      }
+
+      return _breadcrumbLinks;
+    },
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
@@ -320,7 +328,7 @@ export default {
       this.tenantId = this.tenant.tenantId;
       this.tenantName = this.tenant.name;
       this.redirectUris = this.tenant.redirectUris;
-      this.scope = this.tenant.scope.split(" ");
+      this.scope = this.tenant.scope ? this.tenant.scope.split(" ") : this.tenant.scope;
       this.domain = this.tenant.domain;
       this.clientUri = this.tenant.clientUri;
       this.logoUri = this.tenant.logoUri;
@@ -356,6 +364,10 @@ export default {
         requesterEmail: this.requesterEmail
       });
     }
+  },
+  beforeMount() {
+    this.$store.dispatch("tenant/fetchTenant", {clientId: this.clientId});
+    this.$store.dispatch("tenant/fetchTenantSecret", {clientId: this.clientId});
   }
 }
 </script>

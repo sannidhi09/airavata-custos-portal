@@ -332,6 +332,31 @@ export default {
     tenantId: String
   },
   computed: {
+    // parentTenantId() {
+    //   if (this.$route.query.parentTenantId) {
+    //     return this.$route.query.parentTenantId;
+    //   } else {
+    //     return 0;
+    //   }
+    // },
+    parentClientId() {
+      console.log("======== this.$route", this.$route)
+      if (this.$route.query.parentClientId) {
+        return this.$route.query.parentClientId;
+      } else {
+        return 0;
+      }
+    },
+    parentTenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: this.parentClientId});
+    },
+    parentClientSecret() {
+      if (this.parentTenant) {
+        return this.parentTenant.clientSecret;
+      } else {
+        return null;
+      }
+    },
     state() {
       return this.name.length >= 4 ? true : false
     },
@@ -713,7 +738,10 @@ export default {
             clientUri: this.clientUri,
             logoUri: this.logoUri,
             comment: this.comment,
-            applicationType: this.applicationType
+            applicationType: this.applicationType,
+
+            parentClientId: this.parentClientId,
+            parentClientSecret: this.parentClientSecret
           });
 
           this.clientId = clientId;
@@ -756,6 +784,9 @@ export default {
       this.lastName = user.lastName;
       this.email = user.email;
     }
+
+    this.$store.dispatch("tenant/fetchTenant", {clientId: this.parentClientId});
+    this.$store.dispatch("tenant/fetchTenantSecret", {clientId: this.parentClientId});
   }
 }
 </script>

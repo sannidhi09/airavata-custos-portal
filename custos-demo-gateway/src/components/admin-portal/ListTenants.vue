@@ -3,9 +3,10 @@
     <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">
       <div style="flex: 1;">
         <div style="font-size: 1.4rem;">Tenants</div>
+        <Breadcrumb :links="breadcrumbLinks"/>
       </div>
       <div>
-        <router-link to="/tenants-new" v-slot="{ href, route, navigate}" tag="">
+        <router-link :to="`/tenants-new?parentClientId=${parentClientId}`" v-slot="{ href, route, navigate}" tag="">
           <b-button variant="primary" @click="navigate">Create New Tenant</b-button>
         </router-link>
       </div>
@@ -43,7 +44,7 @@
                 <b-checkbox/>
               </b-td>
               <b-td>
-                <router-link :to="`/tenants/${tenant.clientId}`" v-slot="{ href, route, navigate}" tag="">
+                <router-link :to="getTenantLink(tenant)" v-slot="{ href, route, navigate}" tag="">
                   <b-link @click="navigate" :href="href">{{ tenant.tenantId }}</b-link>
                 </router-link>
               </b-td>
@@ -60,6 +61,7 @@
           </b-tbody>
         </b-table-simple>
         <b-pagination
+            v-if="tenantsPagination"
             size="sm"
             class="float-right"
             v-model="activePage"
@@ -77,11 +79,12 @@
 
 import store from "../../new-service/store"
 import svgNotFound from "../../assets/not-found-icon.svg"
+import Breadcrumb from "@/components/Breadcrumb";
 
 export default {
   name: "ListTenants",
   store: store,
-  components: {},
+  components: {Breadcrumb},
   data() {
     return {
       // currentActivePage: 3,
@@ -97,6 +100,35 @@ export default {
     }
   },
   computed: {
+    // parentTenantId() {
+    //   console.log("======== this.$route", this.$route)
+    //   if (this.$route.query.parentTenantId) {
+    //     return this.$route.query.parentTenantId;
+    //   } else {
+    //     return 0;
+    //   }
+    // },
+    breadcrumbLinks() {
+      const _breadcrumbLinks = [{to: "/tenants", name: "Tenants"}];
+      if (this.parentTenant) {
+        _breadcrumbLinks.push({to: `/tenants?parentClientId=${this.parentTenant}`, name: this.parentTenant.name})
+      }
+
+      return _breadcrumbLinks;
+    },
+    parentClientId() {
+      if (this.$route.query.parentClientId) {
+        return this.$route.query.parentClientId;
+      } else {
+        return null;
+      }
+    },
+    parentTenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: this.parentClientId});
+    },
+    isParentSuperTenant() {
+      return !this.parentClientId;
+    },
     offset() {
       return (this.activePage - 1) * this.limit;
     },
@@ -108,43 +140,56 @@ export default {
     },
     tenantsPagination() {
       return this.$store.getters["tenant/getTenantsPagination"]({
+        // parentTenantId: this.parentTenantId,
+        parentClientId: this.parentClientId,
         limit: this.limit, offset: this.offset, // status: "ACTIVE"
       })
     },
     tenants() {
-      // TODO fix once the status param has been fixed.
-
-      const activeTenants = this.$store.getters["tenant/getTenants"]({
+      let activeTenants = this.$store.getters["tenant/getTenants"]({
+        // parentTenantId: this.parentTenantId,
+        parentClientId: this.parentClientId,
         limit: this.limit, offset: this.offset, // status: "ACTIVE"
       })
-      // const requestedTenants = this.$store.getters["tenant/getTenants"]({
-      //   limit: this.limit, offset: this.offset, status: "REQUESTED"
-      // })
-      // const deactivatedTenants = this.$store.getters["tenant/getTenants"]({
-      //   limit: this.limit, offset: this.offset, status: "DEACTIVATED"
-      // })
+
+      // TODO remove later. A temporary fix for tenants that has issues.
+      if (activeTenants) {
+        activeTenants = activeTenants.filter(tenant => !!tenant);
+      }
 
       return activeTenants;
-
-      // if (activeTenants && requestedTenants && deactivatedTenants) {
-      //   return activeTenants.concat(requestedTenants).concat(deactivatedTenants);
-      // } else {
-      //   return null;
-      // }
     }
   },
   watch: {
     activePage() {
       this.$store.dispatch("tenant/fetchTenants", {
+        // parentTenantId: this.parentTenantId,
+        parentClientId: this.parentClientId,
+        limit: this.limit, offset: this.offset, // status: "ACTIVE"
+      });
+    },
+    parentClientId() {
+      if (this.parentClientId) {
+        this.$store.dispatch("tenant/fetchTenant", {clientId: this.parentClientId});
+      }
+
+      this.$store.dispatch("tenant/fetchTenants", {
+        // parentTenantId: this.parentTenantId,
+        parentClientId: this.parentClientId,
         limit: this.limit, offset: this.offset, // status: "ACTIVE"
       });
     }
   },
-  async beforeMount() {
+  async mounted() {
+    if (this.parentClientId) {
+      await this.$store.dispatch("tenant/fetchTenant", {clientId: this.parentClientId});
+    }
+
     await this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
 
-
     this.$store.dispatch("tenant/fetchTenants", {
+      // parentTenantId: this.parentTenantId,
+      parentClientId: this.parentClientId,
       limit: this.limit, offset: this.offset, // status: "ACTIVE"
     });
     // this.$store.dispatch("tenant/fetchTenants", {
@@ -154,7 +199,17 @@ export default {
     //   limit: this.limit, offset: this.offset, status: "DEACTIVATED"
     // });
   },
-  methods: {}
+  methods: {
+    getTenantLink({clientId, tenantId}) {
+      console.log("###### getTenantLink : ", {clientId, tenantId});
+      // return `/tenants/${clientId}`;
+      if (this.isParentSuperTenant) {
+        return `/tenants?parentClientId=${clientId}`;
+      } else {
+        return `/tenants/${clientId}`;
+      }
+    }
+  }
 };
 </script>
 

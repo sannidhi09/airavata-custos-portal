@@ -14,9 +14,21 @@ const getDefaultState = () => {
 const state = getDefaultState();
 
 const actions = {
-    async fetchTenants({commit}, {limit, offset, status, requesterEmail}) {
-        const params = {limit, offset, status, requesterEmail};
+    async fetchTenantSecret({commit}, {clientId}) {
+        const clientSecret = await custosService.identity.getClientSecret({clientId});
+        console.log("STORE : fetchTenantSecret ", clientSecret);
+
+        commit('SET_TENANT_SECRET', {clientId, clientSecret});
+    },
+    async fetchTenants({commit}, {limit, offset, status, requesterEmail, parentTenantId, parentClientId}) {
+        const params = {limit, offset, status, requesterEmail, parentTenantId, parentClientId};
+
+        console.log("STORE : fetchTenants ", params);
         const queryString = JSON.stringify(params);
+
+        if (!params.parentClientId) {
+            params.parentClientId = null; // custosService.clientId;
+        }
 
         // const username = rootGetters["auth/currentUsername"];
         // await dispatch("user/fetchUsers", {username}, {root: true});
@@ -52,12 +64,12 @@ const actions = {
         const {
             admin_username, admin_first_name, admin_last_name, admin_email,
             tenant_id, tenant_status, client_name, domain,
-            client_secret, redirect_uris, scope, client_uri, logo_uri, comment, application_type
+            redirect_uris, scope, client_uri, logo_uri, comment, application_type
         } = tenant;
         commit('SET_TENANT', {
             username: admin_username, firstName: admin_first_name, lastName: admin_last_name, email: admin_email,
             tenantId: tenant_id, status: tenant_status, name: client_name, domain, clientId,
-            clientSecret: client_secret, redirectUris: redirect_uris, scope: scope, clientUri: client_uri,
+            redirectUris: redirect_uris, scope: scope, clientUri: client_uri,
             logoUri: logo_uri, comment: comment, applicationType: application_type
         });
     },
@@ -88,7 +100,7 @@ const actions = {
         });
         commit('SET_TENANT_ROLES_LIST', {queryString, tenantRoleIds});
     },
-    async createTenant(o, {username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType}) {
+    async createTenant(o, {username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType, parentClientId, parentClientSecret}) {
         const res = await custosService.tenants.createTenant({
             username,
             firstName,
@@ -102,7 +114,9 @@ const actions = {
             clientUri,
             logoUri,
             comment,
-            applicationType
+            applicationType,
+            parentClientId,
+            parentClientSecret
         });
 
         const {client_id, client_secret} = res.data;
@@ -150,20 +164,30 @@ const actions = {
 const mutations = {
     SET_TENANT(state, {
         username = null, firstName = null, lastName = null, email = null,
-        tenantId, status, name, domain, clientId, clientSecret = null, redirectUris = null, scope = null,
+        tenantId, status, name, domain, clientId, redirectUris = null, scope = null,
         clientUri = null, logoUri = null, comment = null, applicationType = null
     }) {
         state.tenantsMap = {
             ...state.tenantsMap,
-            [tenantId]: {
+            [clientId]: {
+                ...state.tenantsMap[clientId],
                 username, firstName, lastName, email,
                 tenantId, status, name, domain, clientId,
-                clientSecret, redirectUris, scope, clientUri, logoUri, comment, applicationType
+                redirectUris, scope, clientUri, logoUri, comment, applicationType
             }
         };
         state.clientIdToTenantIdMap = {
             ...state.clientIdToTenantIdMap,
-            [clientId]: tenantId
+            [tenantId]: clientId
+        };
+    },
+    SET_TENANT_SECRET(state, {clientId, clientSecret}) {
+        state.tenantsMap = {
+            ...state.tenantsMap,
+            [clientId]: {
+                ...state.tenantsMap[clientId],
+                clientSecret
+            }
         };
     },
     SET_TENANT_LIST(state, {queryString, tenantIds}) {
@@ -193,8 +217,8 @@ const mutations = {
 
 const getters = {
     getTenants(state, getters) {
-        return ({limit, offset, status, requesterEmail}) => {
-            const queryString = JSON.stringify({limit, offset, status, requesterEmail});
+        return ({limit, offset, status, requesterEmail, parentTenantId, parentClientId}) => {
+            const queryString = JSON.stringify({limit, offset, status, requesterEmail, parentTenantId, parentClientId});
             console.log("###### getTenants : ", queryString)
             if (state.tenantsListMap[queryString]) {
                 const r = state.tenantsListMap[queryString].map(tenantId => getters.getTenant({tenantId}));
@@ -206,8 +230,8 @@ const getters = {
         }
     },
     getTenantsPagination(state) {
-        return ({limit, offset, status, requesterEmail}) => {
-            const queryString = JSON.stringify({limit, offset, status, requesterEmail});
+        return ({limit, offset, status, requesterEmail, parentTenantId, parentClientId}) => {
+            const queryString = JSON.stringify({limit, offset, status, requesterEmail, parentTenantId, parentClientId});
             if (state.tenantsListPaginationMap[queryString]) {
                 return state.tenantsListPaginationMap[queryString];
             } else {
@@ -217,10 +241,10 @@ const getters = {
     },
     getTenant(state) {
         return ({tenantId, clientId}) => {
-            if (state.clientIdToTenantIdMap[clientId]) {
-                return state.tenantsMap[state.clientIdToTenantIdMap[clientId]];
-            } else if (state.tenantsMap[tenantId]) {
-                return state.tenantsMap[tenantId];
+            if (state.clientIdToTenantIdMap[tenantId]) {
+                return state.tenantsMap[state.clientIdToTenantIdMap[tenantId]];
+            } else if (state.tenantsMap[clientId]) {
+                return state.tenantsMap[clientId];
             } else {
                 return null;
             }

@@ -115,4 +115,17 @@ export default class CustosIdentity {
             {'refresh_token': this.custosService.refreshToken, 'grant_type': 'refresh_token'}
         ).then(this._saveTokenResponse.bind(this));
     }
+
+    getClientSecret({clientId}) {
+        console.log("##### getClientSecret :  ", clientId);
+        return this.custosService.axiosInstanceWithTokenAuthorization.get(
+            `${CustosService.ENDPOINTS.IDENTITY}/credentials`,
+            {
+                params: {
+                    "client_id": clientId
+                }
+            }
+        ).then(({data: {custos_client_secret}}) => custos_client_secret);
+    }
+
 }

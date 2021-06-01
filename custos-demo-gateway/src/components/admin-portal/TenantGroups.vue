@@ -47,7 +47,7 @@ export default {
       return this.$store.getters["group/getGroups"]({clientId: this.clientId})
     }
   },
-  beforeMount() {
+  mounted() {
     this.$store.dispatch("group/fetchGroups", {clientId: this.clientId});
   }
 }

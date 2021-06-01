@@ -29,8 +29,8 @@ export default class CustosGroups {
         return this.custosService.axiosInstanceWithTokenAuthorization.post(
             `${CustosService.ENDPOINTS.GROUPS}/group`,
             {
+                clientId: clientId,
                 group: {
-                    client_id: clientId,
                     name,
                     description,
                     ownerId,
