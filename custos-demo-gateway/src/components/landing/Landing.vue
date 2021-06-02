@@ -100,8 +100,7 @@ export default {
       if (this.username != null && this.username != '' && this.password != null && this.password != '') {
         await this.$store.dispatch("auth/authenticateLocally", {
           username: this.username,
-          password: this.password,
-          tokenEndpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
+          password: this.password
         });
       } else {
         this.loginError = true
