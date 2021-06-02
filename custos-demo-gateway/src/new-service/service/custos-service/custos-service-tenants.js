@@ -47,6 +47,7 @@ export default class CustosTenants {
                         // status: status,
                         // requester_email: requesterEmail
                         // "parent_id": parentTenantId
+                        type: "ADMIN"
                     }
                 }
             ).then(({data}) => data)

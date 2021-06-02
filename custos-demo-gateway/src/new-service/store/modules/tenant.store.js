@@ -26,10 +26,6 @@ const actions = {
         console.log("STORE : fetchTenants ", params);
         const queryString = JSON.stringify(params);
 
-        if (!params.parentClientId) {
-            params.parentClientId = null; // custosService.clientId;
-        }
-
         // const username = rootGetters["auth/currentUsername"];
         // await dispatch("user/fetchUsers", {username}, {root: true});
         // const requesterEmail = rootGetters["user/getUser"]({username}).email;
