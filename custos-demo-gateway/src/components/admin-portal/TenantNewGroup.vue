@@ -1,6 +1,6 @@
 <template>
   <TenantHome title="New Group">
-    <div class="w-100">
+    <div class="w-100" style="max-width: 600px;">
       <div class="pt-3">
         <label for="name">Group Name</label>
         <b-form-input
@@ -28,7 +28,7 @@
 
       <div>
         <b-button variant="primary" size="sm" v-on:click="create">Create</b-button>
-        <b-button variant="secondary" size="sm">Cancel</b-button>
+        <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>
       </div>
 
     </div>

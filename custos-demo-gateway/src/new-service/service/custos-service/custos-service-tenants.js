@@ -14,44 +14,32 @@ export default class CustosTenants {
         return this._custosService;
     }
 
-    fetchTenants({limit, offset, status, parentTenantId, parentClientId, parentClientSecret}) {
-        console.log("fetchTenants ", {limit, offset, status, parentTenantId, parentClientSecret})
+    fetchTenants({limit, offset, status, parentTenantId, parentClientId, parentClientSecret, requesterEmail}) {
+        console.log("fetchTenants ", {limit, offset, status, parentTenantId, parentClientSecret, requesterEmail})
 
-        if (parentClientId) {
-            // return this.custosService.getAxiosInstanceWithClientAuthorization({
-            //     clientId: parentClientId,
-            //     clientSecret: parentClientSecret
-            // }).get(
-            return this.custosService.axiosInstanceWithTokenAuthorization.get(
-                `${CustosService.ENDPOINTS.TENANTS}/child/tenants`,
-                // `${CustosService.ENDPOINTS.TENANTS}/tenants`,
-                {
-                    params: {
-                        limit: limit,
-                        offset: offset,
-                        // status: status,
-                        // requester_email: requesterEmail
-                        // "parent_id": parentTenantId,
-                        "parent_client_id": parentClientId
-                    }
-                }
-            ).then(({data}) => data)
+        let url = `${CustosService.ENDPOINTS.TENANTS}/tenants`
+        const params = {
+            limit: limit,
+            offset: offset,
+            // status: status,
+            // requester_email: requesterEmail
+        };
+
+        // TODO fix.
+        if (parentClientId !== "custos-6nwoqodstpe5mvcq09lh-10000101") {
+            url = `${CustosService.ENDPOINTS.TENANTS}/child/tenants`;
+            params["parent_client_id"] = parentClientId;
         } else {
-            return this.custosService.axiosInstanceWithTokenAuthorization.get(
-                `${CustosService.ENDPOINTS.TENANTS}/tenants`,
-                // `${CustosService.ENDPOINTS.TENANTS}/tenants`,
-                {
-                    params: {
-                        limit: limit,
-                        offset: offset,
-                        // status: status,
-                        // requester_email: requesterEmail
-                        // "parent_id": parentTenantId
-                        type: "ADMIN"
-                    }
-                }
-            ).then(({data}) => data)
+            params["type"] = "ADMIN";
         }
+
+        if (requesterEmail) {
+            params["requester_email"] = requesterEmail;
+        }
+
+        return this.custosService.axiosInstanceWithTokenAuthorization.get(
+            url, {params: params}
+        ).then(({data}) => data)
 
 
     }
@@ -82,7 +70,7 @@ export default class CustosTenants {
 
     createTenant({username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType, parentClientId, parentClientSecret}) {
         let axiosInstance;
-        if (parentClientId) {
+        if (parentClientId !== "custos-6nwoqodstpe5mvcq09lh-10000101") {
             axiosInstance = this.custosService.getAxiosInstanceWithClientAuthorization({
                 clientId: parentClientId,
                 clientSecret: parentClientSecret
@@ -145,6 +133,16 @@ export default class CustosTenants {
                 params: {
                     client_id: clientId
                 }
+            }
+        ).then(({data}) => data)
+    }
+
+    updateTenantStatus({clientId, status}) {
+        return this.custosService.axiosInstanceWithTokenAuthorization.post(
+            `${CustosService.ENDPOINTS.TENANTS}/status`,
+            {
+                client_id: clientId,
+                status: status
             }
         ).then(({data}) => data)
     }

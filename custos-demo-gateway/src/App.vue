@@ -33,7 +33,7 @@ export default {
   },
   mounted() {
     this.redirectToLoginIfNotAuthenticated()
-    this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
+    // this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
   }
 }
 </script>

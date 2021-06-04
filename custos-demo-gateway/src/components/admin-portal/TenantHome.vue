@@ -5,11 +5,11 @@
         <div style="font-size: 1.4rem;" v-if="tenant">{{ tenant.name }}</div>
         <Breadcrumb :links="commonBreadcrumbLinks.concat(breadcrumbLinks)"/>
       </div>
-      <div>
-        <router-link to="/tenants" v-slot="{ href, route, navigate}" tag="">
-          <b-button variant="secondary" @click="navigate">Back</b-button>
-        </router-link>
-      </div>
+      <!--      <div>-->
+      <!--        <router-link to="/tenants" v-slot="{ href, route, navigate}" tag="">-->
+      <!--          <b-button variant="secondary" @click="navigate">Back</b-button>-->
+      <!--        </router-link>-->
+      <!--      </div>-->
     </div>
 
     <div class="w-100" v-if="tenant" style="display: flex; flex-direction: row;">
@@ -56,11 +56,19 @@
               <b-link @click="navigate" :href="href">Audits</b-link>
             </router-link>
           </li>
+
+          <li v-if="tenant.type !== 'CHILD_TENANT'">
+            <router-link :to="`/tenants/${tenant.clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">
+              <b-link @click="navigate" :href="href" v-if="tenant.type === 'SUPER_TENANT'">Admin Tenants</b-link>
+              <b-link @click="navigate" :href="href" v-if="tenant.type === 'ADMIN_TENANT'">Child Tenants</b-link>
+            </router-link>
+          </li>
+
         </ul>
       </div>
       <div style="flex: 1;">
         <div class="w-100" style="display: flex; flex-direction: row;">
-          <div style="flex: 1;font-weight: 500;font-size: 23px;">{{ title }}</div>
+          <div style="flex: 1;font-weight: 500;font-size: 23px;padding-top: 15px;">{{ title }}</div>
           <div style="padding: 10px">
             <slot name="header-right"></slot>
           </div>
@@ -75,6 +83,7 @@
 
 import store from "../../new-service/store"
 import Breadcrumb from "@/components/Breadcrumb";
+import {custosService} from "@/new-service/store/util/custos.util";
 
 export default {
   name: "TenantHome",
@@ -93,8 +102,13 @@ export default {
   },
   computed: {
     commonBreadcrumbLinks() {
-      const _breadcrumbLinks = [{to: "/tenants", name: "Tenants"}];
-      if (this.tenant) {
+      const _breadcrumbLinks = [];
+
+      if (this.appTenant) {
+        _breadcrumbLinks.push({to: `/tenants/${this.appTenant.clientId}`, name: this.appTenant.name});
+      }
+
+      if (this.clientId !== custosService.clientId && this.tenant) {
         _breadcrumbLinks.push({to: `/tenants/${this.clientId}`, name: this.tenant.name})
       }
 
@@ -103,23 +117,23 @@ export default {
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
     },
-    currentUserEmail() {
-      return this.$store.getters["user/getUser"]({username: this.currentUsername}).email
-    },
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
-      return this.$route.params.clientId;
+      if (this.$route.params.clientId) {
+        return this.$route.params.clientId;
+      } else {
+        return custosService.clientId;
+      }
+    },
+    appTenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: custosService.clientId});
     },
     tenant() {
       return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
     }
   },
-  async beforeMount() {
-    await this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
-
-    this.$store.dispatch("tenant/fetchTenant", {
-      clientId: this.clientId
-    });
+  beforeMount() {
+    this.$store.dispatch("tenant/fetchTenant", {clientId: this.clientId});
   },
   methods: {}
 };

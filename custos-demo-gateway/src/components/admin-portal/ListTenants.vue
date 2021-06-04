@@ -1,90 +1,116 @@
 <template>
-  <div class="w-100">
-    <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">
-      <div style="flex: 1;">
-        <div style="font-size: 1.4rem;">Tenants</div>
-        <Breadcrumb :links="breadcrumbLinks"/>
-      </div>
-      <div>
-        <router-link :to="`/tenants-new?parentClientId=${parentClientId}`" v-slot="{ href, route, navigate}" tag="">
-          <b-button variant="primary" @click="navigate">Create New Tenant</b-button>
-        </router-link>
-      </div>
-    </div>
+  <TenantHome :title="title">
+    <template #header-right>
+      <router-link :to="`/tenants/${clientId}/child-tenants/new`" v-slot="{ href, route, navigate}" tag="">
+        <b-button variant="primary" @click="navigate">Create New Tenant</b-button>
+      </router-link>
+    </template>
 
     <div class="w-100">
-      <div v-if="!tenants" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
-        Loading ...
-      </div>
-      <div v-else-if="tenants.length === 0" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
-        <p style="max-width: 600px;display: inline-block;">
-          <img :src="svgNotFound" style="width: 70px;margin-bottom: 30px;"/><br/>
-          You have no tenants. Start by clicking on Create New Tenant Button.
-          Visit
-          <b-link href="#">documentation</b-link>
-          more information.
-        </p>
-      </div>
-      <div v-else style="padding: 30px 100px;">
-        <b-table-simple small>
-          <b-thead>
-            <b-tr>
-              <b-th>
-                <b-checkbox/>
-              </b-th>
-              <b-th>Tenant ID</b-th>
-              <b-th>Name</b-th>
-              <b-th>Domain</b-th>
-              <b-th>Status</b-th>
-            </b-tr>
-          </b-thead>
-          <b-tbody>
-            <b-tr v-for="tenant in tenants" :key="tenant.tenantId">
-              <b-td>
-                <b-checkbox/>
-              </b-td>
-              <b-td>
-                <router-link :to="getTenantLink(tenant)" v-slot="{ href, route, navigate}" tag="">
-                  <b-link @click="navigate" :href="href">{{ tenant.tenantId }}</b-link>
-                </router-link>
-              </b-td>
-              <b-td>{{ tenant.name }}</b-td>
-              <b-td>{{ tenant.domain }}</b-td>
-              <b-td>
-                <b-form-tag v-if="tenant.status === 'ACTIVE'" no-remove variant="success">Active</b-form-tag>
-                <b-form-tag v-else-if="tenant.status === 'REQUESTED'" no-remove variant="warning">Requested</b-form-tag>
-                <b-form-tag v-else-if="tenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
-                </b-form-tag>
-              </b-td>
-            </b-tr>
+      <!--      <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">-->
+      <!--        <div style="flex: 1;">-->
+      <!--          <div style="font-size: 1.4rem;">Tenants</div>-->
+      <!--          <Breadcrumb :links="breadcrumbLinks"/>-->
+      <!--        </div>-->
+      <!--        <div>-->
+      <!--          <router-link :to="`/tenants-new?parentClientId=${parentClientId}`" v-slot="{ href, route, navigate}" tag="">-->
+      <!--            <b-button variant="primary" @click="navigate">Create New Tenant</b-button>-->
+      <!--          </router-link>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
-          </b-tbody>
-        </b-table-simple>
-        <b-pagination
-            v-if="tenantsPagination"
-            size="sm"
-            class="float-right"
-            v-model="activePage"
-            :total-rows="tenantsPagination.totalRows"
-            :per-page="tenantsPagination.perPage"
-            aria-controls="my-table"
-            :value="activePage"
-        ></b-pagination>
+
+      <div class="w-100">
+        <div v-if="!tenants" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
+          Loading ...
+        </div>
+        <div v-else-if="tenants.length === 0" class="w-100 text-center" style="color: #203A43;padding-top: 100px;">
+          <p style="max-width: 600px;display: inline-block;">
+            <img :src="svgNotFound" style="width: 70px;margin-bottom: 30px;"/><br/>
+            You have no tenants. Start by clicking on Create New Tenant Button.
+            Visit
+            <b-link href="#">documentation</b-link>
+            more information.
+          </p>
+        </div>
+        <div v-else>
+          <b-table-simple small>
+            <b-thead>
+              <b-tr>
+                <b-th>
+                  <b-checkbox/>
+                </b-th>
+                <b-th>Tenant ID</b-th>
+                <b-th>Name</b-th>
+                <b-th>Domain</b-th>
+                <b-th>Status</b-th>
+                <b-th>Actions</b-th>
+              </b-tr>
+            </b-thead>
+            <b-tbody>
+              <b-tr v-for="childTenant in tenants" :key="childTenant.tenantId">
+                <b-td>
+                  <b-checkbox/>
+                </b-td>
+                <b-td>
+                  <router-link :to="getTenantLink(childTenant)" v-slot="{ href, route, navigate}" tag=""
+                               v-if="childTenant.hasAdminPrivileges">
+                    <b-link @click="navigate" :href="href">{{ childTenant.tenantId }}</b-link>
+                  </router-link>
+                  <span v-else>{{ childTenant.tenantId }}</span>
+                </b-td>
+                <b-td>{{ childTenant.name }}</b-td>
+                <b-td>{{ childTenant.domain }}</b-td>
+                <b-td>
+                  <b-form-tag v-if="childTenant.status === 'ACTIVE'" no-remove variant="success">Active</b-form-tag>
+                  <b-form-tag v-else-if="childTenant.status === 'REQUESTED'" no-remove variant="warning">Requested
+                  </b-form-tag>
+                  <b-form-tag v-else-if="childTenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
+                  </b-form-tag>
+                </b-td>
+                <td>
+                  <b-button variant="outline-primary" size="sm"
+                            v-if="tenant.hasAdminPrivileges && childTenant.status !== 'ACTIVE'"
+                            v-on:click="activateTenant(childTenant)">Activate
+                  </b-button>
+                  <b-button variant="outline-primary" size="sm"
+                            v-if="tenant.hasAdminPrivileges && childTenant.status !== 'DEACTIVATED'"
+                            v-on:click="deactivateTenant(childTenant)"
+                            :class="{'ml-2':childTenant.status !== 'ACTIVE'}">
+                    Deactivate
+                  </b-button>
+                </td>
+              </b-tr>
+
+            </b-tbody>
+          </b-table-simple>
+          <b-pagination
+              v-if="tenantsPagination"
+              size="sm"
+              class="float-right"
+              v-model="activePage"
+              :total-rows="tenantsPagination.totalRows"
+              :per-page="tenantsPagination.perPage"
+              aria-controls="my-table"
+              :value="activePage"
+          ></b-pagination>
+        </div>
       </div>
     </div>
-  </div>
+  </TenantHome>
 </template>
 
 <script>
 
 import store from "../../new-service/store"
 import svgNotFound from "../../assets/not-found-icon.svg"
-import Breadcrumb from "@/components/Breadcrumb";
+import TenantHome from "@/components/admin-portal/TenantHome";
+import {custosService} from "@/new-service/store/util/custos.util";
 
 export default {
   name: "ListTenants",
   store: store,
-  components: {Breadcrumb},
+  components: {TenantHome},
   data() {
     return {
       // currentActivePage: 3,
@@ -100,6 +126,15 @@ export default {
     }
   },
   computed: {
+    title() {
+      if (this.tenant && this.tenant.type === "SUPER_TENANT") {
+        return "Admin Tenants";
+      } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
+        return "Child Tenants";
+      } else {
+        return "Tenants";
+      }
+    },
     // parentTenantId() {
     //   console.log("======== this.$route", this.$route)
     //   if (this.$route.query.parentTenantId) {
@@ -108,49 +143,33 @@ export default {
     //     return 0;
     //   }
     // },
-    breadcrumbLinks() {
-      const _breadcrumbLinks = [{to: "/tenants", name: "Tenants"}];
-      if (this.parentTenant) {
-        _breadcrumbLinks.push({to: `/tenants?parentClientId=${this.parentTenant}`, name: this.parentTenant.name})
-      }
-
-      return _breadcrumbLinks;
-    },
-    parentClientId() {
-      if (this.$route.query.parentClientId) {
-        return this.$route.query.parentClientId;
+    // breadcrumbLinks() {
+    //   const _breadcrumbLinks = [{to: "/tenants", name: "Tenants"}];
+    //   if (this.tenant) {
+    //     _breadcrumbLinks.push({to: `/tenants?parentClientId=${this.clientId}`, name: this.parentTenant.name})
+    //   }
+    //
+    //   return _breadcrumbLinks;
+    // },
+    clientId() {
+      console.log("this.$route.params : ", this.$route.params);
+      if (this.$route.params.clientId) {
+        return this.$route.params.clientId;
       } else {
-        return null;
+        return custosService.clientId;
       }
     },
-    parentTenant() {
-      return this.$store.getters["tenant/getTenant"]({clientId: this.parentClientId});
-    },
-    isParentSuperTenant() {
-      return !this.parentClientId;
+    tenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
     },
     offset() {
       return (this.activePage - 1) * this.limit;
     },
-    currentUsername() {
-      return this.$store.getters["auth/currentUsername"]
-    },
-    currentUserEmail() {
-      return this.$store.getters["user/getUser"]({username: this.currentUsername}).email
-    },
     tenantsPagination() {
-      return this.$store.getters["tenant/getTenantsPagination"]({
-        // parentTenantId: this.parentTenantId,
-        parentClientId: this.parentClientId,
-        limit: this.limit, offset: this.offset, // status: "ACTIVE"
-      })
+      return this.$store.getters["tenant/getTenantsPagination"](this.tenantsListParams);
     },
     tenants() {
-      let activeTenants = this.$store.getters["tenant/getTenants"]({
-        // parentTenantId: this.parentTenantId,
-        parentClientId: this.parentClientId,
-        limit: this.limit, offset: this.offset, // status: "ACTIVE"
-      })
+      let activeTenants = this.$store.getters["tenant/getTenants"](this.tenantsListParams);
 
       // TODO remove later. A temporary fix for tenants that has issues.
       if (activeTenants) {
@@ -158,56 +177,44 @@ export default {
       }
 
       return activeTenants;
+    },
+    tenantsListParams() {
+      const params = {
+        parentClientId: this.clientId,
+        limit: this.limit, offset: this.offset, // status: "ACTIVE"
+      }
+
+      if (this.tenant && !this.tenant.hasAdminPrivileges) {
+        const currentUsername = this.$store.getters["auth/currentUsername"];
+        params.requesterEmail = this.$store.getters["user/getUser"]({username: currentUsername}).email;
+      }
+
+      return params;
     }
   },
   watch: {
     activePage() {
-      this.$store.dispatch("tenant/fetchTenants", {
-        // parentTenantId: this.parentTenantId,
-        parentClientId: this.parentClientId,
-        limit: this.limit, offset: this.offset, // status: "ACTIVE"
-      });
+      this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
     },
-    parentClientId() {
-      if (this.parentClientId) {
-        this.$store.dispatch("tenant/fetchTenant", {clientId: this.parentClientId});
-      }
-
-      this.$store.dispatch("tenant/fetchTenants", {
-        // parentTenantId: this.parentTenantId,
-        parentClientId: this.parentClientId,
-        limit: this.limit, offset: this.offset, // status: "ACTIVE"
-      });
+    clientId() {
+      this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
     }
   },
-  async mounted() {
-    if (this.parentClientId) {
-      await this.$store.dispatch("tenant/fetchTenant", {clientId: this.parentClientId});
-    }
+  mounted() {
+    this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
 
-    await this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
-
-    this.$store.dispatch("tenant/fetchTenants", {
-      // parentTenantId: this.parentTenantId,
-      parentClientId: this.parentClientId,
-      limit: this.limit, offset: this.offset, // status: "ACTIVE"
-    });
-    // this.$store.dispatch("tenant/fetchTenants", {
-    //   limit: this.limit, offset: this.offset, status: "REQUESTED"
-    // });
-    // this.$store.dispatch("tenant/fetchTenants", {
-    //   limit: this.limit, offset: this.offset, status: "DEACTIVATED"
-    // });
+    // this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
   },
   methods: {
     getTenantLink({clientId, tenantId}) {
       console.log("###### getTenantLink : ", {clientId, tenantId});
-      // return `/tenants/${clientId}`;
-      if (this.isParentSuperTenant) {
-        return `/tenants?parentClientId=${clientId}`;
-      } else {
-        return `/tenants/${clientId}`;
-      }
+      return `/tenants/${clientId}`;
+    },
+    activateTenant({clientId}) {
+      this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "ACTIVE"})
+    },
+    deactivateTenant({clientId}) {
+      this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "DEACTIVATED"})
     }
   }
 };

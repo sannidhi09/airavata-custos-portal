@@ -1,10 +1,10 @@
 <template>
   <TenantHome title="Profile">
     <div>
-      <div style="padding: 10px; max-width: 600px;">
+      <div style="max-width: 600px;">
         <div class="pt-3" style="display: flex; flex-direction: row;">
 
-          <div class="pt-3">
+          <div style="flex: 1;" class="mr-2">
             <label for="username">Username</label>
             <b-form-input
                 v-model="username"
@@ -215,7 +215,7 @@
       </div>
       <div>
         <b-button variant="primary" size="sm" v-on:click="onClickSave">Save Changes</b-button>
-        <b-button variant="secondary" size="sm">Cancel</b-button>
+        <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>
       </div>
     </div>
   </TenantHome>
@@ -224,6 +224,7 @@
 <script>
 import store from "../../new-service/store";
 import TenantHome from "@/components/admin-portal/TenantHome";
+import {custosService} from "@/new-service/store/util/custos.util";
 
 export default {
   name: "TenantProfile",
@@ -263,8 +264,12 @@ export default {
       return _breadcrumbLinks;
     },
     clientId() {
-      console.log("this.$route.params : ", this.$route.params);
-      return this.$route.params.clientId;
+      console.log("-------Heyy : " + custosService.clientId + " ==== " + this.$route.params.clientId);
+      if (this.$route.params.clientId) {
+        return this.$route.params.clientId;
+      } else {
+        return custosService.clientId;
+      }
     },
     tenant() {
       return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
@@ -366,7 +371,7 @@ export default {
     }
   },
   beforeMount() {
-    this.$store.dispatch("tenant/fetchTenant", {clientId: this.clientId});
+    // this.$store.dispatch("tenant/fetchTenant", {clientId: this.clientId});
     this.$store.dispatch("tenant/fetchTenantSecret", {clientId: this.clientId});
   }
 }

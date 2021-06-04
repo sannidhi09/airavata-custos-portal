@@ -2,7 +2,7 @@
   <TenantHome title="Groups">
     <template #header-right>
       <router-link :to="`/tenants/${clientId}/groups/new`" v-slot="{href, navigate}" tag="">
-        <b-button variant="primary" size="sm" @click="navigate">Create New Group</b-button>
+        <b-button variant="primary" @click="navigate">Create New Group</b-button>
       </router-link>
     </template>
     <b-table-simple>

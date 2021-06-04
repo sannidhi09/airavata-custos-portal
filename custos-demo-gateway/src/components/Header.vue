@@ -62,18 +62,18 @@ export default {
   methods: {
     logout: () => store.dispatch("auth/logout")
   },
-  watch: {
-    authenticated() {
-      if (this.authenticated) {
-        this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
-      }
-    }
-  },
-  mounted() {
-    if (this.authenticated) {
-      this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
-    }
-  }
+  // watch: {
+  //   authenticated() {
+  //     if (this.authenticated) {
+  //       this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
+  //     }
+  //   }
+  // },
+  // mounted() {
+  //   if (this.authenticated) {
+  //     this.$store.dispatch("user/fetchUsers", {username: this.currentUsername});
+  //   }
+  // }
 }
 </script>
 

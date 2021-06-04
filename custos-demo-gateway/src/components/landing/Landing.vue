@@ -113,11 +113,7 @@ export default {
     loadAuthURL: () => store.dispatch("auth/fetchAuthorizationEndpoint"),
     redirectIfAuthenticated() {
       if (this.authenticated === true) {
-        if (this.successRedirect) {
-          this.$router.push(this.successRedirect);
-        } else {
-          this.$router.push('tenants');
-        }
+        this.$router.push('/tenants/default');
       }
     }
   },

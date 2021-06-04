@@ -20,7 +20,7 @@ const actions = {
 
         commit('SET_TENANT_SECRET', {clientId, clientSecret});
     },
-    async fetchTenants({commit}, {limit, offset, status, requesterEmail, parentTenantId, parentClientId}) {
+    async fetchTenants({commit, rootGetters}, {limit, offset, status, requesterEmail, parentTenantId, parentClientId}) {
         const params = {limit, offset, status, requesterEmail, parentTenantId, parentClientId};
 
         console.log("STORE : fetchTenants ", params);
@@ -31,13 +31,29 @@ const actions = {
         // const requesterEmail = rootGetters["user/getUser"]({username}).email;
 
         let {tenant, total_num_of_tenants} = await custosService.tenants.fetchTenants(params);
-        const tenantIds = tenant.map(({tenant_id, tenant_status, client_name, domain, client_id}) => {
+        const tenantIds = tenant.map(({tenant_id, tenant_status, client_name, domain, client_id, parent_tenant_id, admin_username}) => {
+            let type = "CHILD_TENANT";
+            let hasAdminPrivileges = false;
+            let currentUsername = rootGetters["auth/currentUsername"];
+
+            // TODO fix
+            if (client_id === "custos-6nwoqodstpe5mvcq09lh-10000101") {
+                type = "SUPER_TENANT";
+            } else if (parent_tenant_id === "0") {
+                type = "ADMIN_TENANT";
+            }
+
+            if (currentUsername === admin_username) {
+                hasAdminPrivileges = true;
+            }
+
             commit('SET_TENANT', {
                 tenantId: tenant_id,
                 status: tenant_status,
                 name: client_name,
                 domain,
-                clientId: client_id
+                clientId: client_id,
+                type, hasAdminPrivileges
             });
 
             return tenant_id;
@@ -49,7 +65,7 @@ const actions = {
     },
 
 
-    async fetchTenant({commit}, {clientId}) {
+    async fetchTenant({commit, rootGetters}, {clientId}) {
         let tenant = await custosService.tenants.fetchTenant({clientId});
         console.log("----- fetchTenant : ", tenant);
 //         admin_email: "hasithanjo2work@gmail.com"
@@ -60,13 +76,31 @@ const actions = {
         const {
             admin_username, admin_first_name, admin_last_name, admin_email,
             tenant_id, tenant_status, client_name, domain,
-            redirect_uris, scope, client_uri, logo_uri, comment, application_type
+            redirect_uris, scope, client_uri, logo_uri, comment, application_type,
+            parent_tenant_id
         } = tenant;
+
+        let type = "CHILD_TENANT";
+        let hasAdminPrivileges = false;
+        let currentUsername = rootGetters["auth/currentUsername"];
+
+        // TODO fix
+        if (clientId === "custos-6nwoqodstpe5mvcq09lh-10000101") {
+            type = "SUPER_TENANT";
+        } else if (parent_tenant_id === "0") {
+            type = "ADMIN_TENANT";
+        }
+
+        if (currentUsername === admin_username) {
+            hasAdminPrivileges = true;
+        }
+
         commit('SET_TENANT', {
             username: admin_username, firstName: admin_first_name, lastName: admin_last_name, email: admin_email,
             tenantId: tenant_id, status: tenant_status, name: client_name, domain, clientId,
             redirectUris: redirect_uris, scope: scope, clientUri: client_uri,
-            logoUri: logo_uri, comment: comment, applicationType: application_type
+            logoUri: logo_uri, comment: comment, applicationType: application_type,
+            type, hasAdminPrivileges
         });
     },
     async createTenantRole({commit}, {name, description, composite = false}) {
@@ -152,7 +186,10 @@ const actions = {
             applicationType,
             requesterEmail
         });
-
+    },
+    async updateTenantStatus({commit}, {clientId, status}) {
+        await custosService.tenants.updateTenantStatus({clientId, status});
+        commit('SET_TENANT_STATUS', {clientId, status});
     }
 
 }
@@ -161,7 +198,8 @@ const mutations = {
     SET_TENANT(state, {
         username = null, firstName = null, lastName = null, email = null,
         tenantId, status, name, domain, clientId, redirectUris = null, scope = null,
-        clientUri = null, logoUri = null, comment = null, applicationType = null
+        clientUri = null, logoUri = null, comment = null, applicationType = null,
+        type, hasAdminPrivileges
     }) {
         state.tenantsMap = {
             ...state.tenantsMap,
@@ -169,7 +207,8 @@ const mutations = {
                 ...state.tenantsMap[clientId],
                 username, firstName, lastName, email,
                 tenantId, status, name, domain, clientId,
-                redirectUris, scope, clientUri, logoUri, comment, applicationType
+                redirectUris, scope, clientUri, logoUri, comment, applicationType,
+                type, hasAdminPrivileges
             }
         };
         state.clientIdToTenantIdMap = {
@@ -183,6 +222,15 @@ const mutations = {
             [clientId]: {
                 ...state.tenantsMap[clientId],
                 clientSecret
+            }
+        };
+    },
+    SET_TENANT_STATUS(state, {clientId, status}) {
+        state.tenantsMap = {
+            ...state.tenantsMap,
+            [clientId]: {
+                ...state.tenantsMap[clientId],
+                status
             }
         };
     },

@@ -2,6 +2,8 @@ import Vue from "vue";
 import Router from "vue-router";
 import Landing from "./components/landing/Landing.vue";
 import store from './new-service/store'
+import {custosService} from "@/new-service/store/util/custos.util";
+// import {custosService} from "@/new-service/store/util/custos.util";
 
 Vue.use(Router)
 
@@ -101,7 +103,14 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/workspace/Agents")
         },
         {
-            path: "/tenants",
+            path: "/tenants/default",
+            name: "tenants-default",
+            beforeEnter: async (to, from, next) => {
+                next(`/tenants/${custosService.clientId}`);
+            }
+        },
+        {
+            path: "/tenants/:clientId/child-tenants",
             name: "tenants",
             beforeEnter: async (to, from, next) => {
                 await _validateAuthenticationBeforeEnter(to, from, next)
@@ -110,7 +119,7 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/ListTenants")
         },
         {
-            path: "/tenants-new",
+            path: "/tenants/:clientId/child-tenants/new",
             name: "tenants-new",
             beforeEnter: async (to, from, next) => {
                 await _validateAuthenticationBeforeEnter(to, from, next)
@@ -203,16 +212,30 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
     await store.dispatch('auth/refreshAuthentication');
     const authenticated = store.getters['auth/authenticated'];
 
+
     console.log("store ", store)
     if (!authenticated) {
-        console.log("NOT authenticated")
+        console.log("NOT authenticated");
         // next(true);
         next('/');
     } else {
         const username = store.getters["auth/currentUsername"];
         await store.dispatch('user/fetchUsers', {username});
+        await store.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
 
-        console.log("YES authenticated")
+        console.log("YES authenticated");
         next(true);
     }
 }
+
+// async function _validateSuperAdminAuthenticationBeforeEnter(to, from, next) {
+//     await _validateAuthenticationBeforeEnter(to, from, async (nextArg) => {
+//         await store.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
+//         const appTenant = store.getters["tenant/getTenant"]({clientId: custosService.clientId});
+//
+//         // const username = store.getters["auth/currentUsername"];
+//
+//         console.log("@@@@@@@@ appTenant : ", appTenant);
+//         next(nextArg);
+//     });
+// }
