@@ -131,10 +131,13 @@ export default new Router({
             path: "/tenants/:clientId",
             name: "tenants",
             beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantHome")
+                next(`/tenants/${to.params.clientId}/child-tenants`);
+            }
+            // beforeEnter: async (to, from, next) => {
+            //     await _validateAuthenticationBeforeEnter(to, from, next)
+            // },
+            // component: () =>
+            //     import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantHome")
         },
         {
             path: "/tenants/:clientId/profile",

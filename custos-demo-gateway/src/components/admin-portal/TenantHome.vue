@@ -13,7 +13,7 @@
     </div>
 
     <div class="w-100" v-if="tenant" style="display: flex; flex-direction: row;">
-      <div style="width: 300px;">
+      <div style="width: 300px;" v-if="tenant.hasAdminPrivileges">
         <ul>
           <li>
             <router-link :to="`/tenants/${clientId}/profile`" v-slot="{ href, route, navigate}" tag="">
@@ -66,7 +66,7 @@
 
         </ul>
       </div>
-      <div style="flex: 1;">
+      <div style="flex: 1;padding: 10px 30px;">
         <div class="w-100" style="display: flex; flex-direction: row;">
           <div style="flex: 1;font-weight: 500;font-size: 23px;padding-top: 15px;">{{ title }}</div>
           <div style="padding: 10px">

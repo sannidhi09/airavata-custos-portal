@@ -53,11 +53,10 @@
                   <b-checkbox/>
                 </b-td>
                 <b-td>
-                  <router-link :to="getTenantLink(childTenant)" v-slot="{ href, route, navigate}" tag=""
-                               v-if="childTenant.hasAdminPrivileges">
+                  <router-link :to="getTenantLink(childTenant)" v-slot="{ href, route, navigate}" tag="">
                     <b-link @click="navigate" :href="href">{{ childTenant.tenantId }}</b-link>
                   </router-link>
-                  <span v-else>{{ childTenant.tenantId }}</span>
+                  <!--                  <span v-else>{{ childTenant.tenantId }}</span>-->
                 </b-td>
                 <b-td>{{ childTenant.name }}</b-td>
                 <b-td>{{ childTenant.domain }}</b-td>
