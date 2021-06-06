@@ -269,7 +269,7 @@ export default {
     tenant() {
       return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
     },
-    tenantSecret() {
+    clientSecret() {
       if (this.tenant) {
         return this.tenant.clientSecret;
       } else {
