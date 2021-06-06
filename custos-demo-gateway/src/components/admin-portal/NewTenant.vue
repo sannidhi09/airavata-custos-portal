@@ -1,25 +1,12 @@
 <template>
   <TenantHome title="New Tenant">
     <div class="w-100" style="max-width: 600px;">
-      <!--    <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">-->
-      <!--      <div style="flex: 1;">-->
-      <!--        <div style="font-size: 1.4rem;">Create New Tenants</div>-->
-      <!--      </div>-->
-      <!--      <div>-->
-      <!--        <router-link to="/tenants" v-slot="{ href, route, navigate}" tag="">-->
-      <!--          <b-button variant="secondary" @click="navigate">Cancel</b-button>-->
-      <!--        </router-link>-->
-      <!--      </div>-->
-      <!--    </div>-->
-
       <div class="w-100 text-center">
         <b-form @submit="onSubmit" class="pr-3 pl-3 text-left" style="width: 800px;display: inline-block;"
                 autocomplete="off">
           <b-tabs align="center" justified>
             <b-tab title="Step 1" :active="tabIndex===1" v-on:click="onTabClick(1)">
-
               <div class="pt-3 text-center tab-title">Admin Account Information</div>
-
               <div class="pt-3">
                 <label for="username">Username</label>
                 <b-form-input
@@ -34,7 +21,6 @@
                   Enter at least 3 letters
                 </b-form-invalid-feedback>
               </div>
-
               <div class="pt-3" style="display: flex; flex-direction: row;">
                 <div style="flex: 1;" class="mr-2">
                   <label for="first-name">First Name</label>
@@ -48,7 +34,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
                 <div style="flex: 1;" class="ml-2">
                   <label for="last-name">Last Name</label>
                   <b-form-input
@@ -62,7 +47,6 @@
                   </b-form-invalid-feedback>
                 </div>
               </div>
-
               <div class="pt-3">
                 <label for="email">Email</label>
                 <b-form-input
@@ -76,7 +60,6 @@
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
               </div>
-
               <div class="pt-3">
                 <label for="new-password">Password</label>
                 <b-form-input
@@ -94,7 +77,6 @@
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
               </div>
-
               <div class="pt-3">
                 <label for="confirm-password">Confirm Password</label>
                 <b-form-input
@@ -109,9 +91,7 @@
               </div>
             </b-tab>
             <b-tab title="Step 2" :active="tabIndex===2" v-on:click="onTabClick(2)">
-
               <div class="content">
-
                 <div class="pt-3">
                   <label for="tenantName">Tenant Name</label>
                   <b-form-input
@@ -129,7 +109,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
                 <div class="pt-3">
                   <label>Redirect URI</label>
                   <div class="pb-2" v-for="(redirectUri, redirectUriIndex) in redirectUris" :key=redirectUriIndex>
@@ -157,7 +136,6 @@
                   </div>
                   <b-button size="sm" variant="link" v-on:click="redirectUris.push('')">Add another URI</b-button>
                 </div>
-
                 <div class="pt-3">
                   <label for="scope">Scope</label>
                   <b-form-checkbox-group
@@ -175,7 +153,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
                 <div class="pt-3">
                   <label for="domain">Domain</label>
                   <b-form-input
@@ -189,7 +166,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
                 <div class="pt-3">
                   <label for="clientUri">Client URI</label>
                   <b-form-input
@@ -202,7 +178,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
                 <div class="pt-3">
                   <label for="logoUri">Logo URI</label>
                   <b-form-input
@@ -215,7 +190,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
                 <div class="pt-3">
                   <label for="comment">Comment</label>
                   <b-form-input
@@ -229,7 +203,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
                 <div class="pt-3">
                   <label for="applicationType">Application Type</label>
                   <b-form-radio-group
@@ -243,7 +216,6 @@
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
                 </div>
-
               </div>
             </b-tab>
             <b-tab title="Step 3" :active="tabIndex===3" v-on:click="onTabClick(3)">
@@ -255,54 +227,6 @@
                   <strong>Client Secret</strong> : {{ newClientSecret }}
                 </div>
               </div>
-              <!--        <div class="content">-->
-              <!--          <div v-if="(this.clientID === ''&& !this.requestingTenant)">-->
-              <!--            <div class="row">-->
-              <!--              <div class="col">-->
-              <!--                <h1 class="h4 mb-4">Please create a new tenant to view ClientID and Client Secret</h1>-->
-              <!--              </div>-->
-              <!--            </div>-->
-              <!--          </div>-->
-              <!--          <div v-if="(this.requestingTenant)">-->
-
-              <!--            <div v-if="this.requestingTenant" class="text-center">-->
-              <!--              <b-spinner variant="primary" style="width: 3rem; height: 3rem;"-->
-              <!--                         label="Large Spinner"></b-spinner>-->
-              <!--            </div>-->
-              <!--          </div>-->
-              <!--          <div v-if="(this.clientID !== ''&& !this.requestingTenant)">-->
-              <!--            <div class="row">-->
-              <!--              <div class="col">-->
-              <!--                <div class="card border-default">-->
-              <!--                  <div class="card-body">-->
-              <!--                    <table class="table">-->
-              <!--                      <tbody>-->
-              <!--                      <tr>-->
-              <!--                        <th scope="row">Tenant ID</th>-->
-              <!--                        <td>-->
-              <!--                          <div> {{ this.clientID }}</div>-->
-              <!--                        </td>-->
-              <!--                      </tr>-->
-              <!--                      <tr>-->
-              <!--                        <th scope="row">Tenant Secret</th>-->
-              <!--                        <td>-->
-              <!--                          <div> {{ this.clientSecret }}</div>-->
-              <!--                        </td>-->
-              <!--                      </tr>-->
-              <!--                      <tr>-->
-              <!--                        <th scope="row">Tenant Status</th>-->
-              <!--                        <td>-->
-              <!--                          <div> {{ this.status }}</div>-->
-              <!--                        </td>-->
-              <!--                      </tr>-->
-              <!--                      </tbody>-->
-              <!--                    </table>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
-              <!--            </div>-->
-              <!--          </div>-->
-              <!--        </div>-->
             </b-tab>
           </b-tabs>
           <div class="pt-3 text-center">
@@ -323,8 +247,6 @@
 </template>
 
 <script>
-// import {email, required, minLength} from "vuelidate/lib/validators";
-// import config from "@/config";
 import store from "../../new-service/store";
 import {custosService} from "@/new-service/store/util/custos.util";
 import TenantHome from "@/components/admin-portal/TenantHome";
@@ -337,15 +259,7 @@ export default {
     tenantId: String
   },
   computed: {
-    // parentTenantId() {
-    //   if (this.$route.query.parentTenantId) {
-    //     return this.$route.query.parentTenantId;
-    //   } else {
-    //     return 0;
-    //   }
-    // },
     clientId() {
-      console.log("this.$route.params : ", this.$route.params);
       if (this.$route.params.clientId) {
         return this.$route.params.clientId;
       } else {
@@ -386,8 +300,6 @@ export default {
         domain: null,
         clientUri: null,
         logoUri: null,
-        // clientId: null,
-        // parentSecret: null,
         comment: null,
         applicationType: null
       }
@@ -410,8 +322,6 @@ export default {
         domain: false,
         clientUri: false,
         logoUri: false,
-        // clientId: false,
-        // parentSecret: false,
         comment: false,
         applicationType: false
       }
@@ -444,286 +354,31 @@ export default {
       password: null,
       confirmPassword: null,
 
-
       tenantName: null,
       redirectUris: [null],
       scope: ['openid', 'email', 'profile', 'org.cilogon.userinfo'],
       domain: null,
       clientUri: null,
       logoUri: null,
-      // clientId: null,
-      // parentSecret: null,
       comment: null,
       applicationType: "web",
 
       newClientId: null,
       newClientSecret: null
-
-      // custosId: "",
-      // custosSec: "",
-      // currentUserName: "",
-      // user: "",
-      // requestingTenant: false,
-      // form: {
-      //   tab1: {
-      //     requester_email: "",
-      //     admin_username: "",
-      //     admin_first_name: "",
-      //     admin_last_name: "",
-      //     admin_email: "",
-      //     admin_password: "",
-      //     confirm_admin_password: "",
-      //   },
-      //   tab2: {
-      //     client_name: "",
-      //     redirect_uris: [""],
-      //     scope: "openid email profile org.cilogon.userinfo".split(" "),
-      //     domain: "",
-      //     client_uri: "",
-      //     logo_uri: "",
-      //     application_type: "web",
-      //     comment: "",
-      //     parentID: "",
-      //     parentSecret: "",
-      //   },
-      //   primary_contact: "",
-      //   secondary_contact: "",
-      //
-      //
-      // },
-      // scopeOptions: [
-      //   {text: "openId", value: "openid", disabled: "true"},
-      //   {text: "email", value: "email", disabled: "true"},
-      //   {text: "profile", value: "profile", disabled: "true"},
-      //   {text: "org.cilogon.userinfo", value: "org.cilogon.userinfo", disabled: "true"},
-      // ],
-      // application_typeOptions: [
-      //   {text: "web", value: "web"},
-      // ],
-      // clientID: 'testing-client',
-      // clientSecret: 'testing-secret',
-      // status: 'REQUESTED'
     }
   },
-  // validations: {
-  //   form: {
-  //     tab1: {
-  //       requester_email: {email},
-  //       admin_username: {required},
-  //       admin_first_name: {required},
-  //       admin_last_name: {required},
-  //       admin_email: {required},
-  //       admin_password: {
-  //         required,
-  //         strongPassword(admin_password) {
-  //           return (
-  //               /[a-z]/.test(admin_password) && // checks for a-z
-  //               /[0-9]/.test(admin_password) && // checks for 0-9
-  //               /\W|_/.test(admin_password) && // checks for special char
-  //               admin_password.length >= 8
-  //           );
-  //         }
-  //       },
-  //       confirm_admin_password: {
-  //         required,
-  //         strongPassword(confirm_admin_password) {
-  //           return (
-  //               // /[a-z]/.test(admin_password) && // checks for a-z
-  //               // /[0-9]/.test(admin_password) && // checks for 0-9
-  //               // /\W|_/.test(admin_password) && // checks for special char
-  //               // admin_password.length >= 8
-  //               confirm_admin_password == this.form.tab1.admin_password
-  //           );
-  //         }
-  //       },
-  //     },
-  //
-  //     tab2: {
-  //       client_name: {required},
-  //       scope: {required},
-  //       domain: {
-  //         required,
-  //         validDomain(domain) {
-  //           return (
-  //               /^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,}\.?((xn--)?([a-z0-9\-.]{1,61}|[a-z0-9-]{1,30})\.?[a-z]{2,})$/.test(domain)
-  //           )
-  //         }
-  //       },
-  //       client_uri: {
-  //         required,
-  //         validURL(client_uri) {
-  //           return (
-  //               /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/.test(client_uri)
-  //           )
-  //         }
-  //
-  //       },
-  //       logo_uri: {
-  //         required,
-  //         validURL(logo_uri) {
-  //           return (
-  //               /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/.test(logo_uri)
-  //           )
-  //         }
-  //       },
-  //       application_type: {required},
-  //       redirect_uris: {
-  //         $each: {
-  //           required,
-  //           validURL(url) {
-  //             return (
-  //                 /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/.test(url)
-  //             )
-  //           }
-  //         }
-  //       },
-  //       comment: {required, minLength: minLength(15)},
-  //       parentID: {},
-  //       parentSecret: {
-  //         validate(parentSecret) {
-  //           if (this.form.tab2.parentID) {
-  //             return (
-  //                 parentSecret
-  //             )
-  //           } else {
-  //             return (
-  //                 true
-  //             )
-  //           }
-  //         }
-  //       }
-  //
-  //     },
-  //     primary_contact: {required},
-  //     secondary_contact: {},
-  //
-  //
-  //   }
-  // },
   methods: {
-    // getInputFieldList(tabIndex) {
-    //   if (tabIndex === 0) {
-    //     return ["username", "firstName", "lastName", "email", "password", "confirmPassword"]
-    //   }
-    // },
     makeTabVisited() {
       for (let i = 0; i < this.inputFieldsList.length; i++) {
         if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
       }
     },
-    // isTabValid() {
-    //   let _isTabValid = true;
-    //   for (let i = 0; i < this.inputFieldsList.length; i++) {
-    //     if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
-    //     _isTabValid = _isTabValid && this.isValid[this.inputFieldsList[i]];
-    //   }
-    //
-    //   return _isTabValid
-    // },
-    // isSubmitDisabled() {
-    //   if (!this.isSubmitted)
-    //     return this.$v.form.$invalid;
-    //   return this.isSubmitted;
-    // },
-    // linkClass(idx) {
-    //   if (this.tabIndex === idx) {
-    //     return ['bg-primary', 'text-light']
-    //   } else {
-    //     return ['bg-light', 'text-info']
-    //   }
-    // },
     onTabClick(tabIndex) {
       this.tabIndex = tabIndex;
     },
-    async onSubmit() {
-      // event.preventDefault();
-      // this.isSubmitted = true;
-      // this.requestingTenant = true
-      // this.tabIndex++;
-      //
-      // if (!this.$v.form.tab1.$invalid && !this.$v.form.tab2.$invalid) {
-      //   let requester_email = this.$v.form.tab1.admin_email.$model;
-      //   let admin_username = this.$v.form.tab1.admin_username.$model;
-      //   let admin_first_name = this.$v.form.tab1.admin_first_name.$model;
-      //   let admin_last_name = this.$v.form.tab1.admin_last_name.$model;
-      //   let admin_email = this.$v.form.tab1.admin_email.$model;
-      //   let admin_password = this.$v.form.tab1.admin_password.$model;
-      //   let client_name = this.$v.form.tab2.client_name.$model;
-      //   let redirect_uris = this.$v.form.tab2.redirect_uris.$model;
-      //   let scope = this.$v.form.tab2.scope.$model;
-      //   let domain = this.$v.form.tab2.domain.$model;
-      //   let client_uri = this.$v.form.tab2.client_uri.$model;
-      //   let logo_uri = this.$v.form.tab2.logo_uri.$model;
-      //   let comment = this.$v.form.tab2.comment.$model;
-      //   let application_type = this.$v.form.tab2.application_type.$model;
-      //   let scopeString = '';
-      //   for (var i = 0; i < scope.length; i++) {
-      //     scopeString += scope[i] + " "
-      //   }
-      //   scopeString = scopeString.trim()
-      //   let contacts = [];
-      //   contacts.push(requester_email);
-      //
-      //   let body = {
-      //     "client_name": client_name,
-      //     "requester_email": requester_email,
-      //     "admin_username": admin_username,
-      //     "admin_first_name": admin_first_name,
-      //     "admin_last_name": admin_last_name,
-      //     "admin_email": admin_email,
-      //     "contacts": contacts,
-      //     "redirect_uris": redirect_uris,
-      //     "scope": scopeString,
-      //     "domain": domain,
-      //     "admin_password": admin_password,
-      //     "client_uri": client_uri,
-      //     "logo_uri": logo_uri,
-      //     "application_type": application_type,
-      //     "comment": comment
-      //   }
-      //
-      //
-      //   if (this.$v.form.tab2.parentID.$model && this.$v.form.tab2.parentSecret.$model) {
-      //     let data = {
-      //       client_id: this.$v.form.tab2.parentID.$model,
-      //       client_sec: this.$v.form.tab2.parentSecret.$model,
-      //       body: body
-      //     }
-      //
-      //     let response = await this.$store.dispatch('tenant/createChildTenant', data)
-      //     this.clientID = response.client_id
-      //     this.clientSecret = response.client_secret
-      //     if (response.is_activated) {
-      //       this.status = "ACTIVE"
-      //     }
-      //
-      //
-      //   } else {
-      //     let data = {
-      //       body: body
-      //     }
-      //     let response = await this.$store.dispatch('tenant/createAdminTenant', data)
-      //     this.clientID = response.client_id
-      //     this.clientSecret = response.client_secret
-      //     if (response.is_activated) {
-      //       this.status = "ACTIVE"
-      //     }
-      //
-      //   }
-      //
-      //
-      //   this.requestingTenant = false
-      // }
+    onSubmit() {
+      this.onClickNext()
     },
-    // addRedirectUri: function () {
-    //   this.form.tab2.redirect_uris.push("");
-    // },
-    // deleteRedirectUri: function (index) {
-    //   if (index > 0) {
-    //     this.form.tab2.redirect_uris.splice(index, 1);
-    //   }
-    // },
-
     async onClickNext() {
       this.makeTabVisited();
 
@@ -760,29 +415,13 @@ export default {
     onClickPrev() {
       this.tabIndex--;
     },
-
-    // eslint-disable-next-line no-unused-vars
-    enableNextButton(tabIndex) {
-      if (tabIndex === 1) {
-        return !this.isValid.username || !this.isValid.firstName || !this.isValid.lastName ||
-            !this.isValid.email || !this.isValid.password || !this.isValid.confirmPassword
-      }
-      if (tabIndex === 2) {
-        // TODO
-      }
-    },
-
     async sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
-
-
   },
-
   async mounted() {
-    const username = await this.$store.getters["auth/currentUsername"]
-    // await this.$store.dispatch('user/fetchUsers', {username})
-    const user = await this.$store.getters["user/getUser"]({username})
+    const username = await this.$store.getters["auth/currentUsername"];
+    const user = await this.$store.getters["user/getUser"]({username});
     if (user) {
       this.username = user.username;
       this.firstName = user.firstName;
@@ -790,14 +429,12 @@ export default {
       this.email = user.email;
     }
 
-    // this.$store.dispatch("tenant/fetchTenant", {clientId: this.clientId});
-    this.$store.dispatch("tenant/fetchTenantSecret", {clientId: this.clientId});
+    await this.$store.dispatch("tenant/fetchTenantSecret", {clientId: this.clientId});
   }
 }
 </script>
 
 <style scoped>
-
 label {
   font-size: 0.9rem;
   font-weight: 500;
@@ -806,100 +443,4 @@ label {
 .tab-title {
   font-weight: 800;
 }
-
-/*.btn:hover {*/
-/*  color: white;*/
-/*  background-color: #944203;*/
-/*  padding: 10px 25px;*/
-/*  border: 1px solid #944203;*/
-/*  border-radius: 8px;*/
-/*}*/
-
-/*.btn:focus {*/
-/*  color: white;*/
-/*  background-color: #944203;*/
-/*  padding: 10px 25px;*/
-/*  border: 1px solid #944203;*/
-/*  border-radius: 8px;*/
-/*}*/
-
-/*.link {*/
-/*  color: #ff6600;*/
-/*}*/
-
-/*.h-tab {*/
-/*  display: flex;*/
-/*  max-height: 500px;*/
-/*  margin-top: 20px;*/
-/*  padding: 20px;*/
-/*}*/
-
-/*.h-tabs {*/
-/*  flex: 8;*/
-/*}*/
-
-/*.tab-content {*/
-/*  flex: 1;*/
-/*  border-bottom: 3px solid black;*/
-/*  padding: 8px;*/
-/*  color: black;*/
-/*  font-weight: bold;*/
-/*  cursor: pointer;*/
-/*  font-size: 20px;*/
-/*}*/
-
-/*.tab-content-active {*/
-/*  flex: 1;*/
-/*  border-bottom: 3px solid #ff6600;;*/
-/*  padding: 8px;*/
-/*  color: #ff6600;*/
-/*  font-weight: bold;*/
-/*  cursor: pointer;*/
-/*  font-size: 20px;*/
-/*}*/
-
-/*.content {*/
-/*  margin-top: 20px;*/
-/*  width: 1000px;*/
-/*  margin-left: 35px;*/
-/*}*/
-
-/*.heading {*/
-/*  font-size: 30px;*/
-/*  color: black;*/
-/*  font-weight: bold;*/
-/*}*/
-
-/*.card {*/
-/*  padding: 25px;*/
-/*}*/
-
-/*.btnCustom {*/
-/*  color: white;*/
-/*  background-color: #ff6600;*/
-/*  padding: 10px 25px;*/
-/*  border: 1px solid #ff6600;*/
-/*  border-radius: 8px;*/
-/*}*/
-
-/*.btnCustom:hover {*/
-/*  color: white;*/
-/*  background-color: #944203;*/
-/*  padding: 10px 25px;*/
-/*  border: 1px solid #944203;*/
-/*  border-radius: 8px;*/
-/*}*/
-
-/*.btnCustom:focus {*/
-/*  color: white;*/
-/*  background-color: #944203;*/
-/*  padding: 10px 25px;*/
-/*  border: 1px solid #944203;*/
-/*  border-radius: 8px;*/
-/*}*/
-
-/*.inputLabels {*/
-/*  color: black;*/
-/*  font-weight: bold;*/
-/*}*/
 </style>

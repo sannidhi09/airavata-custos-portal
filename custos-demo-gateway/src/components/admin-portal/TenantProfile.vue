@@ -236,8 +236,6 @@ export default {
       firstName: null,
       lastName: null,
       email: null,
-      // password: null,
-      // confirmPassword: null,
 
       tenantId: null,
       tenantName: null,
@@ -250,7 +248,6 @@ export default {
       comment: null,
       applicationType: null,
 
-      // clientId: null,
       clientSecret: null
     }
   },
@@ -264,7 +261,6 @@ export default {
       return _breadcrumbLinks;
     },
     clientId() {
-      console.log("-------Heyy : " + custosService.clientId + " ==== " + this.$route.params.clientId);
       if (this.$route.params.clientId) {
         return this.$route.params.clientId;
       } else {
@@ -280,8 +276,6 @@ export default {
         firstName: this.firstName === null ? null : this.isValid.firstName,
         lastName: this.lastName === null ? null : this.isValid.lastName,
         email: this.email === null ? null : this.isValid.email,
-        // password: this.password === null ? null : this.isValid.password,
-        // confirmPassword: this.confirmPassword === null ? null : this.isValid.confirmPassword,
 
         tenantName: null,
         redirectUris: [null],
@@ -289,8 +283,6 @@ export default {
         domain: null,
         clientUri: null,
         logoUri: null,
-        // clientId: null,
-        // parentSecret: null,
         comment: null,
         applicationType: null
       }
@@ -313,8 +305,6 @@ export default {
         domain: false,
         clientUri: false,
         logoUri: false,
-        // clientId: false,
-        // parentSecret: false,
         comment: false,
         applicationType: false
       }
@@ -341,7 +331,6 @@ export default {
       this.comment = this.tenant.comment;
       this.applicationType = this.tenant.applicationType;
 
-      // this.clientId = this.tenant.tenantId;
       this.clientSecret = this.tenant.clientSecret;
     }
   },
@@ -355,7 +344,6 @@ export default {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
-        // password: this.password,
 
         tenantName: this.tenantName,
         redirectUris: this.redirectUris,
@@ -371,7 +359,6 @@ export default {
     }
   },
   beforeMount() {
-    // this.$store.dispatch("tenant/fetchTenant", {clientId: this.clientId});
     this.$store.dispatch("tenant/fetchTenantSecret", {clientId: this.clientId});
   }
 }
