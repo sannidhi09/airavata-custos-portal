@@ -223,10 +223,16 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
         next('/');
     } else {
         const username = store.getters["auth/currentUsername"];
-        await store.dispatch('user/fetchUsers', {username});
-        await store.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
 
-        console.log("YES authenticated");
+        if (!store.getters["user/getUser"]({username})) {
+            await store.dispatch('user/fetchUsers', {username});
+        }
+
+        if (!store.getters["tenant/getTenant"]({clientId: custosService.clientId})) {
+            await store.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
+        }
+
+        console.log("YES authenticated " + store.getters["user/getUser"]({username}));
         next(true);
     }
 }
