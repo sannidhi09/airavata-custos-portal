@@ -14,7 +14,11 @@
         </b-thead>
         <b-tbody>
           <b-tr v-for="group in groups" :key="group.groupId">
-            <b-td>{{ group.name }}</b-td>
+            <b-td>
+              <router-link :to="`/tenants/${clientId}/groups/${group.groupId}`" v-slot="{href, navigate}">
+                <b-link :href="href" v-on:click="navigate">{{ group.name }}</b-link>
+              </router-link>
+            </b-td>
           </b-tr>
         </b-tbody>
       </b-table-simple>

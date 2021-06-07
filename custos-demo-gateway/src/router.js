@@ -167,6 +167,15 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantGroups")
         },
         {
+            path: "/tenants/:clientId/groups/:groupId",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantGroup")
+        },
+        {
             path: "/tenants/:clientId/groups/new",
             name: "tenants",
             beforeEnter: async (to, from, next) => {
