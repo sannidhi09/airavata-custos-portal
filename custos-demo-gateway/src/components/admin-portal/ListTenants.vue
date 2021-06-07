@@ -34,11 +34,11 @@
               <b-td>{{ childTenant.name }}</b-td>
               <b-td>{{ childTenant.domain }}</b-td>
               <b-td>
-                <b-form-tag v-if="childTenant.status === 'ACTIVE'" no-remove variant="success">Active</b-form-tag>
-                <b-form-tag v-else-if="childTenant.status === 'REQUESTED'" no-remove variant="warning">Requested
-                </b-form-tag>
-                <b-form-tag v-else-if="childTenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
-                </b-form-tag>
+                <b-tag v-if="childTenant.status === 'ACTIVE'" no-remove variant="success">Active</b-tag>
+                <b-tag v-else-if="childTenant.status === 'REQUESTED'" no-remove variant="warning">Requested
+                </b-tag>
+                <b-tag v-else-if="childTenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
+                </b-tag>
               </b-td>
               <td>
                 <b-button variant="outline-primary" size="sm"
