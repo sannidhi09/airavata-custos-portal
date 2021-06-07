@@ -1,5 +1,5 @@
 <template>
-  <b-overlay :show="!data" rounded="sm" opacity="0">
+  <b-overlay :show="!data" rounded="sm" opacity="0" spinner-type="none">
     <b-skeleton-table v-if="data === null" :rows="rows" :columns="columns"
                       :table-props="{ bordered: true }"></b-skeleton-table>
     <slot name="empty" v-else-if="data.length === 0">
