@@ -59,8 +59,8 @@
 
           <li v-if="tenant.type !== 'CHILD_TENANT'">
             <router-link :to="`/tenants/${tenant.clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href" v-if="tenant.type === 'SUPER_TENANT'">Admin Tenants</b-link>
-              <b-link @click="navigate" :href="href" v-if="tenant.type === 'ADMIN_TENANT'">Child Tenants</b-link>
+              <b-link @click="navigate" :href="href" v-if="tenant.type === 'SUPER_TENANT'">Admin Clients</b-link>
+              <b-link @click="navigate" :href="href" v-if="tenant.type === 'ADMIN_TENANT'">Child Clients</b-link>
             </router-link>
           </li>
 

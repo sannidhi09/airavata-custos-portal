@@ -13,7 +13,7 @@
               <!--              <b-th>-->
               <!--                <b-checkbox/>-->
               <!--              </b-th>-->
-              <b-th>Tenant ID</b-th>
+              <b-th>Client ID</b-th>
               <b-th>Name</b-th>
               <b-th>Domain</b-th>
               <b-th>Status</b-th>
@@ -29,10 +29,10 @@
                 <router-link v-if="childTenant.status === 'ACTIVE'" :to="getTenantLink(childTenant)"
                              v-slot="{ href, route, navigate}" tag="">
                   <b-link @click="navigate" :href="href">
-                    {{ childTenant.tenantId }}
+                    {{ childTenant.clientId }}
                   </b-link>
                 </router-link>
-                <span v-else>{{ childTenant.tenantId }}</span>
+                <span v-else>{{ childTenant.clientId }}</span>
               </b-td>
               <b-td>{{ childTenant.name }}</b-td>
               <b-td>{{ childTenant.domain }}</b-td>
@@ -109,11 +109,11 @@ export default {
   computed: {
     title() {
       if (this.tenant && this.tenant.type === "SUPER_TENANT") {
-        return "Admin Tenants";
+        return "Admin Clients";
       } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
-        return "Child Tenants";
+        return "Child Clients";
       } else {
-        return "Tenants";
+        return "Clients";
       }
     },
     breadcrumbLinks() {
