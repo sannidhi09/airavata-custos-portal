@@ -14,7 +14,11 @@
         </b-thead>
         <b-tbody>
           <b-tr v-for="user in users" :key="user.username">
-            <b-td>{{ user.username }}</b-td>
+            <b-td>
+              <router-link :to="`/tenants/${clientId}/users/${user.username}`" v-slot="{href, navigate}">
+                <b-link :href="href" v-on:click="navigate">{{ user.username }}</b-link>
+              </router-link>
+            </b-td>
             <b-td>{{ user.email }}</b-td>
             <b-td>
               {{ user.clientRoles.join(", ") }}
@@ -36,7 +40,8 @@
                         v-on:click="enableUser(user)">
                 Enable
               </b-button>
-              <b-button variant="outline-secondary" size="sm" v-if="user.status === 'ACTIVE'" v-on:click="disableUser(user)">
+              <b-button variant="outline-secondary" size="sm" v-if="user.status === 'ACTIVE'"
+                        v-on:click="disableUser(user)">
                 Disable
               </b-button>
             </b-td>
