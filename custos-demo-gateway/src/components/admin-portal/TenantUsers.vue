@@ -36,11 +36,11 @@
               <b-tag v-else-if="user.status === 'PENDING_CONFIRMATION'" no-remove variant="warning">Disabled</b-tag>
             </b-td>
             <b-td>
-              <b-button variant="outline-secondary" size="sm" v-if="user.status === 'PENDING_CONFIRMATION'"
+              <b-button variant="outline-primary" size="sm" v-if="user.status === 'PENDING_CONFIRMATION'"
                         v-on:click="enableUser(user)">
                 Enable
               </b-button>
-              <b-button variant="outline-secondary" size="sm" v-if="user.status === 'ACTIVE'"
+              <b-button variant="outline-primary" size="sm" v-if="user.status === 'ACTIVE'"
                         v-on:click="disableUser(user)">
                 Disable
               </b-button>
