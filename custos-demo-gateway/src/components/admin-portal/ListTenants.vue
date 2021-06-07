@@ -10,9 +10,9 @@
         <b-table-simple small>
           <b-thead>
             <b-tr>
-              <b-th>
-                <b-checkbox/>
-              </b-th>
+              <!--              <b-th>-->
+              <!--                <b-checkbox/>-->
+              <!--              </b-th>-->
               <b-th>Tenant ID</b-th>
               <b-th>Name</b-th>
               <b-th>Domain</b-th>
@@ -22,9 +22,9 @@
           </b-thead>
           <b-tbody>
             <b-tr v-for="childTenant in tenants" :key="childTenant.tenantId">
-              <b-td>
-                <b-checkbox/>
-              </b-td>
+              <!--              <b-td>-->
+              <!--                <b-checkbox/>-->
+              <!--              </b-td>-->
               <b-td>
                 <router-link v-if="childTenant.status === 'ACTIVE'" :to="getTenantLink(childTenant)"
                              v-slot="{ href, route, navigate}" tag="">
