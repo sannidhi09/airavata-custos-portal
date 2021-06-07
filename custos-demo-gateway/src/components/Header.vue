@@ -18,7 +18,9 @@
         </template>
 
         <template v-slot:default v-if="user">
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
+          <router-link :to="profileLink" v-slot="{href, navigate}">
+            <b-dropdown-item :href="href" v-on:click="navigate">Profile</b-dropdown-item>
+          </router-link>
           <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
         </template>
       </b-dropdown>
@@ -41,6 +43,7 @@
 <script>
 
 import store from "../new-service/store";
+import {custosService} from "@/new-service/store/util/custos.util";
 
 export default {
   name: "Header",
@@ -57,6 +60,9 @@ export default {
     },
     user() {
       return this.$store.getters["user/getUser"]({username: this.currentUsername});
+    },
+    profileLink() {
+      return `/tenants/${custosService.clientId}/users/${this.currentUsername}`;
     }
   },
   methods: {
