@@ -16,7 +16,7 @@ const actions = {
         const users = await custosService.users.findUsers(params);
 
         const usernames = users.map((
-            {id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type}
+            {id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type, state}
         ) => {
             commit("SET_USER", {
                 id,
@@ -27,22 +27,51 @@ const actions = {
                 realmRoles: realm_roles,
                 clientRoles: client_roles,
                 attributes,
-                membershipType: membership_type
+                membershipType: membership_type,
+                status: state
             });
 
             return username;
         });
 
         commit("SET_USER_LIST", {queryString, usernames})
+    },
+    async enableUser({commit}, {username}) {
+        await custosService.users.enableUser({username});
+        commit("SET_USER_STATUS", {username, status: "ACTIVE"});
+    },
+    async disableUser({commit}, {username}) {
+        await custosService.users.disableUser({username});
+        commit("SET_USER_STATUS", {username, status: "DEACTIVE"});
     }
 }
 
 
 const mutations = {
-    SET_USER(state, {id, username, firstName, lastName, email, realmRoles, clientRoles, attributes, membershipType}) {
+    SET_USER(state, {id, username, firstName, lastName, email, realmRoles, clientRoles, attributes, membershipType, status}) {
         state.userMap = {
             ...state.userMap,
-            [username]: {id, username, firstName, lastName, email, realmRoles, clientRoles, attributes, membershipType}
+            [username]: {
+                id,
+                username,
+                firstName,
+                lastName,
+                email,
+                realmRoles,
+                clientRoles,
+                attributes,
+                membershipType,
+                status
+            }
+        }
+    },
+    SET_USER_STATUS(state, {username, status}) {
+        state.userMap = {
+            ...state.userMap,
+            [username]: {
+                ...state.userMap[username],
+                status: status
+            }
         }
     },
     SET_USER_LIST(state, {queryString, usernames}) {

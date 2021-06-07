@@ -1,17 +1,45 @@
 <template>
   <TenantHome title="Users" :breadcrumb-links="breadcrumbLinks">
-    <table-overlay-info :rows="5" :columns="2" :data="users">
+    <table-overlay-info :rows="5" :columns="6" :data="users">
       <b-table-simple>
         <b-thead>
           <b-tr>
             <b-th>Name</b-th>
             <b-th>Email</b-th>
+            <b-th>Client Roles</b-th>
+            <b-th>Tenant Roles</b-th>
+            <b-th>Status</b-th>
+            <b-th>Actions</b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
           <b-tr v-for="user in users" :key="user.username">
             <b-td>{{ user.username }}</b-td>
             <b-td>{{ user.email }}</b-td>
+            <b-td>
+              {{ user.clientRoles.join(", ") }}
+              <!--              <b-form-tags v-model="user.clientRoles" separator=" " no-tag-remove no-outer-focus-->
+              <!--                           ignore-input-focus-selector=""></b-form-tags>-->
+            </b-td>
+            <b-td>
+              {{ user.realmRoles.join(", ") }}
+              <!--              <b-button variant="link-secondary" size="sm" v-for="role in user.realmRoles" :key="role" href="#">-->
+              <!--                {{ role }}-->
+              <!--              </b-button>-->
+            </b-td>
+            <b-td>
+              <b-tag v-if="user.status === 'ACTIVE'" no-remove variant="success">Enabled</b-tag>
+              <b-tag v-else-if="user.status === 'PENDING_CONFIRMATION'" no-remove variant="warning">Disabled</b-tag>
+            </b-td>
+            <b-td>
+              <b-button variant="outline-secondary" size="sm" v-if="user.status === 'PENDING_CONFIRMATION'"
+                        v-on:click="enableUser(user)">
+                Enable
+              </b-button>
+              <b-button variant="outline-secondary" size="sm" v-if="user.status === 'ACTIVE'" v-on:click="disableUser(user)">
+                Disable
+              </b-button>
+            </b-td>
           </b-tr>
         </b-tbody>
       </b-table-simple>
@@ -48,6 +76,14 @@ export default {
     breadcrumbLinks() {
       return [{to: `/tenants/${this.clientId}/users`, name: "Users"}];
     },
+  },
+  methods: {
+    enableUser({username}) {
+      this.$store.dispatch("user/enableUser", {username});
+    },
+    disableUser({username}) {
+      this.$store.dispatch("user/disableUser", {username});
+    }
   },
   beforeMount() {
     this.$store.dispatch("user/fetchUsers", {clientId: this.clientId});
