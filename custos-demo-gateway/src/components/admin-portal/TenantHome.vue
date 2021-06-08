@@ -19,41 +19,67 @@
             <router-link :to="`/tenants/${clientId}/profile`" v-slot="{ href, route, navigate}" tag="">
               <b-link @click="navigate" :href="href">Profile</b-link>
             </router-link>
-          </li>
-          <li>
-            <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href">User Management</b-link>
-            </router-link>
-            <ul><!---->
+            <ul>
               <li>
-                <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}"
-                             tag="">
-                  <b-link @click="navigate" :href="href">Users</b-link>
-                </router-link>
-              </li>
-              <li>
-                <router-link :to="`/tenants/${clientId}/groups`" v-slot="{ href, route, navigate}"
-                             tag="">
-                  <b-link @click="navigate" :href="href">Groups</b-link>
-                </router-link>
-              </li>
-              <li>
-                <router-link :to="`/tenants/${tenant.tenantId}/user-management/users`" v-slot="{ href, route, navigate}"
+                <router-link :to="`/tenants/${clientId}/roles`" v-slot="{ href, route, navigate}"
                              tag="">
                   <b-link @click="navigate" :href="href">Roles</b-link>
                 </router-link>
               </li>
               <li>
-                <router-link :to="`/tenants/${tenant.tenantId}/user-management/users`" v-slot="{ href, route, navigate}"
+                <router-link :to="`/tenants/${clientId}/permission-types`" v-slot="{ href, route, navigate}"
                              tag="">
-                  <b-link @click="navigate" :href="href">Permissions</b-link>
+                  <b-link @click="navigate" :href="href">Permission Types</b-link>
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="`/tenants/${clientId}/entity-types`" v-slot="{ href, route, navigate}"
+                             tag="">
+                  <b-link @click="navigate" :href="href">Entity Types</b-link>
                 </router-link>
               </li>
             </ul>
           </li>
+          <!--          <li>-->
+          <!--            <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}" tag="">-->
+          <!--              <b-link @click="navigate" :href="href">User Management</b-link>-->
+          <!--            </router-link>-->
+          <!--            <ul>&lt;!&ndash;&ndash;&gt;-->
+          <li>
+            <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}"
+                         tag="">
+              <b-link @click="navigate" :href="href">Users</b-link>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="`/tenants/${clientId}/groups`" v-slot="{ href, route, navigate}"
+                         tag="">
+              <b-link @click="navigate" :href="href">Groups</b-link>
+            </router-link>
+          </li>
+
+          <!--          <li>-->
+          <!--            <router-link :to="`/tenants/${tenant.tenantId}/user-management/users`" v-slot="{ href, route, navigate}"-->
+          <!--                         tag="">-->
+          <!--              <b-link @click="navigate" :href="href">Permissions</b-link>-->
+          <!--            </router-link>-->
+          <!--          </li>-->
+          <!--            </ul>-->
+          <!--          </li>-->
+          <!--          <li>-->
+          <!--            <router-link :to="`/tenants/${tenant}/audits`" v-slot="{ href, route, navigate}" tag="">-->
+          <!--              <b-link @click="navigate" :href="href">Audits</b-link>-->
+          <!--            </router-link>-->
+          <!--          </li>-->
+
           <li>
             <router-link :to="`/tenants/${tenant}/audits`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href">Audits</b-link>
+              <b-link @click="navigate" :href="href">Entities</b-link>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="`/tenants/${tenant}/audits`" v-slot="{ href, route, navigate}" tag="">
+              <b-link @click="navigate" :href="href">Secrets</b-link>
             </router-link>
           </li>
 

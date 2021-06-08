@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="New Tenant">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks">
     <div class="w-100" style="max-width: 600px;">
       <div class="w-100 text-center">
         <b-form @submit="onSubmit" class="pr-3 pl-3 text-left" style="width: 800px;display: inline-block;"
@@ -259,6 +259,24 @@ export default {
     tenantId: String
   },
   computed: {
+    tenantsTitle() {
+      if (this.tenant && this.tenant.type === "SUPER_TENANT") {
+        return "Admin Clients";
+      } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
+        return "Child Clients";
+      } else {
+        return "Clients";
+      }
+    },
+    title() {
+      if (this.tenant && this.tenant.type === "SUPER_TENANT") {
+        return "New Admin Client";
+      } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
+        return "New Child Client";
+      } else {
+        return "New Client";
+      }
+    },
     clientId() {
       if (this.$route.params.clientId) {
         return this.$route.params.clientId;
@@ -340,6 +358,12 @@ export default {
       } else {
         return []
       }
+    },
+    breadcrumbLinks() {
+      return [
+        {to: `/tenants/${this.clientId}/child-tenants`, name: this.tenantsTitle},
+        {to: `/tenants/${this.clientId}/child-tenants/new`, name: "New"}
+      ];
     }
   },
   data() {

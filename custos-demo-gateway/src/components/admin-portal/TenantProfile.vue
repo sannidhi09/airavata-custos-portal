@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Profile">
+  <TenantHome title="Profile" :breadcrumb-links="breadcrumbLinks">
     <div>
       <div style="max-width: 600px;">
         <div class="pt-3" style="display: flex; flex-direction: row;">
@@ -253,12 +253,7 @@ export default {
   },
   computed: {
     breadcrumbLinks() {
-      const _breadcrumbLinks = [{to: "/tenants", name: "Tenants"}];
-      if (this.parentTenant) {
-        _breadcrumbLinks.push({to: `/tenants?parentClientId=${this.parentTenant}`, name: this.parentTenant.name})
-      }
-
-      return _breadcrumbLinks;
+      return [{to: `/tenants/${this.clientId}/profile`, name: "Profile"}];
     },
     clientId() {
       if (this.$route.params.clientId) {

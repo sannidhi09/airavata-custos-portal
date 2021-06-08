@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="New Group">
+  <TenantHome title="New Group" :breadcrumb-links="breadcrumbLinks">
     <div class="w-100" style="max-width: 600px;">
       <div class="pt-3">
         <label for="name">Group Name</label>
@@ -26,7 +26,7 @@
         </b-form-input>
       </div>
 
-      <div>
+      <div class="pt-3">
         <b-button variant="primary" size="sm" v-on:click="create">Create</b-button>
         <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>
       </div>
@@ -66,6 +66,12 @@ export default {
         description: true
       }
     },
+    breadcrumbLinks() {
+      return [
+        {to: `/tenants/${this.clientId}/groups`, name: "Groups"},
+        {to: `/tenants/${this.clientId}/groups/new`, name: "New"}
+      ];
+    }
   },
   methods: {
     create() {
