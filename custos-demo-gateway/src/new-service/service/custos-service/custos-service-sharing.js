@@ -45,4 +45,14 @@ export default class CustosSharing {
             }
         ).then(({data: {types}}) => types);
     }
+
+    async getEntityTypes({clientId}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.get(
+            `${CustosService.ENDPOINTS.SHARING}/entity/types`,
+            {
+                params: {"client_id": clientId}
+            }
+        ).then(({data: {types}}) => types);
+    }
 }

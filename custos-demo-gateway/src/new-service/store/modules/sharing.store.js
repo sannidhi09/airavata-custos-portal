@@ -3,7 +3,9 @@ import {custosService} from "../util/custos.util";
 const getDefaultState = () => {
     return {
         permissionTypesMap: {},
-        permissionTypesListMap: {}
+        permissionTypesListMap: {},
+        entityTypesMap: {},
+        entityTypesListMap: {}
     }
 };
 
@@ -22,7 +24,6 @@ const actions = {
     },
     async fetchPermissionTypes({commit}, {clientId}) {
         const permissionTypes = await custosService.sharing.getPermissionTypes({clientId});
-        console.log("##### fetchPermissionTypes : ", permissionTypes);
         const permissionTypeIds = permissionTypes.map(({id, name, description}) => {
             commit('SET_PERMISSION_TYPE', {clientId, id, name, description});
 
@@ -30,6 +31,17 @@ const actions = {
         });
 
         commit('SET_PERMISSION_TYPES_LIST', {clientId, permissionTypeIds});
+    },
+    async fetchEntityTypes({commit}, {clientId}) {
+        const entityTypes = await custosService.sharing.getEntityTypes({clientId});
+        console.log("##### fetchEntityTypes : ", entityTypes);
+        const entityTypeIds = entityTypes.map(({id, name, description}) => {
+            commit('SET_ENTITY_TYPE', {clientId, id, name, description});
+
+            return {clientId, id};
+        });
+
+        commit('SET_ENTITY_TYPES_LIST', {clientId, entityTypeIds});
     }
 }
 
@@ -56,6 +68,29 @@ const mutations = {
             ...state.permissionTypesListMap,
             [clientId]: permissionTypeIds
         };
+    },
+    SET_ENTITY_TYPE(state, {clientId, id, name, description}) {
+        state.entityTypesMap = {
+            ...state.entityTypesMap,
+            [clientId]: {
+                ...state.entityTypesMap[clientId],
+                [id]: {clientId, id, name, description}
+            }
+        };
+    },
+    DELETE_ENTITY_TYPE(state, {clientId, id}) {
+        state.entityTypesListMap = {
+            ...state.entityTypesListMap,
+            [clientId]: state.entityTypesListMap[clientId].filter(entityType => {
+                return entityType.id !== id;
+            })
+        };
+    },
+    SET_ENTITY_TYPES_LIST(state, {clientId, entityTypeIds}) {
+        state.entityTypesListMap = {
+            ...state.entityTypesListMap,
+            [clientId]: entityTypeIds
+        };
     }
 }
 
@@ -75,6 +110,26 @@ const getters = {
         return ({clientId, id}) => {
             if (state.permissionTypesMap[clientId] && state.permissionTypesMap[clientId][id]) {
                 return state.permissionTypesMap[clientId][id];
+            } else {
+                return null;
+            }
+        }
+    },
+    getEntityTypes(state, getters) {
+        return ({clientId}) => {
+            if (state.entityTypesListMap[clientId]) {
+                return state.entityTypesListMap[clientId].map(({id}) => {
+                    return getters.getEntityType({clientId, id});
+                });
+            } else {
+                return null;
+            }
+        }
+    },
+    getEntityType(state) {
+        return ({clientId, id}) => {
+            if (state.entityTypesMap[clientId] && state.entityTypesMap[clientId][id]) {
+                return state.entityTypesMap[clientId][id];
             } else {
                 return null;
             }
