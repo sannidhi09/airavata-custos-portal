@@ -62,9 +62,16 @@ export default class CustosTenants {
      * Fetch tenant roles
      * @return {Promise<AxiosResponse<any>>}
      */
-    fetchTenantRoles() {
-        return this.custosService.axiosInstanceWithTokenAuthorization.get(
-            `${CustosService.ENDPOINTS.TENANTS}/roles`
+    async fetchTenantRoles({clientId}) {
+        const axiosInstance = await this.custosService.axiosInstanceWithTokenAuthorization;
+        return axiosInstance.get(
+            `${CustosService.ENDPOINTS.TENANTS}/roles`,
+            {
+                params: {
+                    "client_id": clientId,
+                    // "client_level": clientLevel
+                }
+            }
         );
     }
 

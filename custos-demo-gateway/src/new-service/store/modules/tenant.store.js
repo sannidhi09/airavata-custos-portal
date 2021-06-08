@@ -113,13 +113,15 @@ const actions = {
             composite
         });
     },
-    async fetchTenantRoles({commit}) {
-        const DEFAULT_CUSTOS_ROLES = ["admin-read-only", "admin", "gateway-provider", "gateway-user", "offline_access",
-            "uma_authorization", "user-pending"];
+    async fetchTenantRoles({commit}, {clientId}) {
+        const DEFAULT_CUSTOS_ROLES = [
+            // "admin-read-only", "admin", "gateway-provider", "gateway-user", "offline_access",
+            // "uma_authorization", "user-pending"
+        ];
 
-        let queryString = "";
+        let queryString = JSON.stringify({clientId});
 
-        let {data: {roles}} = await custosService.tenants.fetchTenantRoles();
+        let {data: {roles}} = await custosService.tenants.fetchTenantRoles({clientId});
         const tenantRoleIds = roles.filter(({name}) => {
             return DEFAULT_CUSTOS_ROLES.indexOf(name) < 0
         }).map(({id, name, description, composite}) => {
@@ -295,16 +297,15 @@ const getters = {
         }
     },
     getTenantRoles(state, getters) {
-        return () => {
-            const queryString = "";
+        return ({clientId}) => {
+            const queryString = JSON.stringify({clientId});
             if (state.tenantRolesListMap[queryString]) {
                 return state.tenantRolesListMap[queryString].map(tenantRoleId => getters.getTenantRole({tenantRoleId}));
             } else {
                 return null;
             }
         }
-    }
-    ,
+    },
     getTenantRole(state) {
         return ({tenantRoleId}) => {
             if (state.tenantRolesMap[tenantRoleId]) {
