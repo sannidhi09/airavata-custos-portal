@@ -61,24 +61,72 @@
 
           <div class="pt-3">
             <label for="realm-roles">Tenant Roles</label>
-            <b-form-tags input-id="realm-roles" v-model="realmRoles"></b-form-tags>
+            <b-form-checkbox-group
+                v-model="realmRoles"
+                :options="availableTenantRoles"
+                :state="inputState.realmRoles"
+                id="realm-roles"
+                trim
+                size="sm"
+                aria-describedby="scope-help-block">
+            </b-form-checkbox-group>
+            <b-form-text id="scope-help-block"></b-form-text>
+            <b-form-invalid-feedback></b-form-invalid-feedback>
+            <!--            <b-form-tags input-id="realm-roles" v-model="realmRoles">-->
+            <!--              <template v-slot="{ tags, disabled, addTag, removeTag }">-->
+            <!--                <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">-->
+            <!--                  <li v-for="tag in tags" :key="tag" class="list-inline-item">-->
+            <!--                    <b-form-tag-->
+            <!--                        @remove="removeTag(tag)"-->
+            <!--                        :title="tag"-->
+            <!--                        :disabled="disabled"-->
+            <!--                        variant="info"-->
+            <!--                    >{{ tag }}-->
+            <!--                    </b-form-tag>-->
+            <!--                  </li>-->
+            <!--                </ul>-->
+            <!--                <vue-typeahead-bootstrap-->
+            <!--                    :data="availableTenantRoles"-->
+            <!--                    @hit="addTag" :min-matching-chars="0"-->
+            <!--                >-->
+            <!--                </vue-typeahead-bootstrap>-->
+            <!--              </template>-->
+            <!--            </b-form-tags>-->
           </div>
 
           <div class="pt-3">
             <label for="client-roles">Client Roles</label>
-            <b-form-tags input-id="client-roles" v-model="clientRoles"></b-form-tags>
+            <b-form-checkbox-group
+                v-model="clientRoles"
+                :options="availableClientRoles"
+                :state="inputState.clientRoles"
+                id="client-roles"
+                trim
+                size="sm"
+                aria-describedby="scope-help-block">
+            </b-form-checkbox-group>
+            <b-form-text id="scope-help-block"></b-form-text>
+            <b-form-invalid-feedback></b-form-invalid-feedback>
           </div>
 
           <div class="pt-3">
             <label for="attributes">Attributes</label>
-            <b-form-tags input-id="attributes" v-model="attributes"></b-form-tags>
+            <div>
+              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">
+                <li v-for="(attribute, attributesIndex) in attributes" :key="attributesIndex" class="list-inline-item">
+                  <b-form-tag variant="primary" :title="`${attribute.key} = ${attribute.values}`">
+                    {{ attribute.key }} = {{ attribute.values.join(", ") }}
+                  </b-form-tag>
+                </li>
+              </ul>
+            </div>
           </div>
 
         </div>
 
       </div>
       <div class="pt-4">
-        <b-button variant="primary" size="sm">Save</b-button>
+        <b-button variant="primary" size="sm" v-on:click="onClickSave">Save</b-button>
         <b-button variant="secondary" size="sm" class="ml-3">Cancel</b-button>
       </div>
     </div>
@@ -101,7 +149,7 @@ export default {
       email: null,
       realmRoles: [],
       clientRoles: [],
-      attributes: []
+      attributes: [{key: "a", values: [1, 2, 3]}, {key: "b", values: ["fhfhf"]}]
     }
   },
   computed: {
@@ -110,7 +158,10 @@ export default {
         username: this.username === null ? null : this.isValid.username,
         firstName: this.firstName === null ? null : this.isValid.firstName,
         lastName: this.lastName === null ? null : this.isValid.lastName,
-        email: this.email === null ? null : this.isValid.email
+        email: this.email === null ? null : this.isValid.email,
+        realmRoles: this.realmRoles.email,
+        clientRoles: this.clientRoles.email,
+        attributes: this.attributes.email
       }
     },
     isValid() {
@@ -118,7 +169,10 @@ export default {
         username: !!this.username && this.username.length > 0,
         firstName: !!this.firstName && this.firstName.length > 0,
         lastName: !!this.lastName && this.lastName.length > 0,
-        email: !!this.email && this.email.length > 0
+        email: !!this.email && this.email.length > 0,
+        realmRoles: true,
+        clientRoles: true,
+        attributes: true
       }
     },
     title() {
@@ -148,6 +202,33 @@ export default {
 
       return _breadcrumbLinks;
     },
+    availableClientRoles() {
+      const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: true});
+      if (_roles) {
+        return _roles.map(({name}) => name);
+      } else {
+        return [];
+      }
+    },
+    availableTenantRoles() {
+      const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
+      if (_roles) {
+        return _roles.map(({name}) => name);
+      } else {
+        return [];
+      }
+    }
+  },
+  methods: {
+    onClickSave() {
+      this.$store.dispatch("user/updateUser", {
+        clientId: this.clientId,
+        userName: this.username,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        email: this.email
+      });
+    }
   },
   watch: {
     user() {
@@ -158,11 +239,14 @@ export default {
         this.email = this.user.email;
         this.realmRoles = this.user.realmRoles;
         this.clientRoles = this.user.clientRoles;
-        this.attributes = this.user.attributes;
+        // this.attributes = this.user.attributes;
       }
     }
   },
   mounted() {
+    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true});
+    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false});
+
     if (this.user) {
       console.log("########## user watch")
       this.firstName = this.user.firstName;
@@ -170,7 +254,7 @@ export default {
       this.email = this.user.email;
       this.realmRoles = this.user.realmRoles;
       this.clientRoles = this.user.clientRoles;
-      this.attributes = this.user.attributes;
+      // this.attributes = this.user.attributes;
     }
   }
 }

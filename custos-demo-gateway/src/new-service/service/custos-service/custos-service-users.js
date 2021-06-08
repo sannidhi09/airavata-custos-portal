@@ -159,8 +159,8 @@ export default class CustosUsers {
         );
     }
 
-    async updateProfile({userName, firstName, lastName, email}) {
-        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+    async updateProfile({clientId, userName, firstName, lastName, email}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.put(
             `${CustosService.ENDPOINTS.USERS}/user/profile`,
             {
@@ -169,7 +169,7 @@ export default class CustosUsers {
                 last_name: lastName,
                 email: email
             }
-        );
+        ).then(({data}) => data);
     }
 
     getTenantLevelRoles() {
