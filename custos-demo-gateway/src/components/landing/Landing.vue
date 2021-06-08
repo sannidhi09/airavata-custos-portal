@@ -18,10 +18,10 @@
         <div class="w-100">
           <div class="p-2">
             <h3>Login</h3>
-            <div>
-              New to Custos?
-              <router-link to="/register">Sign Up</router-link>
-            </div>
+            <!--            <div>-->
+            <!--              New to Custos?-->
+            <!--              <router-link to="/register">Sign Up</router-link>-->
+            <!--            </div>-->
 
             <div class="mt-4">
               <label class="form-input-label" for="form-input-institution">Choose your Institution Identity</label>
