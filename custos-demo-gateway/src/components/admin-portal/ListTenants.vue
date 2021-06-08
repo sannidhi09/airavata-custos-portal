@@ -56,7 +56,7 @@
                 </b-button>
               </b-td>
               <b-td>
-                <b-button variant="link" size="sm" v-on:click="deleteTenant(tenant)">
+                <b-button variant="link" size="sm" v-on:click="deleteTenant(childTenant)">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </b-td>
@@ -198,7 +198,8 @@ export default {
       this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "DEACTIVATED"})
     },
     deleteTenant({clientId}) {
-      this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "CANCEL"})
+      this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "CANCELLED"})
+      this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
     },
   }
 };
