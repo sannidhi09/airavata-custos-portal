@@ -14,8 +14,9 @@ export default class CustosUsers {
         return this._custosService;
     }
 
-    registerUser({username, firstName, lastName, password, email}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    async registerUser({username, firstName, lastName, password, email}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.USERS}/user`,
             {
                 'client_id': this.custosService.clientId,
@@ -29,8 +30,9 @@ export default class CustosUsers {
         );
     }
 
-    enableUser({username}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    async enableUser({username}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.USERS}/user/activation`,
             {
                 'username': username
@@ -38,8 +40,9 @@ export default class CustosUsers {
         );
     }
 
-    disableUser({username}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    async disableUser({username}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.USERS}/user/deactivation`,
             {
                 'username': username
@@ -47,8 +50,9 @@ export default class CustosUsers {
         );
     }
 
-    checkUsernameValidity({username}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.get(
+    async checkUsernameValidity({username}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.get(
             `${CustosService.ENDPOINTS.USERS}/user/availability`,
             {
                 params: {'username': username}
@@ -155,8 +159,9 @@ export default class CustosUsers {
         );
     }
 
-    updateProfile({userName, firstName, lastName, email}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.put(
+    async updateProfile({userName, firstName, lastName, email}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.put(
             `${CustosService.ENDPOINTS.USERS}/user/profile`,
             {
                 username: userName,
@@ -175,8 +180,9 @@ export default class CustosUsers {
         return this.getRoles({isClientLevel: true});
     }
 
-    getRoles({isClientLevel = false}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.get(
+    async getRoles({isClientLevel = false}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.get(
             `${CustosService.ENDPOINTS.USERS}/roles`,
             {
                 params: {client_level: isClientLevel}

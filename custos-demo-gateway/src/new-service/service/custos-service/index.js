@@ -136,7 +136,11 @@ export default class CustosService {
         });
     }
 
-    async getAxiosInstanceWithClientAuthorization({clientId, clientSecret = null}) {
+    async getAxiosInstanceWithClientAuthorization({clientId = null, clientSecret = null} = {}) {
+        if (!clientId) {
+            clientId = this.clientId
+        }
+
         if (!clientSecret) {
             clientSecret = await this.identity.getClientSecret({clientId});
         }

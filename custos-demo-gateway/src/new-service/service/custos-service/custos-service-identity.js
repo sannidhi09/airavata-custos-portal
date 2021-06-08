@@ -65,8 +65,9 @@ export default class CustosIdentity {
         this.changeListeners.push(changeListener);
     }
 
-    getOpenIdConfig() {
-        return this.custosService.axiosInstanceWithClientAuthorization.get(
+    async getOpenIdConfig() {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.get(
             `${CustosService.ENDPOINTS.IDENTITY}/.well-known/openid-configuration`,
             {
                 params: {'client_id': this.custosService.clientId}
@@ -84,22 +85,25 @@ export default class CustosIdentity {
         return response;
     }
 
-    getToken({code}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    async getToken({code}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.IDENTITY}/token`,
             {'code': code, 'redirect_uri': this.custosService.redirectURI, 'grant_type': 'authorization_code'}
         ).then(this._saveTokenResponse.bind(this));
     }
 
-    localLogin({username, password}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    async localLogin({username, password}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.IDENTITY}/token`,
             {'grant_type': 'password', 'username': username, 'password': password}
         ).then(this._saveTokenResponse.bind(this));
     }
 
-    logout() {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    async logout() {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.IDENTITY}/user/logout`,
             {refresh_token: this.refreshToken}
         ).then(() => {
@@ -109,8 +113,9 @@ export default class CustosIdentity {
         })
     }
 
-    getTokenUsingRefreshToken() {
-        return this.custosService.axiosInstanceWithClientAuthorization.post(
+    async getTokenUsingRefreshToken() {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.IDENTITY}/token`,
             {'refresh_token': this.custosService.refreshToken, 'grant_type': 'refresh_token'}
         ).then(this._saveTokenResponse.bind(this));
