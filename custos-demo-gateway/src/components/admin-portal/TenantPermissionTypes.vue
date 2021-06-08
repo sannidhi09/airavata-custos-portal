@@ -9,10 +9,10 @@
       <b-table-simple>
         <b-thead>
           <b-tr>
-            <b-td>ID</b-td>
-            <b-td>Name</b-td>
-            <b-td>Description</b-td>
-            <b-td>Actions</b-td>
+            <b-th>ID</b-th>
+            <b-th>Name</b-th>
+            <b-th>Description</b-th>
+            <b-th>Actions</b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
