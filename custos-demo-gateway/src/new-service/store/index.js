@@ -4,6 +4,7 @@ import createLogger from 'vuex/dist/logger';
 import user from "./modules/user.store";
 import group from "./modules/group.store";
 import tenant from "./modules/tenant.store";
+import sharing from "./modules/sharing.store";
 import auth from "./modules/auth.store";
 import ciLogon from "./modules/ci-logon.store";
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
         user,
         group,
         tenant,
+        sharing,
         ciLogon
     },
     strict: debug,

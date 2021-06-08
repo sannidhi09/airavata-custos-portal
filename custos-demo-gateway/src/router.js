@@ -176,6 +176,15 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantGroups")
         },
         {
+            path: "/tenants/:clientId/groups/new",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewGroup")
+        },
+        {
             path: "/tenants/:clientId/groups/:groupId",
             name: "tenants",
             beforeEnter: async (to, from, next) => {
@@ -185,13 +194,22 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantGroup")
         },
         {
-            path: "/tenants/:clientId/groups/new",
+            path: "/tenants/:clientId/permission-types/new",
             name: "tenants",
             beforeEnter: async (to, from, next) => {
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewGroup")
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewPermissionType")
+        },
+        {
+            path: "/tenants/:clientId/permission-types",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantPermissionTypes")
         },
         {
             path: "/callback",
