@@ -17,7 +17,7 @@
               <b-th>Name</b-th>
               <b-th>Domain</b-th>
               <b-th>Status</b-th>
-              <b-th>Actions</b-th>
+              <b-th colspan="2">Actions</b-th>
             </b-tr>
           </b-thead>
           <b-tbody>
@@ -43,18 +43,23 @@
                 <b-tag v-else-if="childTenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
                 </b-tag>
               </b-td>
-              <td>
+              <b-td>
                 <b-button variant="outline-primary" size="sm"
                           v-if="tenant.hasAdminPrivileges && childTenant.status !== 'ACTIVE'"
                           v-on:click="activateTenant(childTenant)">Activate
                 </b-button>
                 <b-button variant="outline-primary" size="sm"
-                          v-if="tenant.hasAdminPrivileges && childTenant.status !== 'DEACTIVATED'"
+                          v-if="tenant.hasAdminPrivileges && childTenant.status === 'ACTIVE'"
                           v-on:click="deactivateTenant(childTenant)"
                           :class="{'ml-2':childTenant.status !== 'ACTIVE'}">
                   Deactivate
                 </b-button>
-              </td>
+              </b-td>
+              <b-td>
+                <b-button variant="link" size="sm" v-on:click="deleteTenant(tenant)">
+                  <b-icon icon="trash"></b-icon>
+                </b-button>
+              </b-td>
             </b-tr>
 
           </b-tbody>
@@ -191,7 +196,10 @@ export default {
     },
     deactivateTenant({clientId}) {
       this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "DEACTIVATED"})
-    }
+    },
+    deleteTenant({clientId}) {
+      this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "CANCEL"})
+    },
   }
 };
 </script>
