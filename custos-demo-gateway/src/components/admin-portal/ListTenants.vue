@@ -150,7 +150,7 @@ export default {
     },
     requesterEmail() {
       if (this.currentUser) {
-        return this.currentUser.emacr;
+        return this.currentUser.email;
       } else {
         return null;
       }
