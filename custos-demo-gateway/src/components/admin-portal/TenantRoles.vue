@@ -11,11 +11,17 @@
           </b-tr>
         </b-thead>
         <b-tbody>
-          <b-tr v-for="role in roles" :key="role.tenantRoleId">
+          <b-tr v-for="role in tenantRoles" :key="role.tenantRoleId">
             <b-td>{{ role.name }}</b-td>
             <b-td>{{ role.description }}</b-td>
             <b-td>{{ role.composite }}</b-td>
             <b-td>TENANT</b-td>
+          </b-tr>
+          <b-tr v-for="role in clientRoles" :key="role.tenantRoleId">
+            <b-td>{{ role.name }}</b-td>
+            <b-td>{{ role.description }}</b-td>
+            <b-td>{{ role.composite }}</b-td>
+            <b-td>CLIENT</b-td>
           </b-tr>
         </b-tbody>
       </b-table-simple>
@@ -38,14 +44,26 @@ export default {
       return this.$route.params.clientId;
     },
     roles() {
-      return this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId})
+      let _roles = null;
+      if (this.clientRoles && this.tenantRoles) {
+        _roles = this.clientRoles.concat(this.tenantRoles);
+      }
+
+      return _roles;
+    },
+    clientRoles() {
+      return this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: true});
+    },
+    tenantRoles() {
+      return this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
     },
     breadcrumbLinks() {
       return [{to: `/tenants/${this.clientId}/roles`, name: "Roles"}];
     }
   },
   mounted() {
-    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId});
+    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true});
+    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false});
   }
 }
 </script>
