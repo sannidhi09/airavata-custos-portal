@@ -223,10 +223,12 @@ export default {
     onClickSave() {
       this.$store.dispatch("user/updateUser", {
         clientId: this.clientId,
-        userName: this.username,
+        username: this.username,
         firstName: this.firstName,
         lastName: this.lastName,
-        email: this.email
+        email: this.email,
+        realmRoles: this.realmRoles,
+        clientRoles: this.clientRoles
       });
     }
   },
@@ -244,6 +246,7 @@ export default {
     }
   },
   mounted() {
+    this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, username: this.username});
     this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true});
     this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false});
 

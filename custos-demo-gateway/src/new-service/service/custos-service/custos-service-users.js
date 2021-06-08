@@ -130,13 +130,16 @@ export default class CustosUsers {
      * @param {boolean} isClientLevel
      * @return {Promise<AxiosResponse<any>>}
      */
-    addRolesToUser({roles, usernames, isClientLevel}) {
-        return this.custosService.axiosInstanceWithTokenAuthorization.post(
+    async addRolesToUser({clientId, roles, usernames, clientLevel = false}) {
+        // const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        console.log(" addRolesToUser ", {clientId, roles, usernames, clientLevel});
+        const axiosInstance = await this.custosService.axiosInstanceWithTokenAuthorization;
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.USERS}/users/roles`,
             {
                 roles: roles,
                 usernames: usernames,
-                client_level: isClientLevel
+                client_level: clientLevel
             }
         );
     }
@@ -159,12 +162,12 @@ export default class CustosUsers {
         );
     }
 
-    async updateProfile({clientId, userName, firstName, lastName, email}) {
+    async updateProfile({clientId, username, firstName, lastName, email}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.put(
             `${CustosService.ENDPOINTS.USERS}/user/profile`,
             {
-                username: userName,
+                username: username,
                 first_name: firstName,
                 last_name: lastName,
                 email: email
