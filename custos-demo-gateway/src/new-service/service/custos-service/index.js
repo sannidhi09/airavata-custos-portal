@@ -141,7 +141,9 @@ export default class CustosService {
             clientId = this.clientId
         }
 
-        if (!clientSecret) {
+        if (clientId === this.clientId) {
+            clientSecret = this.clientSecret;
+        } else if (!clientSecret) {
             clientSecret = await this.identity.getClientSecret({clientId});
         }
 
