@@ -68,10 +68,10 @@ export default class CustosTenants {
         );
     }
 
-    createTenant({username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType, parentClientId, parentClientSecret}) {
+    async createTenant({username, firstName, lastName, email, password, tenantName, redirectUris, scope, domain, clientUri, logoUri, comment, applicationType, parentClientId, parentClientSecret}) {
         let axiosInstance;
         if (parentClientId !== "custos-6nwoqodstpe5mvcq09lh-10000101") {
-            axiosInstance = this.custosService.getAxiosInstanceWithClientAuthorization({
+            axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({
                 clientId: parentClientId,
                 clientSecret: parentClientSecret
             });

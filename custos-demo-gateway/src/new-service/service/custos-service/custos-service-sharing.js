@@ -14,8 +14,9 @@ export default class CustosSharing {
         return this._custosService;
     }
 
-    createPermissionType({clientId, id, name, description = null}) {
-        return this.custosService.axiosInstanceWithClientAuthorization().post(
+    async createPermissionType({clientId, id, name, description = null}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.post(
             `${CustosService.ENDPOINTS.SHARING}/permission/type`,
             {
                 "client_id": clientId,
@@ -24,8 +25,9 @@ export default class CustosSharing {
         );
     }
 
-    deletePermissionType({clientId, id, name, description = null}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.delete(
+    async deletePermissionType({clientId, id, name, description = null}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.delete(
             `${CustosService.ENDPOINTS.SHARING}/permission/type`,
             {
                 "client_id": clientId,
@@ -34,11 +36,12 @@ export default class CustosSharing {
         );
     }
 
-    getPermissionTypes({clientId}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.get(
+    async getPermissionTypes({clientId}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.get(
             `${CustosService.ENDPOINTS.SHARING}/permission/types`,
             {
-                "client_id": clientId
+                params: {"client_id": clientId}
             }
         ).then(({data: {types}}) => types);
     }
