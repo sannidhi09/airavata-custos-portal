@@ -42,6 +42,8 @@
                 </b-tag>
                 <b-tag v-else-if="childTenant.status === 'DEACTIVATED'" no-remove variant="secondary">Deactivated
                 </b-tag>
+                <b-tag v-else-if="childTenant.status === 'CANCELLED'" no-remove variant="danger">Cancelled
+                </b-tag>
               </b-td>
               <b-td>
                 <b-button variant="outline-primary" size="sm"
