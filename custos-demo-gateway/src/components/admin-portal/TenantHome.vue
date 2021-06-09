@@ -165,5 +165,14 @@ export default {
 </script>
 
 <style scoped>
+ul {
+  list-style: none;
+}
+
+ul li ul {
+  margin-left: 30px;
+  padding: 0px;
+}
+
 
 </style>
