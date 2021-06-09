@@ -99,6 +99,7 @@ export default class CustosUsers {
         return this.custosService.axiosInstanceWithTokenAuthorization.post(
             `${CustosService.ENDPOINTS.USERS}/attributes`,
             {
+                client_id: clientId,
                 attributes: attributes,
                 users: usernames
             }
@@ -138,6 +139,7 @@ export default class CustosUsers {
         return axiosInstance.post(
             `${CustosService.ENDPOINTS.USERS}/users/roles`,
             {
+                client_id: clientId,
                 roles: roles,
                 usernames: usernames,
                 client_level: clientLevel
