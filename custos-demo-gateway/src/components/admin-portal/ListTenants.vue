@@ -56,7 +56,8 @@
                 </b-button>
               </b-td>
               <b-td>
-                <b-button variant="link" size="sm" v-on:click="deleteTenant(childTenant)">
+                <b-button variant="link" size="sm" v-if="childTenant.status === 'REQUESTED'"
+                          v-on:click="deleteTenant(childTenant)">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </b-td>
