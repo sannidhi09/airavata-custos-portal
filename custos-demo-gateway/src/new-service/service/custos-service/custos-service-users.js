@@ -94,7 +94,8 @@ export default class CustosUsers {
      * @param {string[]} usernames
      * @return {Promise<AxiosResponse<any>>}
      */
-    addUserAttribute({attributes, usernames}) {
+    addUserAttribute({clientId, attributes, usernames}) {
+        console.log("addUserAttribute : ", {clientId, attributes, usernames});
         return this.custosService.axiosInstanceWithTokenAuthorization.post(
             `${CustosService.ENDPOINTS.USERS}/attributes`,
             {

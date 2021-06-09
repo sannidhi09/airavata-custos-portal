@@ -1,11 +1,20 @@
 <template>
   <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks">
+    <template #header-right>
+      <div style="font-size: 14px; font-weight: 500;">
+        <b-icon icon="envelope"></b-icon>
+        {{ email }}
+        <br/>
+        <b-icon icon="person"></b-icon>
+        {{ username }}
+      </div>
+    </template>
+
     <div>
       <div style="display: flex; flex-direction: row;">
-
         <div style="flex: 1;padding-right: 10px;">
           <div class="pt-3">
-            <label for="first-name">First Name</label>
+            <label class="form-label" for="first-name">First Name</label>
             <b-form-input
                 v-model="firstName"
                 :state="inputState.firstName"
@@ -18,7 +27,7 @@
           </div>
 
           <div class="pt-3">
-            <label for="last-name">Last Name</label>
+            <label class="form-label" for="last-name">Last Name</label>
             <b-form-input
                 v-model="lastName"
                 :state="inputState.lastName"
@@ -30,37 +39,34 @@
             </b-form-invalid-feedback>
           </div>
 
-          <div class="pt-3">
-            <label for="email">Email</label>
-            <b-form-input
-                v-model="email"
-                :state="inputState.email"
-                id="email"
-                trim
-                size="sm">
-            </b-form-input>
-            <b-form-invalid-feedback>
-            </b-form-invalid-feedback>
-          </div>
+          <!--          <div class="pt-3">-->
+          <!--            <label class="form-label" for="email">Email</label>-->
+          <!--            <b-form-input-->
+          <!--                v-model="email"-->
+          <!--                :state="inputState.email"-->
+          <!--                id="email"-->
+          <!--                trim-->
+          <!--                size="sm">-->
+          <!--            </b-form-input>-->
+          <!--            <b-form-invalid-feedback>-->
+          <!--            </b-form-invalid-feedback>-->
+          <!--          </div>-->
+
+          <!--          <div class="pt-3">-->
+          <!--            <label class="form-label" for="username">Username</label>-->
+          <!--            <b-form-input-->
+          <!--                v-model="username"-->
+          <!--                :state="inputState.username"-->
+          <!--                id="username"-->
+          <!--                trim-->
+          <!--                size="sm">-->
+          <!--            </b-form-input>-->
+          <!--            <b-form-invalid-feedback>-->
+          <!--            </b-form-invalid-feedback>-->
+          <!--          </div>-->
 
           <div class="pt-3">
-            <label for="username">Username</label>
-            <b-form-input
-                v-model="username"
-                :state="inputState.username"
-                id="username"
-                trim
-                size="sm">
-            </b-form-input>
-            <b-form-invalid-feedback>
-            </b-form-invalid-feedback>
-          </div>
-        </div>
-
-        <div style="flex: 1;padding-left: 10px;">
-
-          <div class="pt-3">
-            <label for="realm-roles">Tenant Roles</label>
+            <label class="form-label" for="realm-roles">Tenant Roles</label>
             <b-form-checkbox-group
                 v-model="realmRoles"
                 :options="availableTenantRoles"
@@ -95,7 +101,7 @@
           </div>
 
           <div class="pt-3">
-            <label for="client-roles">Client Roles</label>
+            <label class="form-label" for="client-roles">Client Roles</label>
             <b-form-checkbox-group
                 v-model="clientRoles"
                 :options="availableClientRoles"
@@ -109,17 +115,62 @@
             <b-form-invalid-feedback></b-form-invalid-feedback>
           </div>
 
+        </div>
+
+        <div style="flex: 1;padding-left: 10px;">
+
           <div class="pt-3">
-            <label for="attributes">Attributes</label>
-            <div>
-              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">
-                <li v-for="(attribute, attributesIndex) in attributes" :key="attributesIndex" class="list-inline-item">
-                  <b-form-tag variant="primary" :title="`${attribute.key} = ${attribute.values}`">
-                    {{ attribute.key }} = {{ attribute.values.join(", ") }}
-                  </b-form-tag>
-                </li>
-              </ul>
-            </div>
+            <label class="form-label" for="attributes">Attributes</label>
+            <table-overlay-info :rows="5" :columns="2" :data="attributes" empty-label="No attributes.">
+              <template #empty>
+                No attributes to show.
+                <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})">
+                  Create an attribute
+                </b-button>
+              </template>
+              <b-table-simple>
+                <b-thead>
+                  <b-tr>
+                    <b-th></b-th>
+                    <b-th>Key</b-th>
+                    <b-th>Values</b-th>
+                  </b-tr>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="(attribute, attributesIndex) in attributes" :key="attributesIndex">
+                    <b-td>#{{ attributesIndex + 1 }}</b-td>
+                    <b-td>
+                      <label :for="`attribute-key-${attributesIndex + 1}`"
+                             style="visibility: hidden; position: fixed; top: -100px;">
+                        Attribute #{{ attributesIndex + 1 }} key
+                      </label>
+                      <b-form-input :id="`attributes-key-${attributesIndex + 1}`" v-model="attribute.key" size="sm"/>
+                    </b-td>
+                    <b-td>
+                      <label :for="`attribute-values-${attributesIndex + 1}`"
+                             style="visibility: hidden; position: fixed; top: -100px;">
+                        Attribute #{{ attributesIndex + 1 }} values
+                      </label>
+                      <b-form-input :id="`attributes-values-${attributesIndex + 1}`" v-model="attribute.values"
+                                    size="sm"/>
+                    </b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+              <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})">
+                Add new attribute
+              </b-button>
+              <!--              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">-->
+              <!--                <li v-for="(attribute, attributesIndex) in attributes" :key="attributesIndex" class="list-inline-item">-->
+              <!--                  <b-form-tag variant="primary" :title="`${attribute.key} = ${attribute.values}`">-->
+              <!--                    <div style="display: flex; flex-direction: row;">-->
+              <!--                      <label :for="`attributes-${attributesIndex}`">{{ attribute.key }} =</label>-->
+              <!--                      <b-form-input :id="`attributes-${attributesIndex}`" v-model="attribute.values"/>-->
+              <!--                    </div>-->
+              <!--                  </b-form-tag>-->
+              <!--                </li>-->
+              <!--              </ul>-->
+            </table-overlay-info>
           </div>
 
         </div>
@@ -136,11 +187,12 @@
 <script>
 import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
+import TableOverlayInfo from "@/components/table-overlay-info";
 // import TableOverlayInfo from "@/components/table-overlay-info";
 
 export default {
   name: "TenantUser",
-  components: {TenantHome},
+  components: {TableOverlayInfo, TenantHome},
   store: store,
   data() {
     return {
@@ -149,7 +201,7 @@ export default {
       email: null,
       realmRoles: [],
       clientRoles: [],
-      attributes: [{key: "a", values: [1, 2, 3]}, {key: "b", values: ["fhfhf"]}]
+      attributes: null // [{key: "a", values: ["1", "2", "3"]}, {key: "b", values: ["fhfhf"]}]
     }
   },
   computed: {
@@ -228,7 +280,10 @@ export default {
         lastName: this.lastName,
         email: this.email,
         realmRoles: this.realmRoles,
-        clientRoles: this.clientRoles
+        clientRoles: this.clientRoles,
+        attributes: this.attributes.map(({key, values}) => {
+          return {key: key, values: values.split(",").map(value => value.trim())};
+        }).filter(({key}) => key.length > 0)
       });
     }
   },
@@ -241,7 +296,9 @@ export default {
         this.email = this.user.email;
         this.realmRoles = this.user.realmRoles;
         this.clientRoles = this.user.clientRoles;
-        // this.attributes = this.user.attributes;
+        this.attributes = this.user.attributes.map(({key, values}) => {
+          return {key: key, values: values.join(", ")};
+        });
       }
     }
   },
@@ -257,7 +314,9 @@ export default {
       this.email = this.user.email;
       this.realmRoles = this.user.realmRoles;
       this.clientRoles = this.user.clientRoles;
-      // this.attributes = this.user.attributes;
+      this.attributes = this.user.attributes.map(({key, values}) => {
+        return {key: key, values: values.join(", ")};
+      });
     }
   }
 }
