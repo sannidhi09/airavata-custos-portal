@@ -2,7 +2,7 @@
   <TenantHome title="New Group" :breadcrumb-links="breadcrumbLinks">
     <div class="w-100" style="max-width: 600px;">
       <div class="pt-3">
-        <label for="name">Group Name</label>
+        <label class="form-label"  for="name">Group Name</label>
         <b-form-input
             v-model="name"
             :state="inputState.name"
@@ -16,7 +16,7 @@
       </div>
 
       <div class="pt-3">
-        <label for="description">Description</label>
+        <label class="form-label"  for="description">Description</label>
         <b-form-input
             v-model="description"
             :state="inputState.description"

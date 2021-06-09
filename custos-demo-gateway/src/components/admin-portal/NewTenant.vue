@@ -8,7 +8,7 @@
             <b-tab title="Step 1" :active="tabIndex===1" v-on:click="onTabClick(1)">
               <div class="pt-3 text-center tab-title">Admin Account Information</div>
               <div class="pt-3">
-                <label for="username">Username</label>
+                <label class="form-label"  for="username">Username</label>
                 <b-form-input
                     v-model="username"
                     :state="inputState.username"
@@ -23,7 +23,7 @@
               </div>
               <div class="pt-3" style="display: flex; flex-direction: row;">
                 <div style="flex: 1;" class="mr-2">
-                  <label for="first-name">First Name</label>
+                  <label class="form-label"  for="first-name">First Name</label>
                   <b-form-input
                       v-model="firstName"
                       :state="inputState.firstName"
@@ -35,7 +35,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div style="flex: 1;" class="ml-2">
-                  <label for="last-name">Last Name</label>
+                  <label class="form-label"  for="last-name">Last Name</label>
                   <b-form-input
                       v-model="lastName"
                       :state="inputState.lastName"
@@ -48,7 +48,7 @@
                 </div>
               </div>
               <div class="pt-3">
-                <label for="email">Email</label>
+                <label class="form-label"  for="email">Email</label>
                 <b-form-input
                     v-model="email"
                     :state="inputState.email"
@@ -61,7 +61,7 @@
                 </b-form-invalid-feedback>
               </div>
               <div class="pt-3">
-                <label for="new-password">Password</label>
+                <label class="form-label"  for="new-password">Password</label>
                 <b-form-input
                     v-model="password"
                     :state="inputState.password"
@@ -78,7 +78,7 @@
                 </b-form-invalid-feedback>
               </div>
               <div class="pt-3">
-                <label for="confirm-password">Confirm Password</label>
+                <label class="form-label"  for="confirm-password">Confirm Password</label>
                 <b-form-input
                     v-model="confirmPassword"
                     :state="inputState.confirmPassword"
@@ -93,7 +93,7 @@
             <b-tab title="Step 2" :active="tabIndex===2" v-on:click="onTabClick(2)">
               <div class="content">
                 <div class="pt-3">
-                  <label for="tenantName">Tenant Name</label>
+                  <label class="form-label"  for="tenantName">Tenant Name</label>
                   <b-form-input
                       v-model="tenantName"
                       :state="inputState.tenantName"
@@ -110,9 +110,9 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label>Redirect URI</label>
+                  <label class="form-label" >Redirect URI</label>
                   <div class="pb-2" v-for="(redirectUri, redirectUriIndex) in redirectUris" :key=redirectUriIndex>
-                    <label :for="`redirectUri-${redirectUriIndex}`"
+                    <label class="form-label"  :for="`redirectUri-${redirectUriIndex}`"
                            style="visibility: hidden;line-height: 0px;margin: 0px;position: absolute;">
                       Redirect URI {{ redirectUriIndex }}</label>
                     <b-input-group>
@@ -137,7 +137,7 @@
                   <b-button size="sm" variant="link" v-on:click="redirectUris.push('')">Add another URI</b-button>
                 </div>
                 <div class="pt-3">
-                  <label for="scope">Scope</label>
+                  <label class="form-label"  for="scope">Scope</label>
                   <b-form-checkbox-group
                       v-model="scope"
                       :options="['openid', 'email', 'profile', 'org.cilogon.userinfo']"
@@ -154,7 +154,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label for="domain">Domain</label>
+                  <label class="form-label"  for="domain">Domain</label>
                   <b-form-input
                       v-model="domain"
                       :state="inputState.domain"
@@ -167,7 +167,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label for="clientUri">Client URI</label>
+                  <label class="form-label"  for="clientUri">Client URI</label>
                   <b-form-input
                       v-model="clientUri"
                       :state="inputState.clientUri"
@@ -179,7 +179,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label for="logoUri">Logo URI</label>
+                  <label class="form-label"  for="logoUri">Logo URI</label>
                   <b-form-input
                       v-model="logoUri"
                       :state="inputState.logoUri"
@@ -191,7 +191,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label for="comment">Comment</label>
+                  <label class="form-label"  for="comment">Comment</label>
                   <b-form-input
                       v-model="comment"
                       :state="inputState.comment"
@@ -204,7 +204,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label for="applicationType">Application Type</label>
+                  <label class="form-label"  for="applicationType">Application Type</label>
                   <b-form-radio-group
                       :options="['web']"
                       v-model="applicationType"
@@ -459,11 +459,6 @@ export default {
 </script>
 
 <style scoped>
-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
 .tab-title {
   font-weight: 800;
 }

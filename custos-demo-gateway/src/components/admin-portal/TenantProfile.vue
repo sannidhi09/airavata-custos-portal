@@ -5,7 +5,7 @@
         <div class="pt-3" style="display: flex; flex-direction: row;">
 
           <div style="flex: 1;" class="mr-2">
-            <label for="username">Username</label>
+            <label class="form-label"  for="username">Username</label>
             <b-form-input
                 v-model="username"
                 :state="inputState.username"
@@ -20,7 +20,7 @@
           </div>
 
           <div style="flex: 1;" class="mr-2">
-            <label for="first-name">First Name</label>
+            <label class="form-label"  for="first-name">First Name</label>
             <b-form-input
                 v-model="firstName"
                 :state="inputState.firstName"
@@ -33,7 +33,7 @@
           </div>
 
           <div style="flex: 1;" class="ml-2">
-            <label for="last-name">Last Name</label>
+            <label class="form-label"  for="last-name">Last Name</label>
             <b-form-input
                 v-model="lastName"
                 :state="inputState.lastName"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="email">Email</label>
+          <label class="form-label"  for="email">Email</label>
           <b-form-input
               v-model="email"
               :state="inputState.email"
@@ -61,7 +61,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="tenantName">Tenant Name</label>
+          <label class="form-label"  for="tenantName">Tenant Name</label>
           <b-form-input
               v-model="tenantName"
               :state="inputState.tenantName"
@@ -79,7 +79,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="clientId">Client ID</label>
+          <label class="form-label"  for="clientId">Client ID</label>
           <b-form-input
               v-model="clientId"
               id="clientId"
@@ -89,7 +89,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="clientSecret">Secret</label>
+          <label class="form-label"  for="clientSecret">Secret</label>
           <b-form-input
               v-model="clientSecret"
               id="clientSecret"
@@ -99,9 +99,9 @@
         </div>
 
         <div class="pt-3">
-          <label>Redirect URI</label>
+          <label class="form-label" >Redirect URI</label>
           <div class="pb-2" v-for="(redirectUri, redirectUriIndex) in redirectUris" :key=redirectUriIndex>
-            <label :for="`redirectUri-${redirectUriIndex}`"
+            <label class="form-label"  :for="`redirectUri-${redirectUriIndex}`"
                    style="visibility: hidden;line-height: 0px;margin: 0px;position: absolute;">
               Redirect URI {{ redirectUriIndex }}</label>
             <b-input-group>
@@ -127,7 +127,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="scope">Scope</label>
+          <label class="form-label"  for="scope">Scope</label>
           <b-form-checkbox-group
               v-model="scope"
               :options="['openid', 'email', 'profile', 'org.cilogon.userinfo']"
@@ -145,7 +145,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="domain">Domain</label>
+          <label class="form-label"  for="domain">Domain</label>
           <b-form-input
               v-model="domain"
               :state="inputState.domain"
@@ -159,7 +159,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="clientUri">Client URI</label>
+          <label class="form-label"  for="clientUri">Client URI</label>
           <b-form-input
               v-model="clientUri"
               :state="inputState.clientUri"
@@ -172,7 +172,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="logoUri">Logo URI</label>
+          <label class="form-label"  for="logoUri">Logo URI</label>
           <b-form-input
               v-model="logoUri"
               :state="inputState.logoUri"
@@ -185,7 +185,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="comment">Comment</label>
+          <label class="form-label"  for="comment">Comment</label>
           <b-form-input
               v-model="comment"
               :state="inputState.comment"
@@ -199,7 +199,7 @@
         </div>
 
         <div class="pt-3">
-          <label for="applicationType">Application Type</label>
+          <label class="form-label"  for="applicationType">Application Type</label>
           <b-form-radio-group
               :options="['web']"
               v-model="applicationType"
@@ -360,8 +360,5 @@ export default {
 </script>
 
 <style scoped>
-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
+
 </style>
