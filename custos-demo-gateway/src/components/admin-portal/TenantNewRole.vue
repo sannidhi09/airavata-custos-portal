@@ -71,7 +71,9 @@ export default {
       name: null,
       description: null,
       scope: "TENANT",
-      composite: false
+      composite: false,
+
+      inputFieldsList: ["name", "description"]
     }
   },
   computed: {
@@ -96,14 +98,30 @@ export default {
         {to: `/tenants/${this.clientId}/roles`, name: "Roles"},
         {to: `/tenants/${this.clientId}/roles/new`, name: "New"}
       ];
+    },
+    isFormValid() {
+      let _isFormValid = true;
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+      }
+
+      return _isFormValid;
     }
   },
   methods: {
+    makeFormVisited() {
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
+      }
+    },
     onSaveClick() {
-      this.$store.dispatch("tenant/createTenantRole", {
-        clientId: this.clientId, name: this.name, description: this.description, composite: this.composite,
-        clientLevel: this.scope === "CLIENT"
-      })
+      this.makeFormVisited();
+      if (this.isFormValid) {
+        this.$store.dispatch("tenant/createTenantRole", {
+          clientId: this.clientId, name: this.name, description: this.description, composite: this.composite,
+          clientLevel: this.scope === "CLIENT"
+        });
+      }
     }
   }
 }

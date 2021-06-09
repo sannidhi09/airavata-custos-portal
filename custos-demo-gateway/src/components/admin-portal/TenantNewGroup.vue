@@ -2,7 +2,7 @@
   <TenantHome title="New Group" :breadcrumb-links="breadcrumbLinks">
     <div class="w-100" style="max-width: 600px;">
       <div class="pt-3">
-        <label class="form-label"  for="name">Group Name</label>
+        <label class="form-label" for="name">Group Name</label>
         <b-form-input
             v-model="name"
             :state="inputState.name"
@@ -16,7 +16,7 @@
       </div>
 
       <div class="pt-3">
-        <label class="form-label"  for="description">Description</label>
+        <label class="form-label" for="description">Description</label>
         <b-form-input
             v-model="description"
             :state="inputState.description"
@@ -46,7 +46,9 @@ export default {
   data() {
     return {
       name: null,
-      description: null
+      description: null,
+
+      inputFieldsList: ["name", "description"]
     };
   },
   computed: {
@@ -66,6 +68,14 @@ export default {
         description: true
       }
     },
+    isFormValid() {
+      let _isFormValid = true;
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+      }
+
+      return _isFormValid;
+    },
     breadcrumbLinks() {
       return [
         {to: `/tenants/${this.clientId}/groups`, name: "Groups"},
@@ -74,15 +84,24 @@ export default {
     }
   },
   methods: {
+    makeFormVisited() {
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
+      }
+    },
     create() {
-      this.$store.dispatch("group/createGroup", {
-        clientId: this.clientId,
-        name: this.name,
-        description: this.description,
-        ownerId: this.$store.getters["auth/currentUsername"]
-      });
+      this.makeFormVisited()
 
-      this.$router.push(`/tenants/${this.clientId}/groups`);
+      if (this.isFormValid) {
+        this.$store.dispatch("group/createGroup", {
+          clientId: this.clientId,
+          name: this.name,
+          description: this.description,
+          ownerId: this.$store.getters["auth/currentUsername"]
+        });
+
+        this.$router.push(`/tenants/${this.clientId}/groups`);
+      }
     }
   }
 }

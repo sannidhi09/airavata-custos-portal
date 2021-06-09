@@ -5,7 +5,7 @@
         <div class="pt-3" style="display: flex; flex-direction: row;">
 
           <div style="flex: 1;" class="mr-2">
-            <label class="form-label"  for="username">Username</label>
+            <label class="form-label" for="username">Username</label>
             <b-form-input
                 v-model="username"
                 :state="inputState.username"
@@ -20,7 +20,7 @@
           </div>
 
           <div style="flex: 1;" class="mr-2">
-            <label class="form-label"  for="first-name">First Name</label>
+            <label class="form-label" for="first-name">First Name</label>
             <b-form-input
                 v-model="firstName"
                 :state="inputState.firstName"
@@ -33,7 +33,7 @@
           </div>
 
           <div style="flex: 1;" class="ml-2">
-            <label class="form-label"  for="last-name">Last Name</label>
+            <label class="form-label" for="last-name">Last Name</label>
             <b-form-input
                 v-model="lastName"
                 :state="inputState.lastName"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="email">Email</label>
+          <label class="form-label" for="email">Email</label>
           <b-form-input
               v-model="email"
               :state="inputState.email"
@@ -61,7 +61,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="tenantName">Tenant Name</label>
+          <label class="form-label" for="tenantName">Tenant Name</label>
           <b-form-input
               v-model="tenantName"
               :state="inputState.tenantName"
@@ -79,7 +79,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="clientId">Client ID</label>
+          <label class="form-label" for="clientId">Client ID</label>
           <b-form-input
               v-model="clientId"
               id="clientId"
@@ -89,7 +89,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="clientSecret">Secret</label>
+          <label class="form-label" for="clientSecret">Secret</label>
           <b-form-input
               v-model="clientSecret"
               id="clientSecret"
@@ -99,9 +99,9 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label" >Redirect URI</label>
+          <label class="form-label">Redirect URI</label>
           <div class="pb-2" v-for="(redirectUri, redirectUriIndex) in redirectUris" :key=redirectUriIndex>
-            <label class="form-label"  :for="`redirectUri-${redirectUriIndex}`"
+            <label class="form-label" :for="`redirectUri-${redirectUriIndex}`"
                    style="visibility: hidden;line-height: 0px;margin: 0px;position: absolute;">
               Redirect URI {{ redirectUriIndex }}</label>
             <b-input-group>
@@ -127,7 +127,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="scope">Scope</label>
+          <label class="form-label" for="scope">Scope</label>
           <b-form-checkbox-group
               v-model="scope"
               :options="['openid', 'email', 'profile', 'org.cilogon.userinfo']"
@@ -145,7 +145,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="domain">Domain</label>
+          <label class="form-label" for="domain">Domain</label>
           <b-form-input
               v-model="domain"
               :state="inputState.domain"
@@ -159,7 +159,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="clientUri">Client URI</label>
+          <label class="form-label" for="clientUri">Client URI</label>
           <b-form-input
               v-model="clientUri"
               :state="inputState.clientUri"
@@ -172,7 +172,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="logoUri">Logo URI</label>
+          <label class="form-label" for="logoUri">Logo URI</label>
           <b-form-input
               v-model="logoUri"
               :state="inputState.logoUri"
@@ -185,7 +185,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="comment">Comment</label>
+          <label class="form-label" for="comment">Comment</label>
           <b-form-input
               v-model="comment"
               :state="inputState.comment"
@@ -199,7 +199,7 @@
         </div>
 
         <div class="pt-3">
-          <label class="form-label"  for="applicationType">Application Type</label>
+          <label class="form-label" for="applicationType">Application Type</label>
           <b-form-radio-group
               :options="['web']"
               v-model="applicationType"
@@ -248,7 +248,10 @@ export default {
       comment: null,
       applicationType: null,
 
-      clientSecret: null
+      clientSecret: null,
+
+      inputFieldsList: ["firstName", "lastName", "email", "tenantName", "redirectUris", "scope", "domain", "clientUri",
+        "comment", "applicationType"]
     }
   },
   computed: {
@@ -272,7 +275,7 @@ export default {
         lastName: this.lastName === null ? null : this.isValid.lastName,
         email: this.email === null ? null : this.isValid.email,
 
-        tenantName: null,
+        tenantName: this.tenantName === null ? null : this.isValid.tenantName,
         redirectUris: [null],
         scope: null,
         domain: null,
@@ -288,13 +291,8 @@ export default {
         firstName: !!this.firstName && this.firstName.length > 0,
         lastName: !!this.lastName && this.lastName.length > 0,
         email: !!this.email && this.email.length > 0,
-        password: !!this.password && /[a-z]/.test(this.password) && // checks for a-z
-            /[0-9]/.test(this.password) && // checks for 0-9
-            /\W|_/.test(this.password) && // checks for special char
-            this.password.length >= 8,
-        confirmPassword: !!this.confirmPassword && this.confirmPassword === this.password,
 
-        tenantName: false,
+        tenantName: !!this.tenantName && this.tenantName.length > 0,
         redirectUris: [false],
         scope: false,
         domain: false,
@@ -303,6 +301,14 @@ export default {
         comment: false,
         applicationType: false
       }
+    },
+    isFormValid() {
+      let _isFormValid = true;
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+      }
+
+      return _isFormValid;
     },
     requesterEmail() {
       return this.$store.getters["user/getUser"]({username: this.$store.getters["auth/currentUsername"]}).email;
@@ -330,27 +336,35 @@ export default {
     }
   },
   methods: {
+    makeFormVisited() {
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
+      }
+    },
     async onClickSave() {
-      await this.$store.dispatch("tenant/updateTenant", {
-        clientId: this.clientId,
-        tenantId: this.tenantId,
+      this.makeFormVisited();
+      if (this.isFormValid) {
+        await this.$store.dispatch("tenant/updateTenant", {
+          clientId: this.clientId,
+          tenantId: this.tenantId,
 
-        username: this.username,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
+          username: this.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
 
-        tenantName: this.tenantName,
-        redirectUris: this.redirectUris,
-        scope: this.scope,
-        domain: this.domain,
-        clientUri: this.clientUri,
-        logoUri: this.logoUri,
-        comment: this.comment,
-        applicationType: this.applicationType,
+          tenantName: this.tenantName,
+          redirectUris: this.redirectUris,
+          scope: this.scope,
+          domain: this.domain,
+          clientUri: this.clientUri,
+          logoUri: this.logoUri,
+          comment: this.comment,
+          applicationType: this.applicationType,
 
-        requesterEmail: this.requesterEmail
-      });
+          requesterEmail: this.requesterEmail
+        });
+      }
     }
   },
   beforeMount() {

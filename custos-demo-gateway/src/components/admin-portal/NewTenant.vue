@@ -312,7 +312,7 @@ export default {
         password: this.password === null ? null : this.isValid.password,
         confirmPassword: this.confirmPassword === null ? null : this.isValid.confirmPassword,
 
-        tenantName: null,
+        tenantName: this.tenantName === null ? null : this.isValid.tenantName,
         redirectUris: [null],
         scope: null,
         domain: null,
@@ -334,7 +334,7 @@ export default {
             this.password.length >= 8,
         confirmPassword: !!this.confirmPassword && this.confirmPassword === this.password,
 
-        tenantName: false,
+        tenantName: !!this.tenantName && this.tenantName.length > 0,
         redirectUris: [false],
         scope: false,
         domain: false,

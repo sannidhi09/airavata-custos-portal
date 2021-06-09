@@ -201,7 +201,9 @@ export default {
       email: null,
       realmRoles: [],
       clientRoles: [],
-      attributes: null // [{key: "a", values: ["1", "2", "3"]}, {key: "b", values: ["fhfhf"]}]
+      attributes: null, // [{key: "a", values: ["1", "2", "3"]}, {key: "b", values: ["fhfhf"]}]
+
+      inputFieldsList: ["firstName", "lastName", "email", "realmRoles", "clientRoles", "attributes"]
     }
   },
   computed: {
@@ -269,22 +271,39 @@ export default {
       } else {
         return [];
       }
+    },
+    isFormValid() {
+      let _isFormValid = true;
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+      }
+
+      return _isFormValid;
     }
   },
   methods: {
+    makeFormVisited() {
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
+      }
+    },
     onClickSave() {
-      this.$store.dispatch("user/updateUser", {
-        clientId: this.clientId,
-        username: this.username,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        realmRoles: this.realmRoles,
-        clientRoles: this.clientRoles,
-        attributes: this.attributes.map(({key, values}) => {
-          return {key: key, values: values.split(",").map(value => value.trim())};
-        }).filter(({key}) => key.length > 0)
-      });
+      this.makeFormVisited();
+
+      if (this.isFormValid) {
+        this.$store.dispatch("user/updateUser", {
+          clientId: this.clientId,
+          username: this.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          email: this.email,
+          realmRoles: this.realmRoles,
+          clientRoles: this.clientRoles,
+          attributes: this.attributes.map(({key, values}) => {
+            return {key: key, values: values.split(",").map(value => value.trim())};
+          }).filter(({key}) => key.length > 0)
+        });
+      }
     }
   },
   watch: {
