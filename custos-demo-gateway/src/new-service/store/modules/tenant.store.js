@@ -103,8 +103,10 @@ const actions = {
             type, hasAdminPrivileges
         });
     },
-    async createTenantRole({commit}, {name, description, composite = false}) {
-        const {id} = await custosService.tenants.createTenantRole({name, description, composite});
+    async createTenantRole({commit}, {clientId, name, description, composite = false, clientLevel = false}) {
+        const {id} = await custosService.tenants.createTenantRole({
+            clientId, name, description, composite, clientLevel
+        });
 
         commit('SET_TENANT_ROLE', {
             tenantRoleId: id,

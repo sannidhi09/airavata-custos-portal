@@ -1,5 +1,10 @@
 <template>
   <TenantHome title="Roles">
+    <template #header-right>
+      <router-link :to="`/tenants/${clientId}/roles/new`" v-slot="{href, navigate}" tag="">
+        <b-button variant="primary" @click="navigate">Create New Role</b-button>
+      </router-link>
+    </template>
     <table-overlay-info :rows="5" :columns="4" :data="roles">
       <b-table-simple>
         <b-thead>
@@ -7,7 +12,7 @@
             <b-th>Name</b-th>
             <b-th>Description</b-th>
             <b-th>Composite</b-th>
-            <b-th>Type</b-th>
+            <b-th>Scope</b-th>
           </b-tr>
         </b-thead>
         <b-tbody>

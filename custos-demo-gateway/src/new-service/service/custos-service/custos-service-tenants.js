@@ -51,10 +51,15 @@ export default class CustosTenants {
      * @param {boolean} composite
      * @return {Promise<AxiosResponse<any>>}
      */
-    createTenantRole({name, description, composite = false}) {
+    createTenantRole({clientId, name, description, composite = false, clientLevel = false}) {
         return this.custosService.axiosInstanceWithTokenAuthorization.post(
             `${CustosService.ENDPOINTS.TENANTS}/roles`,
-            {group: {name, description, composite}}
+            {
+                "roles": [{name, description}],
+                "client_level": clientLevel,
+                "client_id": clientId,
+                "composite": composite
+            }
         ).then(({data}) => data);
     }
 
