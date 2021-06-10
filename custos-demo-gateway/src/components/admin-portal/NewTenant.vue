@@ -1,8 +1,8 @@
 <template>
   <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <b-overlay :show="processing">
-      <div class="w-100 text-center">
-        <div class="pr-3 pl-3 text-left" style="width: 600px;max-width: 600px;display: inline-block;">
+      <div class="pr-3 pl-3 text-center">
+        <div class="w-100 text-left" style="width: 600px;max-width: 600px;display: inline-block;">
           <b-tabs align="center" justified>
             <b-tab title="Step 1" :active="tabIndex===1" v-on:click="onTabClick(1)">
               <div class="pt-3 text-center tab-title">Admin Account Information</div>
