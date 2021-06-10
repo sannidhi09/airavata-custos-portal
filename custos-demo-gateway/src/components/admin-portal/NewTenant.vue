@@ -325,7 +325,7 @@ export default {
     },
     isValid() {
       return {
-        username: !!this.username && this.username.length > 0,
+        username: !!this.username && this.username.length >= 3,
         firstName: !!this.firstName && this.firstName.length > 0,
         lastName: !!this.lastName && this.lastName.length > 0,
         email: !!this.email && this.email.length > 0,
