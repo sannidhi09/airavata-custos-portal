@@ -243,7 +243,7 @@ export default {
       return this.$route.params.username;
     },
     user() {
-      return this.$store.getters["user/getUser"]({username: this.username})
+      return this.$store.getters["user/getUser"]({clientId: this.clientId, username: this.username})
     },
     breadcrumbLinks() {
       const _breadcrumbLinks = [{to: `/tenants/${this.clientId}/users`, name: "Users"}];
