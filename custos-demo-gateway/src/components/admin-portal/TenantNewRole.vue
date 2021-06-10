@@ -48,7 +48,7 @@
             </b-form-checkbox>
           </div>
           <div class="pt-3">
-            <b-button variant="primary" size="sm" v-on:click="onSaveClick">Save</b-button>
+            <b-button variant="primary" v-on:click="onSaveClick">Save</b-button>
           </div>
         </div>
       </div>

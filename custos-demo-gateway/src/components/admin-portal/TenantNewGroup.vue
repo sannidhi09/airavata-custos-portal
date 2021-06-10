@@ -27,8 +27,7 @@
             </b-form-input>
           </div>
           <div class="pt-3">
-            <b-button variant="primary" size="sm" v-on:click="create">Create</b-button>
-            <!--            <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>-->
+            <b-button variant="primary" v-on:click="create">Create</b-button>
           </div>
         </div>
       </div>
@@ -63,7 +62,7 @@ export default {
     inputState() {
       return {
         name: this.name === null ? null : this.isValid.name,
-        description:  this.description === null ? null : this.isValid.description,
+        description: this.description === null ? null : this.isValid.description,
       }
     },
     isValid() {

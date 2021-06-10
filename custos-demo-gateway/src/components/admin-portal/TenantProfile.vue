@@ -215,8 +215,8 @@
 
         </div>
         <div>
-          <b-button variant="primary" size="sm" v-on:click="onClickSave">Save Changes</b-button>
-          <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>
+          <b-button variant="primary" v-on:click="onClickSave">Save Changes</b-button>
+          <b-button variant="secondary" class="ml-2">Cancel</b-button>
         </div>
       </div>
     </b-overlay>
