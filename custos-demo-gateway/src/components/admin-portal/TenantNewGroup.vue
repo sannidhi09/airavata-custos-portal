@@ -1,37 +1,39 @@
 <template>
   <TenantHome title="New Group" :breadcrumb-links="breadcrumbLinks">
-    <div class="w-100" style="max-width: 600px;">
-      <div class="pt-3">
-        <label class="form-label" for="name">Group Name</label>
-        <b-form-input
-            v-model="name"
-            :state="inputState.name"
-            id="name"
-            trim
-            size="sm">
-        </b-form-input>
-        <b-form-invalid-feedback>
-          Enter at least 3 letters
-        </b-form-invalid-feedback>
+    <b-checkbox v-model="processing"/>
+    <b-overlay :show="processing">
+      <div class="p-2 text-center">
+        <div class="w-100 text-left" style="max-width: 600px;display: inline-block;">
+          <div class="pt-3">
+            <label class="form-label" for="name">Group Name</label>
+            <b-form-input
+                v-model="name"
+                :state="inputState.name"
+                id="name"
+                trim
+                size="sm">
+            </b-form-input>
+            <b-form-invalid-feedback>
+              Enter at least 2 letters
+            </b-form-invalid-feedback>
+          </div>
+          <div class="pt-3">
+            <label class="form-label" for="description">Description</label>
+            <b-form-input
+                v-model="description"
+                :state="inputState.description"
+                id="description"
+                trim
+                size="sm">
+            </b-form-input>
+          </div>
+          <div class="pt-3">
+            <b-button variant="primary" size="sm" v-on:click="create">Create</b-button>
+            <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>
+          </div>
+        </div>
       </div>
-
-      <div class="pt-3">
-        <label class="form-label" for="description">Description</label>
-        <b-form-input
-            v-model="description"
-            :state="inputState.description"
-            id="description"
-            trim
-            size="sm">
-        </b-form-input>
-      </div>
-
-      <div class="pt-3">
-        <b-button variant="primary" size="sm" v-on:click="create">Create</b-button>
-        <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>
-      </div>
-
-    </div>
+    </b-overlay>
   </TenantHome>
 </template>
 
@@ -45,6 +47,9 @@ export default {
   components: {TenantHome},
   data() {
     return {
+      processing: false,
+      errors: [],
+
       name: null,
       description: null,
 
@@ -64,7 +69,7 @@ export default {
     },
     isValid() {
       return {
-        name: !!this.name && this.name.length > 0,
+        name: !!this.name && this.name.length >= 2,
         description: true
       }
     },
@@ -93,12 +98,23 @@ export default {
       this.makeFormVisited()
 
       if (this.isFormValid) {
-        this.$store.dispatch("group/createGroup", {
-          clientId: this.clientId,
-          name: this.name,
-          description: this.description,
-          ownerId: this.$store.getters["auth/currentUsername"]
-        });
+        this.processing = true;
+
+        try {
+          this.$store.dispatch("group/createGroup", {
+            clientId: this.clientId,
+            name: this.name,
+            description: this.description,
+            ownerId: this.$store.getters["auth/currentUsername"]
+          });
+        } catch (error) {
+          this.errors.push({
+            title: "Unknown error when creating the group.",
+            source: error, variant: "danger"
+          });
+        }
+
+        this.processing = false;
 
         this.$router.push(`/tenants/${this.clientId}/groups`);
       }
