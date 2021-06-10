@@ -1,6 +1,5 @@
 <template>
-  <TenantHome title="New Group" :breadcrumb-links="breadcrumbLinks">
-    <b-checkbox v-model="processing"/>
+  <TenantHome title="New Group" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <b-overlay :show="processing">
       <div class="p-2 text-center">
         <div class="w-100 text-left" style="max-width: 600px;display: inline-block;">
@@ -29,7 +28,7 @@
           </div>
           <div class="pt-3">
             <b-button variant="primary" size="sm" v-on:click="create">Create</b-button>
-            <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>
+            <!--            <b-button variant="secondary" size="sm" class="ml-2">Cancel</b-button>-->
           </div>
         </div>
       </div>
@@ -64,7 +63,7 @@ export default {
     inputState() {
       return {
         name: this.name === null ? null : this.isValid.name,
-        description: true
+        description:  this.description === null ? null : this.isValid.description,
       }
     },
     isValid() {
@@ -107,7 +106,7 @@ export default {
             description: this.description,
             ownerId: this.$store.getters["auth/currentUsername"]
           });
-          this.$router.push(`/tenants/${this.clientId}/groups/${groupId}`);
+          await this.$router.push(`/tenants/${this.clientId}/groups/${groupId}`);
         } catch (error) {
           this.errors.push({
             title: "Unknown error when creating the group.",
