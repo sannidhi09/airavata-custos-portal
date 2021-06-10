@@ -1,14 +1,13 @@
 <template>
-  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks">
-    <div class="w-100" style="max-width: 600px;">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+    <b-overlay :show="processing">
       <div class="w-100 text-center">
-        <b-form @submit="onSubmit" class="pr-3 pl-3 text-left" style="width: 800px;display: inline-block;"
-                autocomplete="off">
+        <div class="pr-3 pl-3 text-left" style="width: 600px;max-width: 600px;display: inline-block;">
           <b-tabs align="center" justified>
             <b-tab title="Step 1" :active="tabIndex===1" v-on:click="onTabClick(1)">
               <div class="pt-3 text-center tab-title">Admin Account Information</div>
               <div class="pt-3">
-                <label class="form-label"  for="username">Username</label>
+                <label class="form-label" for="username">Username</label>
                 <b-form-input
                     v-model="username"
                     :state="inputState.username"
@@ -23,7 +22,7 @@
               </div>
               <div class="pt-3" style="display: flex; flex-direction: row;">
                 <div style="flex: 1;" class="mr-2">
-                  <label class="form-label"  for="first-name">First Name</label>
+                  <label class="form-label" for="first-name">First Name</label>
                   <b-form-input
                       v-model="firstName"
                       :state="inputState.firstName"
@@ -35,7 +34,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div style="flex: 1;" class="ml-2">
-                  <label class="form-label"  for="last-name">Last Name</label>
+                  <label class="form-label" for="last-name">Last Name</label>
                   <b-form-input
                       v-model="lastName"
                       :state="inputState.lastName"
@@ -48,7 +47,7 @@
                 </div>
               </div>
               <div class="pt-3">
-                <label class="form-label"  for="email">Email</label>
+                <label class="form-label" for="email">Email</label>
                 <b-form-input
                     v-model="email"
                     :state="inputState.email"
@@ -61,7 +60,7 @@
                 </b-form-invalid-feedback>
               </div>
               <div class="pt-3">
-                <label class="form-label"  for="new-password">Password</label>
+                <label class="form-label" for="new-password">Password</label>
                 <b-form-input
                     v-model="password"
                     :state="inputState.password"
@@ -78,7 +77,7 @@
                 </b-form-invalid-feedback>
               </div>
               <div class="pt-3">
-                <label class="form-label"  for="confirm-password">Confirm Password</label>
+                <label class="form-label" for="confirm-password">Confirm Password</label>
                 <b-form-input
                     v-model="confirmPassword"
                     :state="inputState.confirmPassword"
@@ -90,10 +89,10 @@
                 </b-form-invalid-feedback>
               </div>
             </b-tab>
-            <b-tab title="Step 2" :active="tabIndex===2" v-on:click="onTabClick(2)">
+            <b-tab title="Step 2" :active="tabIndex===2" :disabled="tabIndex < 2" v-on:click="onTabClick(2)">
               <div class="content">
                 <div class="pt-3">
-                  <label class="form-label"  for="tenantName">Tenant Name</label>
+                  <label class="form-label" for="tenantName">Tenant Name</label>
                   <b-form-input
                       v-model="tenantName"
                       :state="inputState.tenantName"
@@ -110,9 +109,9 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label class="form-label" >Redirect URI</label>
+                  <label class="form-label">Redirect URI</label>
                   <div class="pb-2" v-for="(redirectUri, redirectUriIndex) in redirectUris" :key=redirectUriIndex>
-                    <label class="form-label"  :for="`redirectUri-${redirectUriIndex}`"
+                    <label class="form-label" :for="`redirectUri-${redirectUriIndex}`"
                            style="visibility: hidden;line-height: 0px;margin: 0px;position: absolute;">
                       Redirect URI {{ redirectUriIndex }}</label>
                     <b-input-group>
@@ -137,7 +136,7 @@
                   <b-button size="sm" variant="link" v-on:click="redirectUris.push('')">Add another URI</b-button>
                 </div>
                 <div class="pt-3">
-                  <label class="form-label"  for="scope">Scope</label>
+                  <label class="form-label" for="scope">Scope</label>
                   <b-form-checkbox-group
                       v-model="scope"
                       :options="['openid', 'email', 'profile', 'org.cilogon.userinfo']"
@@ -154,7 +153,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label class="form-label"  for="domain">Domain</label>
+                  <label class="form-label" for="domain">Domain</label>
                   <b-form-input
                       v-model="domain"
                       :state="inputState.domain"
@@ -167,7 +166,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label class="form-label"  for="clientUri">Client URI</label>
+                  <label class="form-label" for="clientUri">Client URI</label>
                   <b-form-input
                       v-model="clientUri"
                       :state="inputState.clientUri"
@@ -179,7 +178,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label class="form-label"  for="logoUri">Logo URI</label>
+                  <label class="form-label" for="logoUri">Logo URI</label>
                   <b-form-input
                       v-model="logoUri"
                       :state="inputState.logoUri"
@@ -191,7 +190,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label class="form-label"  for="comment">Comment</label>
+                  <label class="form-label" for="comment">Comment</label>
                   <b-form-input
                       v-model="comment"
                       :state="inputState.comment"
@@ -204,7 +203,7 @@
                   </b-form-invalid-feedback>
                 </div>
                 <div class="pt-3">
-                  <label class="form-label"  for="applicationType">Application Type</label>
+                  <label class="form-label" for="applicationType">Application Type</label>
                   <b-form-radio-group
                       :options="['web']"
                       v-model="applicationType"
@@ -218,7 +217,7 @@
                 </div>
               </div>
             </b-tab>
-            <b-tab title="Step 3" :active="tabIndex===3" v-on:click="onTabClick(3)">
+            <b-tab title="Step 3" :active="tabIndex===3" :disabled="tabIndex < 3" v-on:click="onTabClick(3)">
               <div style="padding: 20px;text-align: center;">
                 <div>
                   <strong>Client ID</strong> : {{ newClientId }}
@@ -240,9 +239,9 @@
               Create Tenant
             </b-button>
           </div>
-        </b-form>
+        </div>
       </div>
-    </div>
+    </b-overlay>
   </TenantHome>
 </template>
 
@@ -313,13 +312,15 @@ export default {
         confirmPassword: this.confirmPassword === null ? null : this.isValid.confirmPassword,
 
         tenantName: this.tenantName === null ? null : this.isValid.tenantName,
-        redirectUris: [null],
+        redirectUris: this.redirectUris.map((redirectUri, redirectUriIndex) => {
+          return this.redirectUris[redirectUriIndex] === null ? null : this.isValid.redirectUris[redirectUriIndex];
+        }),
         scope: null,
-        domain: null,
-        clientUri: null,
-        logoUri: null,
-        comment: null,
-        applicationType: null
+        domain: this.domain === null ? null : this.isValid.domain,
+        clientUri: this.clientUri === null ? null : this.isValid.clientUri,
+        logoUri: this.logoUri === null ? null : this.isValid.logoUri,
+        comment: this.comment === null ? null : this.isValid.comment,
+        applicationType: this.applicationType === null ? null : this.isValid.applicationType
       }
     },
     isValid() {
@@ -335,19 +336,26 @@ export default {
         confirmPassword: !!this.confirmPassword && this.confirmPassword === this.password,
 
         tenantName: !!this.tenantName && this.tenantName.length > 0,
-        redirectUris: [false],
-        scope: false,
-        domain: false,
-        clientUri: false,
-        logoUri: false,
-        comment: false,
-        applicationType: false
+        redirectUris: this.redirectUris.map(redirectUri =>
+            /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(redirectUri)),
+        scope: true,
+        domain: /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/.test(this.domain),
+        clientUri: /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(this.clientUri),
+        logoUri: /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(this.logoUri),
+        comment: true,
+        applicationType: true
       }
     },
     isTabValid() {
       let _isTabValid = true;
       for (let i = 0; i < this.inputFieldsList.length; i++) {
-        _isTabValid = _isTabValid && this.isValid[this.inputFieldsList[i]];
+        if (Array.isArray(this[this.inputFieldsList[i]])) {
+          for (let j = 0; j < this[this.inputFieldsList[i]].length; j++) {
+            _isTabValid = _isTabValid && this.isValid[this.inputFieldsList[i]][j];
+          }
+        } else {
+          _isTabValid = _isTabValid && this.isValid[this.inputFieldsList[i]];
+        }
       }
 
       return _isTabValid;
@@ -356,7 +364,7 @@ export default {
       if (this.tabIndex === 1) {
         return ["username", "firstName", "lastName", "email", "password", "confirmPassword"];
       } else {
-        return []
+        return ["tenantName", "redirectUris", "domain", "clientUri", "logoUri", "comment", "applicationType"]
       }
     },
     breadcrumbLinks() {
@@ -368,6 +376,9 @@ export default {
   },
   data() {
     return {
+      processing: false,
+      errors: [],
+
       tabIndex: 1,
       isSubmitted: false,
 
@@ -394,7 +405,17 @@ export default {
   methods: {
     makeTabVisited() {
       for (let i = 0; i < this.inputFieldsList.length; i++) {
-        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
+        if (Array.isArray(this[this.inputFieldsList[i]])) {
+          for (let j = 0; j < this[this.inputFieldsList[i]].length; j++) {
+            if (this[this.inputFieldsList[i]][j] === null) {
+              this[this.inputFieldsList[i]][j] = "";
+            }
+          }
+        } else {
+          if (this[this.inputFieldsList[i]] === null) {
+            this[this.inputFieldsList[i]] = "";
+          }
+        }
       }
     },
     onTabClick(tabIndex) {
@@ -408,28 +429,40 @@ export default {
 
       if (this.isTabValid) {
         if (this.tabIndex === 2) {
-          const {clientId, clientSecret} = await this.$store.dispatch("tenant/createTenant", {
-            username: this.username,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            password: this.password,
+          this.processing = true;
 
-            tenantName: this.tenantName,
-            redirectUris: this.redirectUris,
-            scope: this.scope,
-            domain: this.domain,
-            clientUri: this.clientUri,
-            logoUri: this.logoUri,
-            comment: this.comment,
-            applicationType: this.applicationType,
+          try {
+            this.errors = [];
+            const {clientId, clientSecret} = await this.$store.dispatch("tenant/createTenant", {
+              username: this.username,
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email,
+              password: this.password,
 
-            parentClientId: this.clientId,
-            parentClientSecret: this.clientSecret
-          });
+              tenantName: this.tenantName,
+              redirectUris: this.redirectUris,
+              scope: this.scope,
+              domain: this.domain,
+              clientUri: this.clientUri,
+              logoUri: this.logoUri,
+              comment: this.comment,
+              applicationType: this.applicationType,
 
-          this.newClientId = clientId;
-          this.newClientSecret = clientSecret;
+              parentClientId: this.clientId,
+              parentClientSecret: this.clientSecret
+            });
+
+            this.newClientId = clientId;
+            this.newClientSecret = clientSecret;
+          } catch (error) {
+            this.errors.push({
+              title: "Unknown error when creating the tenant.",
+              source: error, variant: "danger"
+            });
+          }
+
+          this.processing = false;
         }
 
         this.tabIndex++;

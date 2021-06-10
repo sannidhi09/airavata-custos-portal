@@ -99,6 +99,11 @@
             <slot name="header-right"></slot>
           </div>
         </div>
+        <div class="w-100">
+          <b-alert v-for="(error, errorIndex) in errors" :key="errorIndex" show dismissible :variant="error.variant">
+            {{ error.title }}
+          </b-alert>
+        </div>
         <slot/>
       </div>
     </div>
@@ -118,6 +123,11 @@ export default {
   props: {
     title: {},
     breadcrumbLinks: {
+      default() {
+        return [];
+      }
+    },
+    errors: {
       default() {
         return [];
       }
