@@ -26,6 +26,8 @@ const actions = {
             attributes,
             sub_groups
         });
+
+        return id;
     },
     async fetchGroups({commit}, {offset = 0, limit = 50, groupId = null, tenantId = null, clientId = null} = {}) {
 

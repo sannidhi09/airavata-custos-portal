@@ -94,19 +94,20 @@ export default {
         if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
       }
     },
-    create() {
+    async create() {
       this.makeFormVisited()
 
       if (this.isFormValid) {
         this.processing = true;
 
         try {
-          this.$store.dispatch("group/createGroup", {
+          const groupId = await this.$store.dispatch("group/createGroup", {
             clientId: this.clientId,
             name: this.name,
             description: this.description,
             ownerId: this.$store.getters["auth/currentUsername"]
           });
+          this.$router.push(`/tenants/${this.clientId}/groups/${groupId}`);
         } catch (error) {
           this.errors.push({
             title: "Unknown error when creating the group.",
@@ -115,8 +116,6 @@ export default {
         }
 
         this.processing = false;
-
-        this.$router.push(`/tenants/${this.clientId}/groups`);
       }
     }
   }
