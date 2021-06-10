@@ -2,7 +2,18 @@
   <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <b-overlay :show="processing">
       <div class="pr-3 pl-3 text-center">
-        <div class="w-100 text-left" style="width: 600px;max-width: 600px;display: inline-block;">
+        <div class="w-100 text-center" style="color: #203A43;padding-top: 100px;" v-if="tabIndex===3">
+          <p style="max-width: 600px;display: inline-block;">
+            <img src="../../assets/green-successfull-icon.svg" style="width: 70px;margin-bottom: 30px;"/><br/>
+            Your client request on ‘{{ tenantName }}’ successfully sent.<br/>
+            We will notify you once your request get approved.
+          </p>
+          <br/>
+          <router-link :to="`/tenants/${clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">
+            <b-button variant="secondary" @click="navigate">Back to Clients</b-button>
+          </router-link>
+        </div>
+        <div v-else class="w-100 text-left" style="width: 600px;max-width: 600px;display: inline-block;">
           <b-tabs align="center" justified>
             <b-tab title="Step 1" :active="tabIndex===1" v-on:click="onTabClick(1)">
               <div class="pt-3 text-center tab-title">Admin Account Information</div>
@@ -217,16 +228,16 @@
                 </div>
               </div>
             </b-tab>
-            <b-tab title="Step 3" :active="tabIndex===3" :disabled="tabIndex < 3" v-on:click="onTabClick(3)">
-              <div style="padding: 20px;text-align: center;">
-                <div>
-                  <strong>Client ID</strong> : {{ newClientId }}
-                </div>
-                <div>
-                  <strong>Client Secret</strong> : {{ newClientSecret }}
-                </div>
-              </div>
-            </b-tab>
+            <!--            <b-tab title="Step 3" :active="tabIndex===3" :disabled="tabIndex < 3" v-on:click="onTabClick(3)">-->
+            <!--              <div style="padding: 20px;text-align: center;">-->
+            <!--                <div>-->
+            <!--                  <strong>Client ID</strong> : {{ newClientId }}-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                  <strong>Client Secret</strong> : {{ newClientSecret }}-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </b-tab>-->
           </b-tabs>
           <div class="pt-3 text-center">
             <b-button v-if="tabIndex > 1 && tabIndex <= 2" variant="secondary" v-on:click="onClickPrev" class="mr-3">
