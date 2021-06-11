@@ -1,5 +1,5 @@
 <template>
-  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <router-link :to="`/tenants/${clientId}/child-tenants/new`" v-slot="{ href, route, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Create New Tenant</b-button>
@@ -46,22 +46,28 @@
                 </b-tag>
               </b-td>
               <b-td>
-                <b-button variant="outline-primary" size="sm"
-                          v-if="tenant.hasAdminPrivileges && childTenant.status !== 'ACTIVE'"
-                          v-on:click="activateTenant(childTenant)">Activate
-                </b-button>
-                <b-button variant="outline-primary" size="sm"
-                          v-if="tenant.hasAdminPrivileges && childTenant.status === 'ACTIVE'"
-                          v-on:click="deactivateTenant(childTenant)"
-                          :class="{'ml-2':childTenant.status !== 'ACTIVE'}">
-                  Deactivate
-                </b-button>
+                <b-overlay :show="processingActivate[childTenant.clientId]"
+                           v-if="tenant.hasAdminPrivileges && childTenant.status !== 'ACTIVE'"
+                           rounded spinner-small spinner-variant="primary" class="d-inline-block">
+                  <b-button variant="outline-primary" size="sm" v-on:click="activateTenant(childTenant)">Activate
+                  </b-button>
+                </b-overlay>
+                <b-overlay :show="processingDeactivate[childTenant.clientId]"
+                           v-if="tenant.hasAdminPrivileges && childTenant.status === 'ACTIVE'"
+                           rounded spinner-small spinner-variant="primary" class="d-inline-block">
+                  <b-button variant="outline-primary" size="sm" v-on:click="deactivateTenant(childTenant)"
+                            :class="{'ml-2':childTenant.status !== 'ACTIVE'}">
+                    Deactivate
+                  </b-button>
+                </b-overlay>
               </b-td>
               <b-td>
-                <b-button variant="link" size="sm" v-if="childTenant.status === 'REQUESTED'"
-                          v-on:click="deleteTenant(childTenant)">
-                  <b-icon icon="trash"></b-icon>
-                </b-button>
+                <b-overlay :show="processingDelete[childTenant.clientId]" v-if="childTenant.status === 'REQUESTED'"
+                           rounded spinner-small spinner-variant="primary" class="d-inline-block">
+                  <b-button variant="link" size="sm" v-on:click="deleteTenant(childTenant)">
+                    <b-icon icon="trash"></b-icon>
+                  </b-button>
+                </b-overlay>
               </b-td>
             </b-tr>
 
@@ -109,6 +115,11 @@ export default {
   components: {TableOverlayInfo, TenantHome},
   data() {
     return {
+      processingDelete: {},
+      processingActivate: {},
+      processingDeactivate: {},
+      errors: [],
+
       activePage: 1,
       svgNotFound: svgNotFound,
       limit: 10
@@ -203,15 +214,42 @@ export default {
     getTenantLink({clientId}) {
       return `/tenants/${clientId}`;
     },
-    activateTenant({clientId}) {
-      this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "ACTIVE"})
+    async activateTenant({clientId}) {
+      this.processingActivate = {...this.processingActivate, [clientId]: true};
+      try {
+        await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "ACTIVE"});
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when activating the client '${name}'`,
+          source: error, variant: "danger"
+        });
+      }
+      this.processingActivate = {...this.processingActivate, [clientId]: false};
     },
-    deactivateTenant({clientId}) {
-      this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "DEACTIVATED"})
+    async deactivateTenant({clientId}) {
+      this.processingDeactivate = {...this.processingDeactivate, [clientId]: true};
+      try {
+        await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "DEACTIVATED"});
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when deactivating the client '${name}'`,
+          source: error, variant: "danger"
+        });
+      }
+      this.processingDeactivate = {...this.processingDeactivate, [clientId]: false};
     },
-    async deleteTenant({clientId}) {
-      await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "CANCELLED"})
+    async deleteTenant({clientId, name}) {
+      this.processingDelete = {...this.processingDelete, [clientId]: true};
+      try {
+        await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "CANCELLED"})
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when deleting the client '${name}'`,
+          source: error, variant: "danger"
+        });
+      }
       await this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
+      this.processingDelete = {...this.processingDelete, [clientId]: false};
     },
   }
 };
