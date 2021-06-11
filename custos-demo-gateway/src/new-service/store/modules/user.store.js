@@ -64,8 +64,8 @@ const actions = {
             email: updatedUser.email,
             realmRoles: updatedUser.realm_roles,
             clientRoles: updatedUser.client_roles,
-            attributes: updatedUser.attributes.map(({key, value}) => {
-                return {key, values: value};
+            attributes: updatedUser.attributes.map(({key, values}) => {
+                return {key, values};
             }),
             membershipType: updatedUser.membership_type,
             status: updatedUser.state
