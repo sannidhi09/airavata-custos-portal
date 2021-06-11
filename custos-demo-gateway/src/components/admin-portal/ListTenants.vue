@@ -248,7 +248,7 @@ export default {
           source: error, variant: "danger"
         });
       }
-      await this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
+      this.refreshData();
       this.processingDelete = {...this.processingDelete, [clientId]: false};
     },
   }
