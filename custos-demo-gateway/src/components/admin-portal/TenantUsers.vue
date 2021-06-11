@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Users" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome title="Users" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <table-overlay-info :rows="5" :columns="6" :data="users">
       <b-table-simple>
         <b-thead>
@@ -33,17 +33,24 @@
             </b-td>
             <b-td>
               <b-tag v-if="user.status === 'ACTIVE'" no-remove variant="success">Enabled</b-tag>
-              <b-tag v-else-if="user.status === 'PENDING_CONFIRMATION'" no-remove variant="warning">Disabled</b-tag>
+              <b-tag v-else-if="user.status === 'PENDING_CONFIRMATION'" no-remove variant="warning">Pending</b-tag>
+              <b-tag v-else-if="user.status === 'CONFIRMED'" no-remove variant="danger">Disabled</b-tag>
             </b-td>
             <b-td>
-              <b-button variant="outline-primary" size="sm" v-if="user.status === 'PENDING_CONFIRMATION'"
-                        v-on:click="enableUser(user)">
-                Enable
-              </b-button>
-              <b-button variant="outline-primary" size="sm" v-if="user.status === 'ACTIVE'"
-                        v-on:click="disableUser(user)">
-                Disable
-              </b-button>
+              <b-overlay :show="processingEnableUser[user.username]" v-if="user.status !== 'ACTIVE'"
+                         rounded spinner-small spinner-variant="primary" class="d-inline-block">
+                <b-button variant="outline-primary" size="sm"
+                          v-on:click="enableUser(user)">
+                  Enable
+                </b-button>
+              </b-overlay>
+              <b-overlay :show="processingDisableUser[user.username]" v-if="user.status === 'ACTIVE'"
+                         rounded spinner-small spinner-variant="primary" class="d-inline-block">
+                <b-button variant="outline-primary" size="sm"
+                          v-on:click="disableUser(user)">
+                  Disable
+                </b-button>
+              </b-overlay>
             </b-td>
           </b-tr>
         </b-tbody>
@@ -70,6 +77,13 @@ export default {
   name: "TenantUsers",
   store: store,
   components: {TableOverlayInfo, TenantHome},
+  data() {
+    return {
+      processingEnableUser: {},
+      processingDisableUser: {},
+      errors: []
+    }
+  },
   computed: {
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
@@ -83,11 +97,29 @@ export default {
     },
   },
   methods: {
-    enableUser({username}) {
-      this.$store.dispatch("user/enableUser", {username});
+    async enableUser({username}) {
+      this.processingEnableUser = {...this.processingEnableUser, [username]: true};
+      try {
+        await this.$store.dispatch("user/enableUser", {username});
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when enabling the user '${username}'`,
+          source: error, variant: "danger"
+        });
+      }
+      this.processingEnableUser = {...this.processingEnableUser, [username]: false};
     },
-    disableUser({username}) {
-      this.$store.dispatch("user/disableUser", {username});
+    async disableUser({username}) {
+      this.processingDisableUser = {...this.processingDisableUser, [username]: true};
+      try {
+        await this.$store.dispatch("user/disableUser", {username});
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when disabling the user '${username}'`,
+          source: error, variant: "danger"
+        });
+      }
+      this.processingDisableUser = {...this.processingDisableUser, [username]: false};
     }
   },
   beforeMount() {

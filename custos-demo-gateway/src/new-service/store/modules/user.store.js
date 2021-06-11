@@ -42,7 +42,7 @@ const actions = {
     },
     async disableUser({commit}, {username}) {
         await custosService.users.disableUser({username});
-        commit("SET_USER_STATUS", {username, status: "DEACTIVE"});
+        commit("SET_USER_STATUS", {username, status: "CONFIRMED"});
     },
     async updateUser({commit}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes}) {
         if (attributes && attributes.length > 0) {
