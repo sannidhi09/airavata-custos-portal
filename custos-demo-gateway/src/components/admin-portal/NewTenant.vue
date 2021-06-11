@@ -208,7 +208,7 @@
                       id="comment"
                       trim
                       size="sm"
-                      placeholder="Provide description of the new tenant and any other comments here (at least 15 characters long)">
+                      placeholder="Provide description of the new tenant and any other comments here.">
                   </b-form-input>
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
