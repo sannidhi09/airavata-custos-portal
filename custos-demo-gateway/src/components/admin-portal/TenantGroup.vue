@@ -1,7 +1,9 @@
 <template>
-  <TenantHome title="Group" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
-      <b-button variant="primary" v-b-modal="`modal-select-users-or-groups`">Add Members</b-button>
+      <b-overlay :show="processingAddNewUsers" rounded spinner-small spinner-variant="primary" class="d-inline-block">
+        <b-button variant="primary" v-b-modal="`modal-select-users-or-groups`">Add Members</b-button>
+      </b-overlay>
       <modal-select-users-or-groups :client-id="clientId" modal-id="modal-select-users-or-groups" title="Select Users"
                                     v-on:users="onAddNewUsers"/>
     </template>
@@ -11,6 +13,7 @@
           <b-tr>
             <b-th>Name</b-th>
             <b-th>Email</b-th>
+            <b-th></b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
@@ -18,9 +21,12 @@
             <b-td>{{ user.username }}</b-td>
             <b-td>{{ user.email }}</b-td>
             <b-td>
-              <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)">
-                <b-icon icon="trash"/>
-              </b-button>
+              <b-overlay :show="processingRemoveUser[user.username]"
+                         rounded spinner-small spinner-variant="primary" class="d-inline-block">
+                <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)">
+                  <b-icon icon="trash"/>
+                </b-button>
+              </b-overlay>
             </b-td>
           </b-tr>
         </b-tbody>
@@ -48,7 +54,21 @@ export default {
   name: "TenantGroup",
   components: {ModalSelectUsersOrGroups, TableOverlayInfo, TenantHome},
   store: store,
+  data() {
+    return {
+      processingRemoveUser: {},
+      processingAddNewUsers: false,
+      errors: []
+    };
+  },
   computed: {
+    title() {
+      if (this.group) {
+        return this.group.name;
+      } else {
+        return "";
+      }
+    },
     clientId() {
       return this.$route.params.clientId;
     },
@@ -73,18 +93,35 @@ export default {
   },
   methods: {
     async onAddNewUsers(newUsers) {
+      this.processingAddNewUsers = true;
       await Promise.all(newUsers.map(newUser => {
         return this.$store.dispatch("group/addUserToGroup", {
           groupId: this.groupId,
           username: newUser.username,
           membershipType: "MEMBER"
-        })
+        }).catch(error => {
+          this.errors.push({
+            title: `Unknown error when adding the user '${newUser.username}'`,
+            source: error, variant: "danger"
+          });
+        });
       }));
       this.refreshData();
+
+      this.processingAddNewUsers = false;
     },
     async onRemoveUser({username}) {
-      await this.$store.dispatch("group/removeUserFromGroup", {groupId: this.groupId, username});
+      this.processingRemoveUser = {...this.processingRemoveUser, [username]: true};
+      try {
+        await this.$store.dispatch("group/removeUserFromGroup", {groupId: this.groupId, username});
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when removing the user '${username}'`,
+          source: error, variant: "danger"
+        });
+      }
       this.refreshData();
+      this.processingRemoveUser = {...this.processingRemoveUser, [username]: false};
     },
     refreshData() {
       this.$store.dispatch("user/fetchUsers", {groupId: this.groupId, clientId: this.clientId});

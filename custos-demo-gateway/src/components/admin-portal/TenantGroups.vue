@@ -10,6 +10,7 @@
         <b-thead>
           <b-tr>
             <b-th>Name</b-th>
+            <b-th>Description</b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
@@ -19,6 +20,7 @@
                 <b-link :href="href" v-on:click="navigate">{{ group.name }}</b-link>
               </router-link>
             </b-td>
+            <b-td>{{ group.description }}</b-td>
           </b-tr>
         </b-tbody>
       </b-table-simple>
