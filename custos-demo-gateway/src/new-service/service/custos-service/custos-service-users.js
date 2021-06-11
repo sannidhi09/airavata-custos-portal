@@ -65,7 +65,7 @@ export default class CustosUsers {
             return this.custosService.axiosInstanceWithTokenAuthorization.get(
                 `${CustosService.ENDPOINTS.GROUPS}/user/group/memberships/child`,
                 {
-                    params: {"group.id": groupId}
+                    params: {"group.id": groupId, "client_id": clientId}
                 }
             ).then(({data: {profiles}}) => {
                 return profiles;

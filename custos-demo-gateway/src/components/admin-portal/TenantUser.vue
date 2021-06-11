@@ -10,8 +10,8 @@
       </div>
     </template>
 
-    <div>
-      <div style="display: flex; flex-direction: row;">
+    <b-overlay :show="processing">
+      <div class="p-2" style="display: flex; flex-direction: row;">
         <div style="flex: 1;padding-right: 10px;">
           <div class="pt-3">
             <label class="form-label" for="first-name">First Name</label>
@@ -176,11 +176,11 @@
         </div>
 
       </div>
-      <div class="pt-4">
+      <div class="p-2 pt-4">
         <b-button variant="primary" size="sm" v-on:click="onClickSave">Save</b-button>
         <b-button variant="secondary" size="sm" class="ml-3">Cancel</b-button>
       </div>
-    </div>
+    </b-overlay>
   </TenantHome>
 </template>
 
@@ -196,6 +196,9 @@ export default {
   store: store,
   data() {
     return {
+      processing: false,
+      errors: [],
+
       firstName: null,
       lastName: null,
       email: null,
@@ -223,7 +226,7 @@ export default {
         username: !!this.username && this.username.length > 0,
         firstName: !!this.firstName && this.firstName.length > 0,
         lastName: !!this.lastName && this.lastName.length > 0,
-        email: !!this.email && this.email.length > 0,
+        email: !!this.email && /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(this.email),
         realmRoles: true,
         clientRoles: true,
         attributes: true
@@ -287,22 +290,33 @@ export default {
         if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
       }
     },
-    onClickSave() {
+    async onClickSave() {
       this.makeFormVisited();
 
       if (this.isFormValid) {
-        this.$store.dispatch("user/updateUser", {
-          clientId: this.clientId,
-          username: this.username,
-          firstName: this.firstName,
-          lastName: this.lastName,
-          email: this.email,
-          realmRoles: this.realmRoles,
-          clientRoles: this.clientRoles,
-          attributes: this.attributes.map(({key, values}) => {
-            return {key: key, values: values.split(",").map(value => value.trim())};
-          }).filter(({key}) => key.length > 0)
-        });
+        this.processing = true;
+
+        try {
+          await this.$store.dispatch("user/updateUser", {
+            clientId: this.clientId,
+            username: this.username,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            realmRoles: this.realmRoles,
+            clientRoles: this.clientRoles,
+            attributes: this.attributes.map(({key, values}) => {
+              return {key: key, values: values.split(",").map(value => value.trim())};
+            }).filter(({key}) => key.length > 0)
+          });
+        } catch (error) {
+          this.errors.push({
+            title: "Unknown error when updating the user profile.",
+            source: error, variant: "danger"
+          });
+        }
+
+        this.processing = false;
       }
     }
   },
@@ -320,7 +334,8 @@ export default {
         });
       }
     }
-  },
+  }
+  ,
   mounted() {
     this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, username: this.username});
     this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true});

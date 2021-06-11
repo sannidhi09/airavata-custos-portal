@@ -178,19 +178,28 @@ export default {
   },
   watch: {
     activePage() {
-      this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
+      this.refreshData();
     },
     clientId() {
-      this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
+      this.resetPagination();
+      this.refreshData();
     },
     requesterEmail() {
-      this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
+      this.resetPagination();
+      this.refreshData();
     }
   },
   mounted() {
-    this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
+    this.resetPagination();
+    this.refreshData();
   },
   methods: {
+    resetPagination() {
+      this.activePage = 1;
+    },
+    refreshData() {
+      this.$store.dispatch("tenant/fetchTenants", this.tenantsListParams);
+    },
     getTenantLink({clientId}) {
       return `/tenants/${clientId}`;
     },

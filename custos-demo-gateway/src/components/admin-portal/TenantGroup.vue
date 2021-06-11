@@ -18,7 +18,7 @@
             <b-td>{{ user.username }}</b-td>
             <b-td>{{ user.email }}</b-td>
             <b-td>
-              <b-button variant="link" v-on:click="onRemoveUser(user)">
+              <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)">
                 <b-icon icon="trash"/>
               </b-button>
             </b-td>
@@ -59,7 +59,7 @@ export default {
       return this.$store.getters["group/getGroup"]({groupId: this.groupId})
     },
     users() {
-      return this.$store.getters["user/getUsers"]({groupId: this.groupId});
+      return this.$store.getters["user/getUsers"]({groupId: this.groupId, clientId: this.clientId});
     },
     breadcrumbLinks() {
       const _breadcrumbLinks = [{to: `/tenants/${this.clientId}/groups`, name: "Groups"}];
@@ -87,7 +87,7 @@ export default {
       this.refreshData();
     },
     refreshData() {
-      this.$store.dispatch("user/fetchUsers", {groupId: this.groupId});
+      this.$store.dispatch("user/fetchUsers", {groupId: this.groupId, clientId: this.clientId});
       this.$store.dispatch("group/fetchGroup", {groupId: this.groupId});
     }
   },
