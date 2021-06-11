@@ -31,8 +31,17 @@ export default {
   },
   computed: {
     typeheadData() {
-      // return this.users;
-      return this.users.concat(this.groups);
+      let _typeheadData = [];
+
+      if (this.groups) {
+        _typeheadData = _typeheadData.concat(this.groups);
+      }
+
+      if (this.users) {
+        _typeheadData = _typeheadData.concat(this.users);
+      }
+
+      return _typeheadData;
     },
     // typeheadDataSerializer() {
     //   return (obj) => {
@@ -46,37 +55,25 @@ export default {
     //   };
     // },
     users() {
-      const _users = this.$store.getters["user/getUsers"]({
+      return this.$store.getters["user/getUsers"]({
         clientId: this.clientId,
         limit: 5,
         offset: 0,
         username: this.usernameSearch
       });
-
-      if (_users) {
-        return _users;
-      } else {
-        return [];
-      }
     },
     groups() {
-      const _groups = this.$store.getters["group/getGroups"]({
+      return this.$store.getters["group/getGroups"]({
         clientId: this.clientId,
         limit: 5,
         offset: 0,
         groupId: this.groupId
       });
-
-      if (_groups) {
-        return _groups;
-      } else {
-        return [];
-      }
     }
   },
   watch: {
     usernameSearch() {
-      if (this.typeheadData.length === 0) {
+      if (!this.users || !this.groups) {
         this.refreshList();
       }
     }
