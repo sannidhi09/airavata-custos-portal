@@ -188,6 +188,7 @@
 import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
+import {VALIDATION_REGEX_EMAIL} from "@/components/validation-regex";
 // import TableOverlayInfo from "@/components/table-overlay-info";
 
 export default {
@@ -216,9 +217,9 @@ export default {
         firstName: this.firstName === null ? null : this.isValid.firstName,
         lastName: this.lastName === null ? null : this.isValid.lastName,
         email: this.email === null ? null : this.isValid.email,
-        realmRoles: this.realmRoles.email,
-        clientRoles: this.clientRoles.email,
-        attributes: this.attributes.email
+        realmRoles: null,
+        clientRoles: null,
+        attributes: null
       }
     },
     isValid() {
@@ -226,7 +227,7 @@ export default {
         username: !!this.username && this.username.length > 0,
         firstName: !!this.firstName && this.firstName.length > 0,
         lastName: !!this.lastName && this.lastName.length > 0,
-        email: !!this.email && /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(this.email),
+        email: !!this.email && VALIDATION_REGEX_EMAIL.test(this.email),
         realmRoles: true,
         clientRoles: true,
         attributes: true

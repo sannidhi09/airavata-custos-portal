@@ -227,6 +227,7 @@
 import store from "../../new-service/store";
 import TenantHome from "@/components/admin-portal/TenantHome";
 import {custosService} from "@/new-service/store/util/custos.util";
+import {VALIDATION_REGEX_DOMAIN, VALIDATION_REGEX_EMAIL, VALIDATION_REGEX_URI} from "@/components/validation-regex";
 
 export default {
   name: "TenantProfile",
@@ -297,15 +298,15 @@ export default {
         username: !!this.username && this.username.length >= 3,
         firstName: !!this.firstName && this.firstName.length > 0,
         lastName: !!this.lastName && this.lastName.length > 0,
-        email: !!this.email && this.email.length > 0,
+        email: !!this.email && VALIDATION_REGEX_EMAIL.test(this.email),
 
         tenantName: !!this.tenantName && this.tenantName.length > 0,
         redirectUris: this.redirectUris.map(redirectUri =>
-            /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(redirectUri)),
+            VALIDATION_REGEX_URI.test(redirectUri)),
         scope: true,
-        domain: /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/.test(this.domain),
-        clientUri: /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(this.clientUri),
-        logoUri: /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(this.logoUri),
+        domain: VALIDATION_REGEX_DOMAIN.test(this.domain),
+        clientUri: VALIDATION_REGEX_URI.test(this.clientUri),
+        logoUri: VALIDATION_REGEX_URI.test(this.logoUri),
         comment: true,
         applicationType: true
       }

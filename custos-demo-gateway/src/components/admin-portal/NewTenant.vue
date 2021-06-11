@@ -260,6 +260,7 @@
 import store from "../../new-service/store";
 import {custosService} from "@/new-service/store/util/custos.util";
 import TenantHome from "@/components/admin-portal/TenantHome";
+import {VALIDATION_REGEX_DOMAIN, VALIDATION_REGEX_EMAIL, VALIDATION_REGEX_URI} from "@/components/validation-regex";
 
 export default {
   components: {TenantHome},
@@ -339,7 +340,7 @@ export default {
         username: !!this.username && this.username.length >= 3,
         firstName: !!this.firstName && this.firstName.length > 0,
         lastName: !!this.lastName && this.lastName.length > 0,
-        email: !!this.email && this.email.length > 0,
+        email: !!this.email && VALIDATION_REGEX_EMAIL.test(this.email),
         password: !!this.password && /[a-z]/.test(this.password) && // checks for a-z
             /[0-9]/.test(this.password) && // checks for 0-9
             /\W|_/.test(this.password) && // checks for special char
@@ -348,11 +349,11 @@ export default {
 
         tenantName: !!this.tenantName && this.tenantName.length > 0,
         redirectUris: this.redirectUris.map(redirectUri =>
-            /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(redirectUri)),
+            VALIDATION_REGEX_URI.test(redirectUri)),
         scope: true,
-        domain: /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/.test(this.domain),
-        clientUri: /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(this.clientUri),
-        logoUri: /^((http|https):\/\/)(www.)?[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9].*/.test(this.logoUri),
+        domain: !!this.domain && VALIDATION_REGEX_DOMAIN.test(this.domain),
+        clientUri: !!this.clientUri && VALIDATION_REGEX_URI.test(this.clientUri),
+        logoUri: !!this.logoUri && VALIDATION_REGEX_URI.test(this.logoUri),
         comment: true,
         applicationType: true
       }
