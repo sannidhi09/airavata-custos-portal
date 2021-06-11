@@ -76,7 +76,9 @@ export default {
   },
   watch: {
     usernameSearch() {
-      this.refreshList();
+      if (this.typeheadData.length === 0) {
+        this.refreshList();
+      }
     }
   },
   methods: {
