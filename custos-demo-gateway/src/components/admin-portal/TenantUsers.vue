@@ -39,15 +39,13 @@
             <b-td>
               <b-overlay :show="processingEnableUser[user.username]" v-if="user.status !== 'ACTIVE'"
                          rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                <b-button variant="outline-primary" size="sm"
-                          v-on:click="enableUser(user)">
+                <b-button variant="outline-primary" size="sm" v-on:click="enableUser(user)">
                   Enable
                 </b-button>
               </b-overlay>
               <b-overlay :show="processingDisableUser[user.username]" v-if="user.status === 'ACTIVE'"
                          rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                <b-button variant="outline-primary" size="sm"
-                          v-on:click="disableUser(user)">
+                <b-button variant="outline-primary" size="sm" v-on:click="disableUser(user)">
                   Disable
                 </b-button>
               </b-overlay>
