@@ -248,6 +248,33 @@ export default new Router({
                 import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantEntityTypes")
         },
         {
+            path: "/tenants/:clientId/entities/new",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewEntity")
+        },
+        {
+            path: "/tenants/:clientId/entities",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantEntities")
+        },
+        {
+            path: "/tenants/:clientId/entities/:entityId",
+            name: "tenants",
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, next)
+            },
+            component: () =>
+                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantEntity")
+        },
+        {
             path: "/callback",
             name: "callback",
             component: () =>

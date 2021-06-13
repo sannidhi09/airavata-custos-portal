@@ -6,6 +6,7 @@ import CustosUsers from "./custos-service-users";
 import CustosIdentity from "./custos-service-identity";
 import CustosTenants from "./custos-service-tenants";
 import CustosSharing from "./custos-service-sharing";
+import CustosEntities from "./custos-service-entities";
 
 const httpAgent = new http.Agent({keepAlive: true});
 const httpsAgent = new https.Agent({keepAlive: true});
@@ -75,6 +76,11 @@ export default class CustosService {
      */
     _sharing = null;
 
+    /**
+     * @type {CustosEntities}
+     */
+    _entities = null;
+
     constructor({clientId, clientSecret, redirectURI, baseURL}) {
         this._clientId = clientId;
         this._clientSecret = clientSecret;
@@ -85,6 +91,7 @@ export default class CustosService {
         this._users = new CustosUsers(this);
         this._identity = new CustosIdentity(this);
         this._sharing = new CustosSharing(this);
+        this._entities = new CustosEntities(this);
     }
 
     get clientId() {
@@ -121,6 +128,10 @@ export default class CustosService {
 
     get sharing() {
         return this._sharing;
+    }
+
+    get entities() {
+        return this._entities;
     }
 
     get axiosInstance() {

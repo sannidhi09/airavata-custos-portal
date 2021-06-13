@@ -73,12 +73,12 @@
           <!--          </li>-->
 
           <li>
-            <router-link :to="`/tenants/${tenant}/audits`" v-slot="{ href, route, navigate}" tag="">
+            <router-link :to="`/tenants/${clientId}/entities`" v-slot="{ href, route, navigate}" tag="">
               <b-link @click="navigate" :href="href">Entities</b-link>
             </router-link>
           </li>
           <li>
-            <router-link :to="`/tenants/${tenant}/audits`" v-slot="{ href, route, navigate}" tag="">
+            <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">
               <b-link @click="navigate" :href="href">Secrets</b-link>
             </router-link>
           </li>

@@ -5,6 +5,7 @@ import user from "./modules/user.store";
 import group from "./modules/group.store";
 import tenant from "./modules/tenant.store";
 import sharing from "./modules/sharing.store";
+import entity from "./modules/entity.store";
 import auth from "./modules/auth.store";
 import ciLogon from "./modules/ci-logon.store";
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
         group,
         tenant,
         sharing,
+        entity,
         ciLogon
     },
     strict: debug,
