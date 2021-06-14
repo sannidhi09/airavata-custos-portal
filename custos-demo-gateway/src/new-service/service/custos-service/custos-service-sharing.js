@@ -55,4 +55,39 @@ export default class CustosSharing {
             }
         ).then(({data: {types}}) => types);
     }
+
+
+    async share({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+
+        let promises = [];
+
+        promises.concat(groupIds.map(groupId => {
+            return axiosInstance.post(
+                `${CustosService.ENDPOINTS.SHARING}/groups/share`,
+                {
+                    "client_id": clientId,
+                    "entity": {"id": entityId},
+                    "permission_type": {"id": permissionTypeId},
+                    "owner_id": [groupId],
+                    "cascade": true
+                }
+            );
+        }));
+
+        promises.concat(usernames.map(username => {
+            return axiosInstance.post(
+                `${CustosService.ENDPOINTS.SHARING}/users/share`,
+                {
+                    "client_id": clientId,
+                    "entity": {"id": entityId},
+                    "permission_type": {"id": permissionTypeId},
+                    "owner_id": [username],
+                    "cascade": true
+                }
+            );
+        }));
+
+        await Promise.all(promises);
+    }
 }

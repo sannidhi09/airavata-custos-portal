@@ -42,6 +42,9 @@ const actions = {
         });
 
         commit('SET_ENTITY_TYPES_LIST', {clientId, entityTypeIds});
+    },
+    async share(obj, {clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+        await custosService.sharing.share({clientId, entityId, permissionTypeId, groupIds, usernames});
     }
 }
 

@@ -16,7 +16,7 @@
           </b-tr>
         </b-thead>
         <b-tbody>
-          <b-tr v-for="entity in entities" :key="entity.entityId">
+          <b-tr v-for="(entity, entityIndex) in entities" :key="entity.entityId">
             <b-td>
               <router-link :to="`/tenants/${clientId}/entities/${entity.entityId}`" v-slot="{href, navigate}">
                 <b-link :href="href" v-on:click="navigate">{{ entity.name }}</b-link>
@@ -25,6 +25,15 @@
             <b-td>{{ entity.description }}</b-td>
             <b-td>{{ entity.createdAt }}</b-td>
             <b-td>{{ entity.updatedAt }}</b-td>
+            <b-td>
+              <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`">
+                <b-icon icon="share"></b-icon>
+              </b-button>
+              <modal-select-users-or-groups :client-id="clientId"
+                                            :modal-id="`modal-select-users-or-groups-${entityIndex}`"
+                                            title="Select Users" v-on:users="onShareToUsers(entity, $event)"
+                                            v-on:groups="onShareToGroups(entity, $event)"/>
+            </b-td>
           </b-tr>
         </b-tbody>
       </b-table-simple>
@@ -46,11 +55,12 @@
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
+import ModalSelectUsersOrGroups from "@/components/admin-portal/modals/modal-select-users-or-groups";
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {TableOverlayInfo, TenantHome},
+  components: {ModalSelectUsersOrGroups, TableOverlayInfo, TenantHome},
   computed: {
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
@@ -69,6 +79,32 @@ export default {
   methods: {
     refreshData() {
       this.$store.dispatch("entity/fetchEntities", {clientId: this.clientId, ownerId: this.currentUsername});
+    },
+    onShareToGroups({entityId}, groups) {
+      // alert("onShareToGroups 2 " + JSON.stringify(arguments));
+      // // return function (groups) {
+      // alert("onShareToGroups")
+      this.$store.dispatch("sharing/share", {
+        clientId: this.clientId,
+        entityId,
+        permissionTypeId: "VIEWER",
+        groupIds: groups.map(({groupId}) => groupId),
+        usernames: []
+      });
+      // };
+    },
+    onShareToUsers({entityId}, users) {
+      // alert("onShareToUsers 1 " + JSON.stringify(arguments))
+      // // return function (users) {
+      // alert("onShareToUsers")
+      this.$store.dispatch("sharing/share", {
+        clientId: this.clientId,
+        entityId,
+        permissionTypeId: "VIEWER",
+        groupIds: [],
+        usernames: users.map(({username}) => username)
+      });
+      // }
     }
   },
   mounted() {
