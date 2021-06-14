@@ -5,10 +5,10 @@
         <b-button variant="primary" v-b-modal="`modal-select-users-or-entities`">Share</b-button>
       </b-overlay>
       <modal-select-users-or-groups :client-id="clientId" modal-id="modal-select-users-or-entities"
-                                      title="Select Users"
-                                      v-on:users="onAddNewUsers"/>
+                                    title="Select Users"
+                                    v-on:users="onAddNewUsers"/>
     </template>
-    {{entity}}
+    {{ entity }}
   </TenantHome>
 </template>
 
@@ -91,8 +91,8 @@ export default {
       this.processingRemoveUser = {...this.processingRemoveUser, [username]: false};
     },
     refreshData() {
-      this.$store.dispatch("user/fetchUsers", {entityId: this.entityId, clientId: this.clientId});
-      this.$store.dispatch("entity/fetchEntity", {entityId: this.entityId});
+      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, entityId: this.entityId});
+      this.$store.dispatch("entity/fetchEntity", {clientId: this.clientId, entityId: this.entityId});
     }
   },
   beforeMount() {

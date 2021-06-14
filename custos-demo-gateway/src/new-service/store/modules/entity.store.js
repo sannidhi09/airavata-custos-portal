@@ -14,10 +14,11 @@ const actions = {
         const params = {clientId, ownerId};
         const queryString = JSON.stringify(params);
         const entities = await custosService.entities.getEntities(params);
-        const entityIds = entities.map(({id, name, description, parent_id, owner_id, created_at, updated_at, shared_count, full_text, binary_data}) => {
+        const entityIds = entities.map(({id, type, name, description, parent_id, owner_id, created_at, updated_at, shared_count, full_text, binary_data}) => {
             commit('SET_ENTITY', {
                 clientId,
                 entityId: id,
+                type,
                 name,
                 description,
                 parentId: parent_id,
@@ -40,6 +41,7 @@ const actions = {
         commit('SET_ENTITY', {
             clientId,
             entityId: entity.id,
+            type: entity.type,
             name: entity.name,
             description: entity.description,
             parentId: entity.parent_id,
@@ -57,12 +59,13 @@ const actions = {
 }
 
 const mutations = {
-    SET_ENTITY(state, {clientId, entityId, name, description, parentId, ownerId, createdAt, updatedAt, sharedCount, fullText, binaryData}) {
+    SET_ENTITY(state, {clientId, entityId, type, name, description, parentId, ownerId, createdAt, updatedAt, sharedCount, fullText, binaryData}) {
         state.entityMap = {
             ...state.entityMap,
             [entityId]: {
                 clientId,
                 entityId,
+                type,
                 name,
                 description,
                 parentId,

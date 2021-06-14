@@ -45,12 +45,12 @@ export default class CustosEntities {
 
     async getEntity({clientId, entityId}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
-        return axiosInstance.post(
-            `${CustosService.ENDPOINTS.SHARING}/entities`,
+        return axiosInstance.get(
+            `${CustosService.ENDPOINTS.SHARING}/entity`,
             {
-                params: {"entity": {"id": entityId}}
+                params: {"entity.id": entityId}
             }
-        ).then(({data: {entity_array}}) => entity_array);
+        ).then(({data}) => data);
     }
 
 

@@ -10,6 +10,7 @@
         <b-thead>
           <b-tr>
             <b-th>Name</b-th>
+            <b-th>Type</b-th>
             <b-th>Description</b-th>
             <b-th>Created</b-th>
             <b-th>Last Updated</b-th>
@@ -22,6 +23,7 @@
                 <b-link :href="href" v-on:click="navigate">{{ entity.name }}</b-link>
               </router-link>
             </b-td>
+            <b-td>{{ entity.type }}</b-td>
             <b-td>{{ entity.description }}</b-td>
             <b-td>{{ entity.createdAt }}</b-td>
             <b-td>{{ entity.updatedAt }}</b-td>
