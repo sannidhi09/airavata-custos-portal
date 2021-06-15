@@ -4,7 +4,7 @@
       <b-overlay :show="processingAddNewUsers" rounded spinner-small spinner-variant="primary" class="d-inline-block">
         <b-button variant="primary" v-b-modal="`modal-select-users-or-groups`">Share</b-button>
       </b-overlay>
-      <modal-share-entity :client-id="clientId" :entity-id="entityId"
+      <modal-share-entity v-if="entity" :client-id="clientId" :entity-id="entityId"
                           :modal-id="`modal-select-users-or-groups`"
                           :title="`Share Entity '${entity.name}'`"
                           v-on:close="refreshData"/>

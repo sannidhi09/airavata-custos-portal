@@ -17,7 +17,8 @@ export default class CustosService {
         USERS: "user-management/v1.0.0",
         GROUPS: "group-management/v1.0.0",
         TENANTS: "tenant-management/v1.0.0",
-        SHARING: "sharing-management/v1.0.0"
+        SHARING: "sharing-management/v1.0.0",
+        SECRETS: "resource-secret-management/v1.0.0"
     };
 
     /**

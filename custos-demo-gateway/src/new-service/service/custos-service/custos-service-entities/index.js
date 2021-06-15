@@ -1,4 +1,5 @@
-import CustosService from "./index";
+import CustosService from "../index";
+import CustosServiceEntitiesSecrets from "./custos-service-entities-secrets";
 
 export default class CustosEntities {
     /**
@@ -6,15 +7,29 @@ export default class CustosEntities {
      */
     _custosService = null;
 
+    /**
+     * @type {CustosServiceEntitiesSecrets}
+     */
+    _secrets = null;
+
     constructor(custosService) {
         this._custosService = custosService;
+        this._secrets = new CustosServiceEntitiesSecrets(this.custosService);
     }
 
     get custosService() {
         return this._custosService;
     }
 
+    get secrets() {
+        return this._secrets;
+    }
+
     async createEntity({clientId, entityId, name, description, type, ownerId}) {
+        if (type === "SECRET") {
+            entityId = await this.custosService.entities.secrets.createSecret({clientId, description, ownerId})
+        }
+
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.post(
             `${CustosService.ENDPOINTS.SHARING}/entity`,
@@ -58,17 +73,27 @@ export default class CustosEntities {
                 "client_id": clientId,
                 "owner_id": ownerId
             }
-        ).then(({data: {entity_array}}) => entity_array);
+            // ).then(({data: entity_array}) => entity_array);
+        ).then((res) => {
+            console.log(" $$$$$$$ getEntities ", res);
+            return res.data.entity_array;
+        });
     }
 
     async getEntity({clientId, entityId}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
-        return axiosInstance.get(
+        const {data} = await axiosInstance.get(
             `${CustosService.ENDPOINTS.SHARING}/entity`,
             {
                 params: {"entity.id": entityId}
             }
-        ).then(({data}) => data);
+        );
+        if (data.type === "SECRET") {
+            data.metadata = await this.custosService.entities.secrets.getSecretMetadata({clientId, entityId: data.id});
+            data.ext = await this.custosService.entities.secrets.getSecret({clientId, entityId: data.id});
+        }
+
+        return data;
     }
 
 

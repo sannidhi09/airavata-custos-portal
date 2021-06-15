@@ -50,7 +50,9 @@ const actions = {
             updatedAt: new Date(parseInt(entity.updated_at)).toLocaleString(),
             sharedCount: entity.shared_count,
             fullText: entity.full_text,
-            binaryData: entity.binary_data
+            binaryData: entity.binary_data,
+            metadata: entity.metadata,
+            ext: entity.ext
         });
     },
     async createEntity(obj, {clientId, entityId, name, description, type, ownerId}) {
@@ -62,7 +64,7 @@ const actions = {
 }
 
 const mutations = {
-    SET_ENTITY(state, {clientId, entityId, type, name, description, parentId, ownerId, createdAt, updatedAt, sharedCount, fullText, binaryData}) {
+    SET_ENTITY(state, {clientId, entityId, type, name, description, parentId, ownerId, createdAt, updatedAt, sharedCount, fullText, binaryData, metadata = {}, ext = {}}) {
         state.entityMap = {
             ...state.entityMap,
             [entityId]: {
@@ -77,7 +79,9 @@ const mutations = {
                 updatedAt,
                 sharedCount,
                 fullText,
-                binaryData
+                binaryData,
+                metadata,
+                ext
             }
         };
     },

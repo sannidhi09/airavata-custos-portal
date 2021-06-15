@@ -1,7 +1,10 @@
 <template>
   <table-overlay-info :rows="5" :columns="1" :data="entity ? [entity]: null">
-    <entity-view-secret v-if="entity.type === 'SECRET'" :entity-id="entityId" :client-id="clientId"/>
-    <entity-view-default v-else :entity-id="entityId" :client-id="clientId"/>
+    <div v-if="entity">
+      <entity-view-default :entity-id="entityId" :client-id="clientId"/>
+
+      <entity-view-secret v-if="entity.type === 'SECRET'" :entity-id="entityId" :client-id="clientId"/>
+    </div>
   </table-overlay-info>
 </template>
 
