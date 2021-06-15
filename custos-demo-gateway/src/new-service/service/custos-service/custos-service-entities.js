@@ -31,6 +31,25 @@ export default class CustosEntities {
         ).then(({data: {types}}) => types);
     }
 
+    async deleteEntity({clientId, entityId, name, description, type, ownerId}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.delete(
+            `${CustosService.ENDPOINTS.SHARING}/entity`,
+            {
+                data: {
+                    "client_id": clientId,
+                    "entity": {
+                        "id": entityId,
+                        "name": name,
+                        "description": description,
+                        "type": type,
+                        "owner_id": ownerId
+                    }
+                }
+            }
+        ).then(({data: {types}}) => types);
+    }
+
     async getEntities({clientId, ownerId}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.post(
