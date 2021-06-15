@@ -1,12 +1,17 @@
 <template>
   <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
-      <div style="font-size: 14px; font-weight: 500;">
-        <b-icon icon="envelope"></b-icon>
-        {{ email }}
-        <br/>
-        <b-icon icon="person"></b-icon>
-        {{ username }}
+      <div style="display: flex; flex-direction: row;">
+        <div style="font-size: 14px; font-weight: 500;padding-right: 20px;">
+          <b-icon icon="envelope"></b-icon>
+          {{ email }}
+          <br/>
+          <b-icon icon="person"></b-icon>
+          {{ username }}
+        </div>
+        <div>
+          <b-button variant="primary" v-on:click="onClickSave">Save</b-button>
+        </div>
       </div>
     </template>
 
@@ -175,10 +180,6 @@
 
         </div>
 
-      </div>
-      <div class="p-2 pt-4">
-        <b-button variant="primary" size="sm" v-on:click="onClickSave">Save</b-button>
-        <b-button variant="secondary" size="sm" class="ml-3">Cancel</b-button>
       </div>
     </b-overlay>
   </TenantHome>
