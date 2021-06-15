@@ -13,7 +13,7 @@
     </div>
 
     <div class="w-100" v-if="tenant" style="display: flex; flex-direction: row;">
-      <div style="width: 200px;" v-if="tenant.hasAdminPrivileges">
+      <div style="width: 200px;padding-top: 15px;" v-if="tenant.hasAdminPrivileges">
         <ul>
           <li>
             <router-link :to="`/tenants/${clientId}/profile`" v-slot="{ href, route, navigate}" tag="">
@@ -82,6 +82,18 @@
               <b-link @click="navigate" :href="href">Secrets</b-link>
             </router-link>
           </li>
+          <!--          <ul>-->
+          <!--            <li>-->
+          <!--              <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">-->
+          <!--                <b-link @click="navigate" :href="href">Docs</b-link>-->
+          <!--              </router-link>-->
+          <!--            </li>-->
+          <!--            <li>-->
+          <!--              <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">-->
+          <!--                <b-link @click="navigate" :href="href">Images</b-link>-->
+          <!--              </router-link>-->
+          <!--            </li>-->
+          <!--          </ul>-->
 
           <li v-if="tenant.type !== 'CHILD_TENANT'">
             <router-link :to="`/tenants/${tenant.clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">
@@ -184,5 +196,18 @@ ul li ul {
   padding: 0px;
 }
 
+ul li a {
+  background-color: #e2e3e46e;
+  width: 100%;
+  display: block;
+  padding: 5px 15px;
+  border-radius: 7px;
+  margin-top: 7px;
+}
 
+ul li ul li a {
+  background-color: transparent;
+  padding: 0px;
+  margin-top: 0px;
+}
 </style>
