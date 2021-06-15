@@ -1,5 +1,8 @@
 <template>
   <TenantHome title="New Role" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+    <template #header-right>
+      <b-button variant="primary" v-on:click="onSaveClick">Save</b-button>
+    </template>
     <b-overlay :show="processing">
       <div class="p-2 text-center">
         <div class="w-100 text-left" style="max-width: 500px;display: inline-block">
@@ -46,9 +49,6 @@
                 size="sm">
               <label class="form-label" for="composite">Composite</label>
             </b-form-checkbox>
-          </div>
-          <div class="pt-3">
-            <b-button variant="primary" v-on:click="onSaveClick">Save</b-button>
           </div>
         </div>
       </div>

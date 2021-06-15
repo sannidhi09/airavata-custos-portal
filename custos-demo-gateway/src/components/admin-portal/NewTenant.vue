@@ -1,5 +1,16 @@
 <template>
   <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+    <template #header-right>
+      <b-button v-if="tabIndex > 1 && tabIndex <= 2" variant="secondary" v-on:click="onClickPrev" class="mr-3">
+        Back
+      </b-button>
+      <b-button v-if="tabIndex === 1" variant="primary" v-on:click="onClickNext">
+        Next
+      </b-button>
+      <b-button v-if="tabIndex === 2" variant="primary" v-on:click="onClickNext">
+        Create Tenant
+      </b-button>
+    </template>
     <b-overlay :show="processing">
       <div class="pr-3 pl-3 text-center">
         <div class="w-100 text-center" style="color: #203A43;padding-top: 100px;" v-if="tabIndex===3">
@@ -228,28 +239,7 @@
                 </div>
               </div>
             </b-tab>
-            <!--            <b-tab title="Step 3" :active="tabIndex===3" :disabled="tabIndex < 3" v-on:click="onTabClick(3)">-->
-            <!--              <div style="padding: 20px;text-align: center;">-->
-            <!--                <div>-->
-            <!--                  <strong>Client ID</strong> : {{ newClientId }}-->
-            <!--                </div>-->
-            <!--                <div>-->
-            <!--                  <strong>Client Secret</strong> : {{ newClientSecret }}-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </b-tab>-->
           </b-tabs>
-          <div class="pt-3 text-center">
-            <b-button v-if="tabIndex > 1 && tabIndex <= 2" variant="secondary" v-on:click="onClickPrev" class="mr-3">
-              Back
-            </b-button>
-            <b-button v-if="tabIndex === 1" variant="primary" v-on:click="onClickNext">
-              Next
-            </b-button>
-            <b-button v-if="tabIndex === 2" variant="primary" v-on:click="onClickNext">
-              Create Tenant
-            </b-button>
-          </div>
         </div>
       </div>
     </b-overlay>

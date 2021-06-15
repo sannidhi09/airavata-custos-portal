@@ -1,5 +1,8 @@
 <template>
   <TenantHome title="New Entity" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+    <template #header-right>
+      <b-button variant="primary" v-on:click="create">Create</b-button>
+    </template>
     <b-overlay :show="processing">
       <div class="p-2 text-center">
         <div class="w-100 text-left" style="max-width: 600px;display: inline-block;">
@@ -25,9 +28,6 @@
                 trim
                 size="sm">
             </b-form-input>
-          </div>
-          <div class="pt-3">
-            <b-button variant="primary" v-on:click="create">Create</b-button>
           </div>
         </div>
       </div>

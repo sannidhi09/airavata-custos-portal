@@ -4,17 +4,19 @@
     <div class="w-100" id="nav">
       <router-view/>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import Header from "@/components/Header";
 import store from "./new-service/store";
+import Footer from "@/components/Footer";
 
 export default {
   name: 'App',
   store: store,
-  components: {Header},
+  components: {Footer, Header},
   methods: {
     redirectToLoginIfNotAuthenticated() {
       if (!this.authenticated && this.$router.currentRoute.path !== "/") {
