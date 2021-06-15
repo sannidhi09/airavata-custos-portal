@@ -26,13 +26,12 @@
               <!--                <b-checkbox/>-->
               <!--              </b-td>-->
               <b-td>
-                <router-link v-if="childTenant.status === 'ACTIVE'" :to="getTenantLink(childTenant)"
+                <router-link :to="getTenantLink(childTenant)"
                              v-slot="{ href, route, navigate}" tag="">
                   <b-link @click="navigate" :href="href">
                     {{ childTenant.clientId }}
                   </b-link>
                 </router-link>
-                <span v-else>{{ childTenant.clientId }}</span>
               </b-td>
               <b-td>{{ childTenant.name }}</b-td>
               <b-td>{{ childTenant.domain }}</b-td>
