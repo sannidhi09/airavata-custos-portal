@@ -1,5 +1,5 @@
 <template>
-  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <div style="font-size: 14px; font-weight: 500;">
         <b-icon icon="envelope"></b-icon>
@@ -188,7 +188,11 @@
 import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
-import {VALIDATION_REGEX_EMAIL} from "@/components/validation-regex";
+import {
+  VALIDATION_REGEX_EMAIL,
+  VALIDATION_REGEX_FIRST_NAME,
+  VALIDATION_REGEX_LAST_NAME
+} from "@/components/validation-regex";
 // import TableOverlayInfo from "@/components/table-overlay-info";
 
 export default {
@@ -225,8 +229,8 @@ export default {
     isValid() {
       return {
         username: !!this.username && this.username.length > 0,
-        firstName: !!this.firstName && this.firstName.length > 0,
-        lastName: !!this.lastName && this.lastName.length > 0,
+        firstName: !!this.firstName && VALIDATION_REGEX_FIRST_NAME.test(this.firstName),
+        lastName: !!this.lastName && VALIDATION_REGEX_LAST_NAME.test(this.lastName),
         email: !!this.email && VALIDATION_REGEX_EMAIL.test(this.email),
         realmRoles: true,
         clientRoles: true,
