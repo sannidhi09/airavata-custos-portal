@@ -128,11 +128,11 @@ export default {
   computed: {
     title() {
       if (this.tenant && this.tenant.type === "SUPER_TENANT") {
-        return "Admin Clients";
+        return "Admin Tenants";
       } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
-        return "Child Clients";
+        return "Child Tenants";
       } else {
-        return "Clients";
+        return "Tenants";
       }
     },
     breadcrumbLinks() {
@@ -220,7 +220,7 @@ export default {
         await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "ACTIVE"});
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when activating the client '${name}'`,
+          title: `Unknown error when activating the tenant '${name}'`,
           source: error, variant: "danger"
         });
       }
@@ -232,7 +232,7 @@ export default {
         await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "DEACTIVATED"});
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when deactivating the client '${name}'`,
+          title: `Unknown error when deactivating the tenant '${name}'`,
           source: error, variant: "danger"
         });
       }
@@ -244,7 +244,7 @@ export default {
         await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "CANCELLED"})
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when deleting the client '${name}'`,
+          title: `Unknown error when deleting the tenant '${name}'`,
           source: error, variant: "danger"
         });
       }

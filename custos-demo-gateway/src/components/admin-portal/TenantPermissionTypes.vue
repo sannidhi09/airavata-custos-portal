@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Roles" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome title="Permission Types" :breadcrumb-links="breadcrumbLinks">
     <template #header-right>
       <router-link :to="`/tenants/${clientId}/permission-types/new`" v-slot="{href, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Create New Permission Type</b-button>

@@ -272,20 +272,20 @@ export default {
   computed: {
     tenantsTitle() {
       if (this.tenant && this.tenant.type === "SUPER_TENANT") {
-        return "Admin Clients";
+        return "Admin Tenants";
       } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
-        return "Child Clients";
+        return "Child Tenants";
       } else {
-        return "Clients";
+        return "Tenants";
       }
     },
     title() {
       if (this.tenant && this.tenant.type === "SUPER_TENANT") {
-        return "New Admin Client";
+        return "New Admin Tenant";
       } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
-        return "New Child Client";
+        return "New Child Tenant";
       } else {
-        return "New Client";
+        return "New Tenant";
       }
     },
     clientId() {
