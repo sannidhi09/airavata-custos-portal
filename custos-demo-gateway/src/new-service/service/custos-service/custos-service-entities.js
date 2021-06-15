@@ -37,8 +37,7 @@ export default class CustosEntities {
             `${CustosService.ENDPOINTS.SHARING}/entities`,
             {
                 "client_id": clientId,
-                "owner_id": ownerId,
-                "search_criteria": [{"search_field": "ENTITY_TYPE_ID", "value": "DOC", "condition": "EQUAL"}]
+                "owner_id": ownerId
             }
         ).then(({data: {entity_array}}) => entity_array);
     }

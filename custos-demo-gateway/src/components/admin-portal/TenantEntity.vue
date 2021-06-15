@@ -2,11 +2,12 @@
   <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <b-overlay :show="processingAddNewUsers" rounded spinner-small spinner-variant="primary" class="d-inline-block">
-        <b-button variant="primary" v-b-modal="`modal-select-users-or-entities`">Share</b-button>
+        <b-button variant="primary" v-b-modal="`modal-select-users-or-groups`">Share</b-button>
       </b-overlay>
-      <modal-select-users-or-groups :client-id="clientId" modal-id="modal-select-users-or-entities"
-                                    title="Select Users"
-                                    v-on:users="onAddNewUsers"/>
+      <modal-share-entity :client-id="clientId" :entity-id="entity.entityId"
+                          :modal-id="`modal-select-users-or-groups`"
+                          :title="`Share Entity '${entity.name}'`"
+                          v-on:close="refreshData"/>
     </template>
     {{ entity }}
   </TenantHome>
@@ -15,11 +16,11 @@
 <script>
 import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
-import ModalSelectUsersOrGroups from "./modals/modal-select-users-or-groups";
+import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
 
 export default {
   name: "TenantEntity",
-  components: {ModalSelectUsersOrGroups, TenantHome},
+  components: {ModalShareEntity, TenantHome},
   store: store,
   data() {
     return {
@@ -36,18 +37,6 @@ export default {
         return "";
       }
     },
-    clientId() {
-      return this.$route.params.clientId;
-    },
-    entityId() {
-      return this.$route.params.entityId;
-    },
-    entity() {
-      return this.$store.getters["entity/getEntity"]({entityId: this.entityId})
-    },
-    users() {
-      return this.$store.getters["user/getUsers"]({entityId: this.entityId, clientId: this.clientId});
-    },
     breadcrumbLinks() {
       const _breadcrumbLinks = [{to: `/tenants/${this.clientId}/entities`, name: "Entities"}];
 
@@ -56,42 +45,19 @@ export default {
       }
 
       return _breadcrumbLinks;
+    },
+    clientId() {
+      return this.$route.params.clientId;
+    },
+    entityId() {
+      return this.$route.params.entityId;
+    },
+    entity() {
+      return this.$store.getters["entity/getEntity"]({entityId: this.entityId})
     }
   },
   methods: {
-    async onAddNewUsers(newUsers) {
-      this.processingAddNewUsers = true;
-      await Promise.all(newUsers.map(newUser => {
-        return this.$store.dispatch("entity/addUserToEntity", {
-          entityId: this.entityId,
-          username: newUser.username,
-          membershipType: "MEMBER"
-        }).catch(error => {
-          this.errors.push({
-            title: `Unknown error when adding the user '${newUser.username}'`,
-            source: error, variant: "danger"
-          });
-        });
-      }));
-      this.refreshData();
-
-      this.processingAddNewUsers = false;
-    },
-    async onRemoveUser({username}) {
-      this.processingRemoveUser = {...this.processingRemoveUser, [username]: true};
-      try {
-        await this.$store.dispatch("entity/removeUserFromEntity", {entityId: this.entityId, username});
-      } catch (error) {
-        this.errors.push({
-          title: `Unknown error when removing the user '${username}'`,
-          source: error, variant: "danger"
-        });
-      }
-      this.refreshData();
-      this.processingRemoveUser = {...this.processingRemoveUser, [username]: false};
-    },
     refreshData() {
-      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, entityId: this.entityId});
       this.$store.dispatch("entity/fetchEntity", {clientId: this.clientId, entityId: this.entityId});
     }
   },

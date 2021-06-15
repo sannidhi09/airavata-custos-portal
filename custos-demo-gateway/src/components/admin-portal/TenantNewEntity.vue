@@ -29,6 +29,27 @@
                 size="sm">
             </b-form-input>
           </div>
+          <div class="pt-3">
+            <label class="form-label" for="entityTypeId">Entity Type</label>
+            <button-overlay :show="!entityTypes" class="w-100">
+              <p class="w-100" v-if="entityTypes && entityTypes.length === 0">
+                There's no entity types available.
+                <router-link :to="`/tenants/${this.clientId}/entity-types/new`">Create New Entity Type</router-link>
+              </p>
+              <b-form-select
+                  v-model="entityTypeId"
+                  :state="inputState.entityTypeId"
+                  id="entityTypeId"
+                  trim
+                  size="sm"
+                  :disabled="entityTypes && entityTypes.length === 0">
+                <b-form-select-option v-for="(entityType, entityTypeIndex) in entityTypes" :key="entityTypeIndex"
+                                      :value="entityType.id">
+                  {{ entityType.id }} - {{ entityType.name }} - {{ entityType.description }}
+                </b-form-select-option>
+              </b-form-select>
+            </button-overlay>
+          </div>
         </div>
       </div>
     </b-overlay>
@@ -38,11 +59,12 @@
 <script>
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
+import ButtonOverlay from "@/components/button-overlay";
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {TenantHome},
+  components: {ButtonOverlay, TenantHome},
   data() {
     return {
       processing: false,
@@ -50,8 +72,9 @@ export default {
 
       name: null,
       description: null,
+      entityTypeId: null,
 
-      inputFieldsList: ["name", "description"]
+      inputFieldsList: ["name", "description", "entityTypeId"]
     };
   },
   computed: {
@@ -63,12 +86,14 @@ export default {
       return {
         name: this.name === null ? null : this.isValid.name,
         description: this.description === null ? null : this.isValid.description,
+        entityTypeId: this.entityTypeId === null ? null : this.isValid.entityTypeId,
       }
     },
     isValid() {
       return {
         name: !!this.name && this.name.length >= 2,
-        description: true
+        description: true,
+        entityTypeId: !!this.entityTypeId
       }
     },
     isFormValid() {
@@ -84,6 +109,9 @@ export default {
         {to: `/tenants/${this.clientId}/entities`, name: "Entities"},
         {to: `/tenants/${this.clientId}/entities/new`, name: "New"}
       ];
+    },
+    entityTypes() {
+      return this.$store.getters["sharing/getEntityTypes"]({clientId: this.clientId});
     }
   },
   methods: {
@@ -104,7 +132,7 @@ export default {
             clientId: this.clientId,
             name: this.name,
             description: this.description,
-            type: "DOC",
+            type: this.entityTypeId,
             ownerId: this.$store.getters["auth/currentUsername"]
           });
           await this.$router.push(`/tenants/${this.clientId}/entities`);
@@ -118,6 +146,9 @@ export default {
         this.processing = false;
       }
     }
+  },
+  beforeMount() {
+    this.$store.dispatch("sharing/fetchEntityTypes", {clientId: this.clientId});
   }
 }
 </script>

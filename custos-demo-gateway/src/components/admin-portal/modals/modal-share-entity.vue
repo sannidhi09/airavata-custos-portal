@@ -152,7 +152,7 @@ export default {
       for (let i = 0; i < this.owners.length; i++) {
         const owner = this.owners[i];
         if (owner.dropped) {
-          this.$store.dispatch("sharing/dropShare", {
+          this.$store.dispatch("sharing/dropEntitySharedOwner", {
             clientId: this.clientId,
             entityId: this.entityId,
             permissionTypeId: owner.permissionTypeId,
@@ -160,7 +160,7 @@ export default {
             usernames: owner.ownerType === "user" ? [owner.ownerId] : []
           });
         } else if (!owner.saved && owner.permissionTypeId) {
-          this.$store.dispatch("sharing/share", {
+          this.$store.dispatch("sharing/shareEntity", {
             clientId: this.clientId,
             entityId: this.entityId,
             permissionTypeId: owner.permissionTypeId,
