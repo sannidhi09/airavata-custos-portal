@@ -4,12 +4,12 @@
       <b-overlay :show="processingAddNewUsers" rounded spinner-small spinner-variant="primary" class="d-inline-block">
         <b-button variant="primary" v-b-modal="`modal-select-users-or-groups`">Share</b-button>
       </b-overlay>
-      <modal-share-entity :client-id="clientId" :entity-id="entity.entityId"
+      <modal-share-entity :client-id="clientId" :entity-id="entityId"
                           :modal-id="`modal-select-users-or-groups`"
                           :title="`Share Entity '${entity.name}'`"
                           v-on:close="refreshData"/>
     </template>
-    {{ entity }}
+    <entity-view :client-id="clientId" :entity-id="entityId"/>
   </TenantHome>
 </template>
 
@@ -17,10 +17,11 @@
 import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
+import EntityView from "@/components/admin-portal/block/entity-view/entity-view";
 
 export default {
   name: "TenantEntity",
-  components: {ModalShareEntity, TenantHome},
+  components: {EntityView, ModalShareEntity, TenantHome},
   store: store,
   data() {
     return {
