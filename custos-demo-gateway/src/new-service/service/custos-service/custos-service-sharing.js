@@ -56,7 +56,7 @@ export default class CustosSharing {
         ).then(({data: {types}}) => types);
     }
 
-    async getSharedUsers({clientId, entityId}) {
+    async getSharedOwners({clientId, entityId}) {
 
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
 
@@ -72,53 +72,9 @@ export default class CustosSharing {
         console.log(" res : ", res);
 
         return res;
-
-
-        // const permissionTypes = await this.getPermissionTypes({clientId});
-        // const sharedUsers = [];
-        // await Promise.all(permissionTypes.map(async permissionType => {
-        //     const {data: {owner_ids}} = await axiosInstance.get(
-        //         `${CustosService.ENDPOINTS.SHARING}/users/share`,
-        //         {
-        //             params: {
-        //                 "entity.id": entityId,
-        //                 "permission_type.id": permissionType.id
-        //             }
-        //         }
-        //     );
-        //
-        //     for (let i = 0; i < owner_ids.length; i++) {
-        //         sharedUsers.push({"username": owner_ids[i], permissionTypeId: permissionType.id});
-        //     }
-        // }));
-        //
-        // return sharedUsers;
     }
 
-    async getSharedGroups({clientId, entityId}) {
-        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
-        const permissionTypes = await this.getPermissionTypes({clientId});
-        const sharedUsers = [];
-        await Promise.all(permissionTypes.map(async permissionType => {
-            const {data: {owner_ids}} = await axiosInstance.get(
-                `${CustosService.ENDPOINTS.SHARING}/groups/share`,
-                {
-                    params: {
-                        "entity.id": entityId,
-                        "permission_type.id": permissionType.id
-                    }
-                }
-            );
-
-            for (let i = 0; i < owner_ids.length; i++) {
-                sharedUsers.push({"groupId": owner_ids[i], permissionTypeId: permissionType.id});
-            }
-        }));
-
-        return sharedUsers;
-    }
-
-    async share({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+    async shareEntity({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
 
         let promises = [];
@@ -152,7 +108,7 @@ export default class CustosSharing {
         await Promise.all(promises);
     }
 
-    async dropShare({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+    async dropEntitySharedOwner({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
 
         let promises = [];

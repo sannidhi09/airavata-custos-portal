@@ -71,7 +71,7 @@ export default {
       return this.$store.getters["sharing/getPermissionTypes"]({clientId: this.clientId});
     },
     savedOwners() {
-      return this.$store.getters["sharing/getSharedOwners"]({clientId: this.clientId, entityId: this.entityId});
+      return this.$store.getters["sharing/getEntitySharedOwners"]({clientId: this.clientId, entityId: this.entityId});
     },
     notDroppedOwners() {
       return this.owners.filter(({dropped}) => !dropped);
