@@ -13,7 +13,7 @@
               <!--              <b-th>-->
               <!--                <b-checkbox/>-->
               <!--              </b-th>-->
-              <b-th>Client ID</b-th>
+              <b-th>Custos OAuth Client ID</b-th>
               <b-th>Name</b-th>
               <b-th>Domain</b-th>
               <b-th>Status</b-th>
