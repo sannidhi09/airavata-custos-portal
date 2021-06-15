@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="New Permission Types" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome title="New Permission Types" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <b-button variant="primary" v-on:click="onSaveClick">Save</b-button>
     </template>

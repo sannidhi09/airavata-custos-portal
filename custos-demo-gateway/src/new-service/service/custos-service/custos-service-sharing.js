@@ -30,8 +30,10 @@ export default class CustosSharing {
         return axiosInstance.delete(
             `${CustosService.ENDPOINTS.SHARING}/permission/type`,
             {
-                "client_id": clientId,
-                "permission_type": {id, name, description}
+                data: {
+                    "client_id": clientId,
+                    "permission_type": {id, name, description}
+                }
             }
         );
     }
@@ -44,6 +46,30 @@ export default class CustosSharing {
                 params: {"client_id": clientId}
             }
         ).then(({data: {types}}) => types);
+    }
+
+    async createEntityType({clientId, id, name, description = null}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.post(
+            `${CustosService.ENDPOINTS.SHARING}/entity/type`,
+            {
+                "client_id": clientId,
+                "entity_type": {id, name, description}
+            }
+        );
+    }
+
+    async deleteEntityType({clientId, id, name, description = null}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.delete(
+            `${CustosService.ENDPOINTS.SHARING}/entity/type`,
+            {
+                data: {
+                    "client_id": clientId,
+                    "entity_type": {id, name, description}
+                }
+            }
+        );
     }
 
     async getEntityTypes({clientId}) {

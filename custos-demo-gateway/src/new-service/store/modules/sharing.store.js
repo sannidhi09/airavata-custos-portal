@@ -33,6 +33,16 @@ const actions = {
 
         commit('SET_PERMISSION_TYPES_LIST', {clientId, permissionTypeIds});
     },
+    async createEntityType({commit}, {clientId, id, name, description = null}) {
+        await custosService.sharing.createEntityType({clientId, id, name, description});
+
+        commit('SET_ENTITY_TYPE', {clientId, id, name, description});
+    },
+    async deleteEntityType({commit}, {clientId, id, name, description = null}) {
+        await custosService.sharing.deleteEntityType({clientId, id, name, description});
+
+        commit('DELETE_ENTITY_TYPE', {clientId, id, name, description});
+    },
     async fetchEntityTypes({commit}, {clientId}) {
         const entityTypes = await custosService.sharing.getEntityTypes({clientId});
         console.log("##### fetchEntityTypes : ", entityTypes);

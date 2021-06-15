@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Permission Types" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome title="Permission Types" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <router-link :to="`/tenants/${clientId}/permission-types/new`" v-slot="{href, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Create New Permission Type</b-button>
@@ -66,7 +66,7 @@ export default {
       this.$store.dispatch("sharing/fetchPermissionTypes", {clientId: this.clientId});
     },
     async onClickDelete({id, name, description}) {
-      this.processingDelete = {...this.permissionTypes, [id]: true};
+      this.processingDelete = {...this.processingDelete, [id]: true};
 
       try {
         await this.$store.dispatch("sharing/deletePermissionType", {clientId: this.clientId, id, name, description});
@@ -78,7 +78,7 @@ export default {
         });
       }
 
-      this.processingDelete = {...this.permissionTypes, [id]: false};
+      this.processingDelete = {...this.processingDelete, [id]: false};
     }
   },
   mounted() {
