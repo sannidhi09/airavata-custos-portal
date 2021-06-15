@@ -130,12 +130,25 @@ export default new Router({
         {
             path: "/tenants/:clientId",
             name: "tenants",
-            beforeEnter: async (to, from, next) => {
-                next(`/tenants/${to.params.clientId}/profile`);
-            }
             // beforeEnter: async (to, from, next) => {
-            //     await _validateAuthenticationBeforeEnter(to, from, next)
-            // },
+            //     next(`/tenants/${to.params.clientId}/profile`);
+            // }
+            beforeEnter: async (to, from, next) => {
+                await _validateAuthenticationBeforeEnter(to, from, async (val) => {
+                    if (val === true) {
+                        await store.dispatch("tenant/fetchTenant", {clientId: to.params.clientId});
+                        const tenant = store.getters["tenant/getTenant"]({clientId: to.params.clientId});
+                        if (tenant.hasAdminPrivileges || tenant.type === "CHILD_TENANT") {
+                            next(`/tenants/${to.params.clientId}/profile`);
+                        } else {
+                            next(`/tenants/${to.params.clientId}/child-tenants`);
+                        }
+                    } else {
+                        next(val);
+                    }
+                })
+
+            },
             // component: () =>
             //     import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantHome")
         },
