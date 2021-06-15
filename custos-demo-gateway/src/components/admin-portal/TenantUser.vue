@@ -249,12 +249,26 @@ export default {
     user() {
       return this.$store.getters["user/getUser"]({clientId: this.clientId, username: this.username})
     },
+    tenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
+    },
     breadcrumbLinks() {
-      const _breadcrumbLinks = [{to: `/tenants/${this.clientId}/users`, name: "Users"}];
+      const _breadcrumbLinks = [];
+
+      if (this.tenant) {
+        _breadcrumbLinks.push({
+          to: `/tenants/${this.clientId}/users`,
+          name: "Users",
+          disabled: !this.tenant.hasAdminPrivileges
+        });
+      }
+
       if (this.user) {
+        // alert("this.tenant.hasAdminPrivileges " + this.tenant.hasAdminPrivileges)
         _breadcrumbLinks.push({
           to: `/tenants/${this.clientId}/users/${this.username}`,
-          name: this.title
+          name: this.title,
+          disabled: !this.tenant.hasAdminPrivileges
         });
       }
 
