@@ -28,13 +28,15 @@
             <b-td>{{ entity.createdAt }}</b-td>
             <b-td>{{ entity.updatedAt }}</b-td>
             <b-td>
+              {{ entity.sharedCount }}
               <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`">
                 <b-icon icon="share"></b-icon>
               </b-button>
-              <modal-select-users-or-groups :client-id="clientId"
-                                            :modal-id="`modal-select-users-or-groups-${entityIndex}`"
-                                            title="Select Users" v-on:users="onShareToUsers(entity, $event)"
-                                            v-on:groups="onShareToGroups(entity, $event)"/>
+              <modal-share-entity :client-id="clientId" :entity-id="entity.entityId"
+                                  :modal-id="`modal-select-users-or-groups-${entityIndex}`"
+                                  :title="`Share Entity '${entity.name}'`"
+                                  v-on:close="refreshData"
+              />
             </b-td>
           </b-tr>
         </b-tbody>
@@ -57,12 +59,12 @@
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
-import ModalSelectUsersOrGroups from "@/components/admin-portal/modals/modal-select-users-or-groups";
+import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {ModalSelectUsersOrGroups, TableOverlayInfo, TenantHome},
+  components: {ModalShareEntity, TableOverlayInfo, TenantHome},
   computed: {
     clientId() {
       console.log("this.$route.params : ", this.$route.params);

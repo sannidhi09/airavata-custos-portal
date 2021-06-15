@@ -5,7 +5,9 @@ const getDefaultState = () => {
         permissionTypesMap: {},
         permissionTypesListMap: {},
         entityTypesMap: {},
-        entityTypesListMap: {}
+        entityTypesListMap: {},
+        entitySharedUsersListMap: {},
+        entitySharedGroupsListMap: {}
     }
 };
 
@@ -45,10 +47,36 @@ const actions = {
     },
     async share(obj, {clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
         await custosService.sharing.share({clientId, entityId, permissionTypeId, groupIds, usernames});
-    }
+    },
+    async dropShare(obj, {clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+        await custosService.sharing.dropShare({clientId, entityId, permissionTypeId, groupIds, usernames});
+    },
+    async fetchSharedOwners({commit}, {clientId, entityId}) {
+        let entitySharedUsersList = await custosService.sharing.getSharedUsers({clientId, entityId});
+        entitySharedUsersList = entitySharedUsersList.map(({owner_id, owner_type, permission}) => {
+            return {ownerId: owner_id, ownerType: owner_type, permission: permission};
+        });
+        commit('SET_ENTITY_SHARED_USERS_LIST_MAP', {entityId, entitySharedUsersList});
+    },
+    // async fetchSharedGroups({commit}, {clientId, entityId}) {
+    //     const entitySharedGroupsList = await custosService.sharing.getSharedGroups({clientId, entityId});
+    //     commit('SET_ENTITY_SHARED_GROUPS_LIST_MAP', {entityId, entitySharedGroupsList});
+    // }
 }
 
 const mutations = {
+    SET_ENTITY_SHARED_USERS_LIST_MAP(state, {entityId, entitySharedUsersList}) {
+        state.entitySharedUsersListMap = {
+            ...state.entitySharedUsersListMap,
+            [entityId]: entitySharedUsersList
+        }
+    },
+    SET_ENTITY_SHARED_GROUPS_LIST_MAP(state, {entityId, entitySharedGroupsList}) {
+        state.entitySharedGroupsListMap = {
+            ...state.entitySharedGroupsListMap,
+            [entityId]: entitySharedGroupsList
+        }
+    },
     SET_PERMISSION_TYPE(state, {clientId, id, name, description}) {
         state.permissionTypesMap = {
             ...state.permissionTypesMap,
@@ -98,6 +126,24 @@ const mutations = {
 }
 
 const getters = {
+    getSharedOwners(state) {
+        return ({entityId}) => {
+            if (state.entitySharedUsersListMap[entityId]) {
+                return state.entitySharedUsersListMap[entityId];
+            } else {
+                return null;
+            }
+        }
+    },
+    // getEntitySharedGroups(state) {
+    //     return ({entityId}) => {
+    //         if (state.entitySharedGroupsListMap[entityId]) {
+    //             return state.entitySharedGroupsListMap[entityId];
+    //         } else {
+    //             return null;
+    //         }
+    //     }
+    // },
     getPermissionTypes(state, getters) {
         return ({clientId}) => {
             if (state.permissionTypesListMap[clientId]) {
