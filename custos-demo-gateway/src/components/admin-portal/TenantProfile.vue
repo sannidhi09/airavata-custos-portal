@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Profile" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <b-button variant="primary" v-on:click="onClickSave">Save Changes</b-button>
     </template>
@@ -263,8 +263,9 @@ export default {
     }
   },
   computed: {
+    title: () => "Tenant Profile",
     breadcrumbLinks() {
-      return [{to: `/tenants/${this.clientId}/profile`, name: "Profile"}];
+      return [{to: `/tenants/${this.clientId}/profile`, name: this.title}];
     },
     clientId() {
       if (this.$route.params.clientId) {

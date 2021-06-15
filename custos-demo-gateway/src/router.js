@@ -131,7 +131,7 @@ export default new Router({
             path: "/tenants/:clientId",
             name: "tenants",
             beforeEnter: async (to, from, next) => {
-                next(`/tenants/${to.params.clientId}/child-tenants`);
+                next(`/tenants/${to.params.clientId}/profile`);
             }
             // beforeEnter: async (to, from, next) => {
             //     await _validateAuthenticationBeforeEnter(to, from, next)
