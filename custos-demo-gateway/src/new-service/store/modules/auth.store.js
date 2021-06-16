@@ -20,13 +20,15 @@ const actions = {
             refreshToken: custosService.identity.refreshToken
         });
     },
-    async fetchAuthorizationEndpoint({ciLogonInstitutionEntityId = null} = {}) {
+    async fetchAuthorizationEndpoint(obj, {ciLogonInstitutionEntityId = null} = {}) {
         const {clientId, redirectURI} = custosService;
         const {data: {authorization_endpoint}} = await custosService.identity.getOpenIdConfig();
-        let url = `${authorization_endpoint}?response_type=code&client_id=${clientId}&redirect_uri=${redirectURI}&scope=openid&kc_idp_hint=oidc`;
+        let url = `${authorization_endpoint}?response_type=code&client_id=${clientId}&redirect_uri=${redirectURI}&scope=openid`;
 
         if (ciLogonInstitutionEntityId) {
-            url += `&kc_idp_hint=${ciLogonInstitutionEntityId}`;
+            url += `&kc_idp_hint=oidc&idphint=${ciLogonInstitutionEntityId}`;
+        } else {
+            url += `&kc_idp_hint=oidc`;
         }
 
         console.log("CI LOGON : ", url);
