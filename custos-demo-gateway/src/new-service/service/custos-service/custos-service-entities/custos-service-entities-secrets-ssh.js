@@ -1,6 +1,6 @@
-import CustosService from "../../index";
+import CustosService from "../index";
 
-export default class CustosServiceEntitiesSecrets {
+export default class CustosServiceEntitiesSecretsSSH {
     /**
      * @type {CustosService}
      */
@@ -43,20 +43,5 @@ export default class CustosServiceEntitiesSecrets {
         );
 
         return data;
-    }
-
-    async getSecretMetadata({clientId, entityId = []}) {
-        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
-        const {data: {metadata}} = await axiosInstance.get(
-            `${CustosService.ENDPOINTS.SECRETS}/secret/summaries`,
-            {
-                params: {
-                    client_id: clientId,
-                    accessible_tokens: entityId
-                }
-            }
-        );
-
-        return metadata[0];
     }
 }
