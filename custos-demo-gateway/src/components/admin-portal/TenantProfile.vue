@@ -328,7 +328,10 @@ export default {
       return _isFormValid;
     },
     requesterEmail() {
-      return this.$store.getters["user/getUser"]({username: this.$store.getters["auth/currentUsername"]}).email;
+      return this.$store.getters["user/getUser"]({
+        clientId: this.clientId,
+        username: this.$store.getters["auth/currentUsername"]
+      }).email;
     }
   },
   watch: {

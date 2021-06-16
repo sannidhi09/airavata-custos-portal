@@ -486,7 +486,7 @@ export default {
   },
   async mounted() {
     const username = await this.$store.getters["auth/currentUsername"];
-    const user = await this.$store.getters["user/getUser"]({username});
+    const user = await this.$store.getters["user/getUser"]({clientId: this.clientId, username});
     if (user) {
       this.username = user.username;
       this.firstName = user.firstName;

@@ -50,7 +50,7 @@ export default {
       const _selectedUsers = [];
       for (let username in this.selectedUsersMap) {
         if (this.selectedUsersMap[username]) {
-          _selectedUsers.push(this.$store.getters["user/getUser"]({username}));
+          _selectedUsers.push(this.$store.getters["user/getUser"]({clientId: this.clientId, username}));
         }
       }
 

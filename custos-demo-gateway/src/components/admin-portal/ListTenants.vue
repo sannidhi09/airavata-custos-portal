@@ -164,7 +164,10 @@ export default {
       return activeTenants;
     },
     currentUser() {
-      return this.$store.getters["user/getUser"]({username: this.$store.getters["auth/currentUsername"]});
+      return this.$store.getters["user/getUser"]({
+        clientId: this.clientId,
+        username: this.$store.getters["auth/currentUsername"]
+      });
     },
     requesterEmail() {
       if (this.currentUser) {

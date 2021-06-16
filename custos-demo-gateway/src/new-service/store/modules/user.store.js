@@ -19,6 +19,7 @@ const actions = {
             {id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type, state}
         ) => {
             commit("SET_USER", {
+                clientId,
                 id,
                 username,
                 firstName: first_name,
@@ -34,15 +35,15 @@ const actions = {
             return username;
         });
 
-        commit("SET_USER_LIST", {queryString, usernames})
+        commit("SET_USER_LIST", {clientId, queryString, usernames})
     },
     async enableUser({commit}, {clientId, username}) {
         await custosService.users.enableUser({clientId, username});
-        commit("SET_USER_STATUS", {username, status: "ACTIVE"});
+        commit("SET_USER_STATUS", {clientId, username, status: "ACTIVE"});
     },
     async disableUser({commit}, {clientId, username}) {
         await custosService.users.disableUser({clientId, username});
-        commit("SET_USER_STATUS", {username, status: "CONFIRMED"});
+        commit("SET_USER_STATUS", {clientId, username, status: "CONFIRMED"});
     },
     async updateUser({commit}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes}) {
         if (attributes && attributes.length > 0) {
@@ -66,9 +67,10 @@ const actions = {
                 clientLevel: true
             });
         }
-        
+
         let updatedUser = await custosService.users.updateProfile({clientId, username, firstName, lastName, email});
         commit("SET_USER", {
+            clientId,
             id: updatedUser.id,
             username: updatedUser.username,
             firstName: updatedUser.first_name,
@@ -87,45 +89,54 @@ const actions = {
 
 
 const mutations = {
-    SET_USER(state, {id, username, firstName, lastName, email, realmRoles, clientRoles, attributes, membershipType, status}) {
+    SET_USER(state, {clientId, id, username, firstName, lastName, email, realmRoles, clientRoles, attributes, membershipType, status}) {
         state.userMap = {
             ...state.userMap,
-            [username]: {
-                id,
-                username,
-                firstName,
-                lastName,
-                email,
-                realmRoles,
-                clientRoles,
-                attributes,
-                membershipType,
-                status
+            [clientId]: {
+                ...state.userMap[clientId],
+                [username]: {
+                    id,
+                    username,
+                    firstName,
+                    lastName,
+                    email,
+                    realmRoles,
+                    clientRoles,
+                    attributes,
+                    membershipType,
+                    status
+                }
             }
         }
     },
-    SET_USER_STATUS(state, {username, status}) {
+    SET_USER_STATUS(state, {clientId, username, status}) {
         state.userMap = {
             ...state.userMap,
-            [username]: {
-                ...state.userMap[username],
-                status: status
+            [clientId]: {
+                ...state.userMap[clientId],
+                [username]: {
+                    ...state.userMap[clientId][username],
+                    status: status
+                }
             }
         }
     },
-    SET_USER_LIST(state, {queryString, usernames}) {
+    SET_USER_LIST(state, {clientId, queryString, usernames}) {
         state.userListMap = {
             ...state.userListMap,
-            [queryString]: usernames
+            [clientId]: {
+                ...state.userListMap[clientId],
+                [queryString]: usernames
+            }
         }
     }
 }
 
 const getters = {
-    getUser: (state) => ({username}) => {
-        if (state.userMap[username]) {
-            console.log("####### state.userMap[username] : ", state.userMap[username])
-            return state.userMap[username];
+    getUser: (state) => ({clientId, username}) => {
+        if (state.userMap[clientId] && state.userMap[clientId][username]) {
+            console.log("####### state.userMap[username] : ", state.userMap[clientId][username])
+            return state.userMap[clientId][username];
         } else {
             return null;
         }
@@ -135,9 +146,9 @@ const getters = {
             const params = {username, offset, limit, groupId, tenantId, clientId};
             const queryString = JSON.stringify(params);
             console.log("######## getUsers ", queryString)
-            if (state.userListMap[queryString]) {
-                const usernames = state.userListMap[queryString];
-                return usernames.map(username => getters.getUser({username}));
+            if (state.userListMap[clientId] && state.userListMap[clientId][queryString]) {
+                const usernames = state.userListMap[clientId][queryString];
+                return usernames.map(username => getters.getUser({clientId, username}));
             } else {
                 return null;
             }

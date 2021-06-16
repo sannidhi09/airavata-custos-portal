@@ -338,7 +338,7 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
         const username = store.getters["auth/currentUsername"];
 
         if (!store.getters["user/getUser"]({username, clientId: custosService.clientId})) {
-            await store.dispatch('user/fetchUsers', {username});
+            await store.dispatch('user/fetchUsers', {username, clientId: custosService.clientId});
         }
 
         if (!store.getters["tenant/getTenant"]({clientId: custosService.clientId})) {
