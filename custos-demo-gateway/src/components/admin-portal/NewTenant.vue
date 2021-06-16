@@ -21,7 +21,7 @@
           </p>
           <br/>
           <router-link :to="`/tenants/${clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">
-            <b-button variant="secondary" @click="navigate">Back to Clients</b-button>
+            <b-button variant="secondary" @click="navigate">Back to Tenants</b-button>
           </router-link>
         </div>
         <div v-else class="w-100 text-left" style="width: 600px;max-width: 600px;display: inline-block;">
