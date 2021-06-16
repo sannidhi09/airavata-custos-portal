@@ -49,12 +49,24 @@ const actions = {
             await custosService.users.addUserAttribute({clientId, attributes, usernames: [username]});
         }
 
-        await custosService.users.addRolesToUser({
-            clientId, roles: realmRoles, usernames: [username], clientLevel: false
-        });
-        await custosService.users.addRolesToUser({
-            clientId, roles: clientRoles, usernames: [username], clientLevel: true
-        });
+        if (realmRoles && realmRoles.length > 0) {
+            await custosService.users.addRolesToUser({
+                clientId,
+                roles: realmRoles,
+                usernames: [username],
+                clientLevel: false
+            });
+        }
+
+        if (clientRoles && clientRoles.length > 0) {
+            await custosService.users.addRolesToUser({
+                clientId,
+                roles: clientRoles,
+                usernames: [username],
+                clientLevel: true
+            });
+        }
+        
         let updatedUser = await custosService.users.updateProfile({clientId, username, firstName, lastName, email});
         commit("SET_USER", {
             id: updatedUser.id,

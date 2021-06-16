@@ -79,7 +79,8 @@
                 id="realm-roles"
                 trim
                 size="sm"
-                aria-describedby="scope-help-block">
+                aria-describedby="scope-help-block"
+                :disabled="!tenant.hasAdminPrivileges">
             </b-form-checkbox-group>
             <b-form-text id="scope-help-block"></b-form-text>
             <b-form-invalid-feedback></b-form-invalid-feedback>
@@ -114,7 +115,8 @@
                 id="client-roles"
                 trim
                 size="sm"
-                aria-describedby="scope-help-block">
+                aria-describedby="scope-help-block"
+                :disabled="!tenant.hasAdminPrivileges">
             </b-form-checkbox-group>
             <b-form-text id="scope-help-block"></b-form-text>
             <b-form-invalid-feedback></b-form-invalid-feedback>
@@ -129,7 +131,8 @@
             <table-overlay-info :rows="5" :columns="2" :data="attributes" empty-label="No attributes.">
               <template #empty>
                 No attributes to show.
-                <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})">
+                <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})"
+                          v-if="tenant.hasAdminPrivileges">
                   Create an attribute
                 </b-button>
               </template>
@@ -149,7 +152,8 @@
                              style="visibility: hidden; position: fixed; top: -100px;">
                         Attribute #{{ attributesIndex + 1 }} key
                       </label>
-                      <b-form-input :id="`attributes-key-${attributesIndex + 1}`" v-model="attribute.key" size="sm"/>
+                      <b-form-input :id="`attributes-key-${attributesIndex + 1}`" v-model="attribute.key" size="sm"
+                                    :disabled="!tenant.hasAdminPrivileges"/>
                     </b-td>
                     <b-td>
                       <label :for="`attribute-values-${attributesIndex + 1}`"
@@ -157,12 +161,13 @@
                         Attribute #{{ attributesIndex + 1 }} values
                       </label>
                       <b-form-input :id="`attributes-values-${attributesIndex + 1}`" v-model="attribute.values"
-                                    size="sm"/>
+                                    size="sm" :disabled="!tenant.hasAdminPrivileges"/>
                     </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
-              <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})">
+              <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})"
+                        v-if="tenant.hasAdminPrivileges">
                 Add new attribute
               </b-button>
               <!--              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">-->
@@ -321,18 +326,28 @@ export default {
         this.processing = true;
 
         try {
-          await this.$store.dispatch("user/updateUser", {
-            clientId: this.clientId,
-            username: this.username,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            realmRoles: this.realmRoles,
-            clientRoles: this.clientRoles,
-            attributes: this.attributes.map(({key, values}) => {
-              return {key: key, values: values.split(",").map(value => value.trim())};
-            }).filter(({key}) => key.length > 0)
-          });
+          if (this.tenant.hasAdminPrivileges) {
+            await this.$store.dispatch("user/updateUser", {
+              clientId: this.clientId,
+              username: this.username,
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email,
+              realmRoles: this.realmRoles,
+              clientRoles: this.clientRoles,
+              attributes: this.attributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0)
+            });
+          } else {
+            await this.$store.dispatch("user/updateUser", {
+              clientId: this.clientId,
+              username: this.username,
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email
+            });
+          }
         } catch (error) {
           this.errors.push({
             title: "Unknown error when updating the user profile.",
