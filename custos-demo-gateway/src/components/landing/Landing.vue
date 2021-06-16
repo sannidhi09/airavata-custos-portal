@@ -98,10 +98,14 @@ export default {
     async login() {
       this.loginDisabled = true
       if (this.username != null && this.username != '' && this.password != null && this.password != '') {
-        await this.$store.dispatch("auth/authenticateLocally", {
-          username: this.username,
-          password: this.password
-        });
+        try {
+          await this.$store.dispatch("auth/authenticateLocally", {
+            username: this.username,
+            password: this.password
+          });
+        } catch (error) {
+          this.loginError = true;
+        }
       } else {
         this.loginError = true
       }
