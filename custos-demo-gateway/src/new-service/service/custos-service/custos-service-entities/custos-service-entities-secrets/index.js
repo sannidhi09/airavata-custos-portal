@@ -1,4 +1,4 @@
-import CustosService from "../index";
+import CustosService from "../../index";
 
 export default class CustosServiceEntitiesSecrets {
     /**
