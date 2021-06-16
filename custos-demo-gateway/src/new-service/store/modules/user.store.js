@@ -36,12 +36,12 @@ const actions = {
 
         commit("SET_USER_LIST", {queryString, usernames})
     },
-    async enableUser({commit}, {username}) {
-        await custosService.users.enableUser({username});
+    async enableUser({commit}, {clientId, username}) {
+        await custosService.users.enableUser({clientId, username});
         commit("SET_USER_STATUS", {username, status: "ACTIVE"});
     },
-    async disableUser({commit}, {username}) {
-        await custosService.users.disableUser({username});
+    async disableUser({commit}, {clientId, username}) {
+        await custosService.users.disableUser({clientId, username});
         commit("SET_USER_STATUS", {username, status: "CONFIRMED"});
     },
     async updateUser({commit}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes}) {

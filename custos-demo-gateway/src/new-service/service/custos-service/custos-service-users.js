@@ -30,8 +30,8 @@ export default class CustosUsers {
         );
     }
 
-    async enableUser({username}) {
-        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+    async enableUser({clientId, username}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.post(
             `${CustosService.ENDPOINTS.USERS}/user/activation`,
             {
@@ -40,8 +40,8 @@ export default class CustosUsers {
         );
     }
 
-    async disableUser({username}) {
-        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+    async disableUser({clientId, username}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.post(
             `${CustosService.ENDPOINTS.USERS}/user/deactivation`,
             {

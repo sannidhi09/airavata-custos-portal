@@ -98,7 +98,7 @@ export default {
     async enableUser({username}) {
       this.processingEnableUser = {...this.processingEnableUser, [username]: true};
       try {
-        await this.$store.dispatch("user/enableUser", {username});
+        await this.$store.dispatch("user/enableUser", {clientId: this.clientId, username});
       } catch (error) {
         this.errors.push({
           title: `Unknown error when enabling the user '${username}'`,
@@ -110,7 +110,7 @@ export default {
     async disableUser({username}) {
       this.processingDisableUser = {...this.processingDisableUser, [username]: true};
       try {
-        await this.$store.dispatch("user/disableUser", {username});
+        await this.$store.dispatch("user/disableUser", {clientId: this.clientId, username});
       } catch (error) {
         this.errors.push({
           title: `Unknown error when disabling the user '${username}'`,
