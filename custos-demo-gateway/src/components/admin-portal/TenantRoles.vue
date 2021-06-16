@@ -11,7 +11,7 @@
           <b-tr>
             <b-th>Name</b-th>
             <b-th>Description</b-th>
-            <b-th>Composite</b-th>
+            <!--            <b-th>Composite</b-th>-->
             <b-th>Scope</b-th>
           </b-tr>
         </b-thead>
@@ -19,7 +19,7 @@
           <b-tr v-for="role in tenantRoles" :key="role.tenantRoleId">
             <b-td>{{ role.name }}</b-td>
             <b-td>{{ role.description }}</b-td>
-            <b-td>{{ role.composite }}</b-td>
+            <!--            <b-td>{{ role.composite }}</b-td>-->
             <b-td>TENANT</b-td>
           </b-tr>
           <b-tr v-for="role in clientRoles" :key="role.tenantRoleId">
