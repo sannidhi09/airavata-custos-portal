@@ -30,8 +30,10 @@ export default class CustosSharing {
         return axiosInstance.delete(
             `${CustosService.ENDPOINTS.SHARING}/permission/type`,
             {
-                "client_id": clientId,
-                "permission_type": {id, name, description}
+                data: {
+                    "client_id": clientId,
+                    "permission_type": {id, name, description}
+                }
             }
         );
     }
@@ -46,6 +48,30 @@ export default class CustosSharing {
         ).then(({data: {types}}) => types);
     }
 
+    async createEntityType({clientId, id, name, description = null}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.post(
+            `${CustosService.ENDPOINTS.SHARING}/entity/type`,
+            {
+                "client_id": clientId,
+                "entity_type": {id, name, description}
+            }
+        );
+    }
+
+    async deleteEntityType({clientId, id, name, description = null}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.delete(
+            `${CustosService.ENDPOINTS.SHARING}/entity/type`,
+            {
+                data: {
+                    "client_id": clientId,
+                    "entity_type": {id, name, description}
+                }
+            }
+        );
+    }
+
     async getEntityTypes({clientId}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.get(
@@ -56,8 +82,25 @@ export default class CustosSharing {
         ).then(({data: {types}}) => types);
     }
 
+    async getSharedOwners({clientId, entityId}) {
 
-    async share({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+
+        const res = await axiosInstance.get(
+            `${CustosService.ENDPOINTS.SHARING}/share`,
+            {
+                params: {
+                    "entity.id": entityId
+                }
+            }
+        ).then(({data: {shared_data}}) => shared_data);
+
+        console.log(" res : ", res);
+
+        return res;
+    }
+
+    async shareEntity({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
 
         let promises = [];
@@ -84,6 +127,44 @@ export default class CustosSharing {
                     "permission_type": {"id": permissionTypeId},
                     "owner_id": [username],
                     "cascade": true
+                }
+            );
+        }));
+
+        await Promise.all(promises);
+    }
+
+    async dropEntitySharedOwner({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+
+        let promises = [];
+
+        promises.concat(groupIds.map(groupId => {
+            return axiosInstance.delete(
+                `${CustosService.ENDPOINTS.SHARING}/groups/share`,
+                {
+                    data: {
+                        "client_id": clientId,
+                        "entity": {"id": entityId},
+                        "permission_type": {"id": permissionTypeId},
+                        "owner_id": [groupId],
+                        "cascade": true
+                    }
+                }
+            );
+        }));
+
+        promises.concat(usernames.map(username => {
+            return axiosInstance.delete(
+                `${CustosService.ENDPOINTS.SHARING}/users/share`,
+                {
+                    data: {
+                        "client_id": clientId,
+                        "entity": {"id": entityId},
+                        "permission_type": {"id": permissionTypeId},
+                        "owner_id": [username],
+                        "cascade": true
+                    }
                 }
             );
         }));

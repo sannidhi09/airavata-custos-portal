@@ -13,7 +13,7 @@
               <!--              <b-th>-->
               <!--                <b-checkbox/>-->
               <!--              </b-th>-->
-              <b-th>Client ID</b-th>
+              <b-th>Custos OAuth Client ID</b-th>
               <b-th>Name</b-th>
               <b-th>Domain</b-th>
               <b-th>Status</b-th>
@@ -26,13 +26,12 @@
               <!--                <b-checkbox/>-->
               <!--              </b-td>-->
               <b-td>
-                <router-link v-if="childTenant.status === 'ACTIVE'" :to="getTenantLink(childTenant)"
+                <router-link :to="getTenantLink(childTenant)"
                              v-slot="{ href, route, navigate}" tag="">
                   <b-link @click="navigate" :href="href">
                     {{ childTenant.clientId }}
                   </b-link>
                 </router-link>
-                <span v-else>{{ childTenant.clientId }}</span>
               </b-td>
               <b-td>{{ childTenant.name }}</b-td>
               <b-td>{{ childTenant.domain }}</b-td>
@@ -128,11 +127,11 @@ export default {
   computed: {
     title() {
       if (this.tenant && this.tenant.type === "SUPER_TENANT") {
-        return "Admin Clients";
+        return "Admin Tenants";
       } else if (this.tenant && this.tenant.type === "ADMIN_TENANT") {
-        return "Child Clients";
+        return "Child Tenants";
       } else {
-        return "Clients";
+        return "Tenants";
       }
     },
     breadcrumbLinks() {
@@ -220,7 +219,7 @@ export default {
         await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "ACTIVE"});
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when activating the client '${name}'`,
+          title: `Unknown error when activating the tenant '${name}'`,
           source: error, variant: "danger"
         });
       }
@@ -232,7 +231,7 @@ export default {
         await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "DEACTIVATED"});
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when deactivating the client '${name}'`,
+          title: `Unknown error when deactivating the tenant '${name}'`,
           source: error, variant: "danger"
         });
       }
@@ -244,7 +243,7 @@ export default {
         await this.$store.dispatch("tenant/updateTenantStatus", {clientId, status: "CANCELLED"})
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when deleting the client '${name}'`,
+          title: `Unknown error when deleting the tenant '${name}'`,
           source: error, variant: "danger"
         });
       }

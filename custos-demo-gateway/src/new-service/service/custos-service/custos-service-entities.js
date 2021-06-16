@@ -31,26 +31,44 @@ export default class CustosEntities {
         ).then(({data: {types}}) => types);
     }
 
+    async deleteEntity({clientId, entityId, name, description, type, ownerId}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.delete(
+            `${CustosService.ENDPOINTS.SHARING}/entity`,
+            {
+                data: {
+                    "client_id": clientId,
+                    "entity": {
+                        "id": entityId,
+                        "name": name,
+                        "description": description,
+                        "type": type,
+                        "owner_id": ownerId
+                    }
+                }
+            }
+        ).then(({data: {types}}) => types);
+    }
+
     async getEntities({clientId, ownerId}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.post(
             `${CustosService.ENDPOINTS.SHARING}/entities`,
             {
                 "client_id": clientId,
-                "owner_id": ownerId,
-                "search_criteria": [{"search_field": "ENTITY_TYPE_ID", "value": "DOC", "condition": "EQUAL"}]
+                "owner_id": ownerId
             }
         ).then(({data: {entity_array}}) => entity_array);
     }
 
     async getEntity({clientId, entityId}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
-        return axiosInstance.post(
-            `${CustosService.ENDPOINTS.SHARING}/entities`,
+        return axiosInstance.get(
+            `${CustosService.ENDPOINTS.SHARING}/entity`,
             {
-                params: {"entity": {"id": entityId}}
+                params: {"entity.id": entityId}
             }
-        ).then(({data: {entity_array}}) => entity_array);
+        ).then(({data}) => data);
     }
 
 

@@ -5,7 +5,8 @@ const getDefaultState = () => {
         permissionTypesMap: {},
         permissionTypesListMap: {},
         entityTypesMap: {},
-        entityTypesListMap: {}
+        entityTypesListMap: {},
+        entitySharedOwnersListMap: {}
     }
 };
 
@@ -32,6 +33,16 @@ const actions = {
 
         commit('SET_PERMISSION_TYPES_LIST', {clientId, permissionTypeIds});
     },
+    async createEntityType({commit}, {clientId, id, name, description = null}) {
+        await custosService.sharing.createEntityType({clientId, id, name, description});
+
+        commit('SET_ENTITY_TYPE', {clientId, id, name, description});
+    },
+    async deleteEntityType({commit}, {clientId, id, name, description = null}) {
+        await custosService.sharing.deleteEntityType({clientId, id, name, description});
+
+        commit('DELETE_ENTITY_TYPE', {clientId, id, name, description});
+    },
     async fetchEntityTypes({commit}, {clientId}) {
         const entityTypes = await custosService.sharing.getEntityTypes({clientId});
         console.log("##### fetchEntityTypes : ", entityTypes);
@@ -43,12 +54,28 @@ const actions = {
 
         commit('SET_ENTITY_TYPES_LIST', {clientId, entityTypeIds});
     },
-    async share(obj, {clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
-        await custosService.sharing.share({clientId, entityId, permissionTypeId, groupIds, usernames});
+    async shareEntity(obj, {clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+        await custosService.sharing.shareEntity({clientId, entityId, permissionTypeId, groupIds, usernames});
+    },
+    async dropEntitySharedOwner(obj, {clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+        await custosService.sharing.dropEntitySharedOwner({clientId, entityId, permissionTypeId, groupIds, usernames});
+    },
+    async fetchSharedOwners({commit}, {clientId, entityId}) {
+        let entitySharedUsersList = await custosService.sharing.getSharedOwners({clientId, entityId});
+        entitySharedUsersList = entitySharedUsersList.map(({owner_id, owner_type, permission}) => {
+            return {ownerId: owner_id, ownerType: owner_type, permission: permission};
+        });
+        commit('SET_ENTITY_SHARED_USERS_LIST_MAP', {entityId, entitySharedUsersList});
     }
 }
 
 const mutations = {
+    SET_ENTITY_SHARED_USERS_LIST_MAP(state, {entityId, entitySharedUsersList}) {
+        state.entitySharedOwnersListMap = {
+            ...state.entitySharedOwnersListMap,
+            [entityId]: entitySharedUsersList
+        }
+    },
     SET_PERMISSION_TYPE(state, {clientId, id, name, description}) {
         state.permissionTypesMap = {
             ...state.permissionTypesMap,
@@ -98,6 +125,15 @@ const mutations = {
 }
 
 const getters = {
+    getEntitySharedOwners(state) {
+        return ({entityId}) => {
+            if (state.entitySharedOwnersListMap[entityId]) {
+                return state.entitySharedOwnersListMap[entityId];
+            } else {
+                return null;
+            }
+        }
+    },
     getPermissionTypes(state, getters) {
         return ({clientId}) => {
             if (state.permissionTypesListMap[clientId]) {

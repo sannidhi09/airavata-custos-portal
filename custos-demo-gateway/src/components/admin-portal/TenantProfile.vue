@@ -1,5 +1,8 @@
 <template>
-  <TenantHome title="Profile" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+    <template #header-right>
+      <b-button variant="primary" v-on:click="onClickSave">Save Changes</b-button>
+    </template>
     <b-overlay :show="processing">
       <div class="p-2 text-center">
         <div class="text-left" style="max-width: 600px; display: inline-block;">
@@ -27,7 +30,8 @@
                   :state="inputState.firstName"
                   id="first-name"
                   trim
-                  size="sm">
+                  size="sm"
+                  readonly>
               </b-form-input>
               <b-form-invalid-feedback>
               </b-form-invalid-feedback>
@@ -40,7 +44,8 @@
                   :state="inputState.lastName"
                   id="last-name"
                   trim
-                  size="sm">
+                  size="sm"
+                  readonly>
               </b-form-input>
               <b-form-invalid-feedback>
               </b-form-invalid-feedback>
@@ -55,7 +60,8 @@
                 type="email"
                 id="email"
                 trim
-                size="sm">
+                size="sm"
+                readonly>
             </b-form-input>
             <b-form-invalid-feedback>
             </b-form-invalid-feedback>
@@ -214,10 +220,6 @@
           </div>
 
         </div>
-        <div>
-          <b-button variant="primary" v-on:click="onClickSave">Save Changes</b-button>
-          <b-button variant="secondary" class="ml-2">Cancel</b-button>
-        </div>
       </div>
     </b-overlay>
   </TenantHome>
@@ -261,8 +263,9 @@ export default {
     }
   },
   computed: {
+    title: () => "Tenant Profile",
     breadcrumbLinks() {
-      return [{to: `/tenants/${this.clientId}/profile`, name: "Profile"}];
+      return [{to: `/tenants/${this.clientId}/profile`, name: this.title}];
     },
     clientId() {
       if (this.$route.params.clientId) {

@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Entities" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome title="Entities" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <router-link :to="`/tenants/${clientId}/entities/new`" v-slot="{href, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Create New Entity</b-button>
@@ -10,6 +10,7 @@
         <b-thead>
           <b-tr>
             <b-th>Name</b-th>
+            <b-th>Type</b-th>
             <b-th>Description</b-th>
             <b-th>Created</b-th>
             <b-th>Last Updated</b-th>
@@ -22,17 +23,26 @@
                 <b-link :href="href" v-on:click="navigate">{{ entity.name }}</b-link>
               </router-link>
             </b-td>
+            <b-td>{{ entity.type }}</b-td>
             <b-td>{{ entity.description }}</b-td>
             <b-td>{{ entity.createdAt }}</b-td>
             <b-td>{{ entity.updatedAt }}</b-td>
             <b-td>
+              {{ entity.sharedCount }}
               <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`">
                 <b-icon icon="share"></b-icon>
               </b-button>
-              <modal-select-users-or-groups :client-id="clientId"
-                                            :modal-id="`modal-select-users-or-groups-${entityIndex}`"
-                                            title="Select Users" v-on:users="onShareToUsers(entity, $event)"
-                                            v-on:groups="onShareToGroups(entity, $event)"/>
+              <modal-share-entity :client-id="clientId" :entity-id="entity.entityId"
+                                  :modal-id="`modal-select-users-or-groups-${entityIndex}`"
+                                  :title="`Share Entity '${entity.name}'`"
+                                  v-on:close="refreshData"
+              />
+
+              <button-overlay :show="processingDelete[entity.entityId]">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(entity)">
+                  <b-icon icon="trash"></b-icon>
+                </b-button>
+              </button-overlay>
             </b-td>
           </b-tr>
         </b-tbody>
@@ -55,12 +65,19 @@
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
-import ModalSelectUsersOrGroups from "@/components/admin-portal/modals/modal-select-users-or-groups";
+import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
+import ButtonOverlay from "@/components/button-overlay";
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {ModalSelectUsersOrGroups, TableOverlayInfo, TenantHome},
+  components: {ButtonOverlay, ModalShareEntity, TableOverlayInfo, TenantHome},
+  data() {
+    return {
+      processingDelete: {},
+      errors: []
+    }
+  },
   computed: {
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
@@ -80,31 +97,27 @@ export default {
     refreshData() {
       this.$store.dispatch("entity/fetchEntities", {clientId: this.clientId, ownerId: this.currentUsername});
     },
-    onShareToGroups({entityId}, groups) {
-      // alert("onShareToGroups 2 " + JSON.stringify(arguments));
-      // // return function (groups) {
-      // alert("onShareToGroups")
-      this.$store.dispatch("sharing/share", {
-        clientId: this.clientId,
-        entityId,
-        permissionTypeId: "VIEWER",
-        groupIds: groups.map(({groupId}) => groupId),
-        usernames: []
-      });
-      // };
-    },
-    onShareToUsers({entityId}, users) {
-      // alert("onShareToUsers 1 " + JSON.stringify(arguments))
-      // // return function (users) {
-      // alert("onShareToUsers")
-      this.$store.dispatch("sharing/share", {
-        clientId: this.clientId,
-        entityId,
-        permissionTypeId: "VIEWER",
-        groupIds: [],
-        usernames: users.map(({username}) => username)
-      });
-      // }
+    async onClickDelete({entityId, name, description, type, ownerId}) {
+      this.processingDelete = {...this.processingDelete, [entityId]: true};
+
+      try {
+        await this.$store.dispatch("entity/deleteEntity", {
+          clientId: this.clientId,
+          entityId,
+          name,
+          description,
+          type,
+          ownerId
+        });
+        this.refreshData();
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when deleting the entity '${entityId}'.`,
+          source: error, variant: "danger"
+        });
+      }
+
+      this.processingDelete = {...this.processingDelete, [entityId]: false};
     }
   },
   mounted() {
