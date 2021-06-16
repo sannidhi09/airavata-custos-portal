@@ -25,7 +25,7 @@
 
             <div class="mt-4">
               <label class="form-input-label" for="form-input-institution">Choose your Institution Identity</label>
-              <b-select id="form-input-institution" size="sm">
+              <b-select id="form-input-institution" size="sm" v-model="ciLogonInstitutionEntityId">
                 <b-select-option v-for="ciLogonInstitution in ciLogonInstitutions" :key="ciLogonInstitution.entityId"
                                  :value="ciLogonInstitution.entityId">
                   {{ ciLogonInstitution.displayName }}
@@ -84,6 +84,7 @@ export default {
   },
   data: function () {
     return {
+      ciLogonInstitutionEntityId: null,
       username: "",
       password: "",
       loginDisabled: false,
@@ -114,7 +115,11 @@ export default {
     async callDismissed() {
       this.loginError = false
     },
-    loadAuthURL: () => store.dispatch("auth/fetchAuthorizationEndpoint"),
+    loadAuthURL() {
+      store.dispatch("auth/fetchAuthorizationEndpoint", {
+        ciLogonInstitutionEntityId: this.ciLogonInstitutionEntityId
+      });
+    },
     redirectIfAuthenticated() {
       if (this.authenticated === true) {
         this.$router.push('/tenants/default');
