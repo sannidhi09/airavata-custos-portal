@@ -76,7 +76,8 @@
                     type="email"
                     id="email"
                     trim
-                    size="sm">
+                    size="sm"
+                    readonly>
                 </b-form-input>
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
