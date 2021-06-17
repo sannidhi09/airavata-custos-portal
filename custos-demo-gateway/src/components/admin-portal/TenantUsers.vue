@@ -80,7 +80,11 @@ export default {
     return {
       processingEnableUser: {},
       processingDisableUser: {},
-      errors: []
+      errors: [],
+
+      // TODO fix once the pagination is fixed.
+      // https://github.com/apache/airavata-custos/issues/174
+      limit: 100000
     }
   },
   computed: {
@@ -88,8 +92,11 @@ export default {
       console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
     },
+    tenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
+    },
     users() {
-      return this.$store.getters["user/getUsers"]({clientId: this.clientId})
+      return this.$store.getters["user/getUsers"]({clientId: this.clientId, limit: this.limit})
     },
     breadcrumbLinks() {
       return [{to: `/tenants/${this.clientId}/users`, name: "Users"}];
@@ -122,7 +129,7 @@ export default {
     }
   },
   beforeMount() {
-    this.$store.dispatch("user/fetchUsers", {clientId: this.clientId});
+    this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, limit: this.limit});
   }
 }
 </script>
