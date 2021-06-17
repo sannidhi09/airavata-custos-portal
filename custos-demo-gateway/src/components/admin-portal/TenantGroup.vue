@@ -13,6 +13,7 @@
           <b-tr>
             <b-th>Name</b-th>
             <b-th>Email</b-th>
+            <b-th>Membership</b-th>
             <b-th></b-th>
           </b-tr>
         </b-thead>
@@ -20,10 +21,12 @@
           <b-tr v-for="user in users" :key="user.username">
             <b-td>{{ user.username }}</b-td>
             <b-td>{{ user.email }}</b-td>
+            <b-td>{{ user.membershipType }}</b-td>
             <b-td>
               <b-overlay :show="processingRemoveUser[user.username]"
                          rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)">
+                <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)"
+                          :disabled="user.membershipType === 'OWNER'">
                   <b-icon icon="trash"/>
                 </b-button>
               </b-overlay>
