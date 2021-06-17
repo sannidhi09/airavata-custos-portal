@@ -121,7 +121,8 @@
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
-              <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: '', deleted:false})">
+              <b-button variant="link" size="sm"
+                        v-on:click="attributes.push({key: '', values: '', deleted:false, saved: false})">
                 Add new attribute
               </b-button>
               <!--              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">-->
@@ -240,6 +241,9 @@ export default {
 
       return _breadcrumbLinks;
     },
+    deletedAttributes() {
+      return this.attributes ? this.attributes.filter(({saved, deleted}) => saved && deleted) : this.attributes;
+    },
     availableAttributes() {
       return this.attributes ? this.attributes.filter(({deleted}) => !deleted) : this.attributes;
     },
@@ -294,6 +298,9 @@ export default {
               clientRoles: this.clientRoles,
               attributes: this.availableAttributes.map(({key, values}) => {
                 return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0),
+              deletedAttributes: this.deletedAttributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
               }).filter(({key}) => key.length > 0)
             });
           } else {
@@ -304,6 +311,9 @@ export default {
               lastName: this.lastName,
               email: this.email,
               attributes: this.availableAttributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0),
+              deletedAttributes: this.deletedAttributes.map(({key, values}) => {
                 return {key: key, values: values.split(",").map(value => value.trim())};
               }).filter(({key}) => key.length > 0)
             });
@@ -329,7 +339,7 @@ export default {
         this.realmRoles = this.user.realmRoles;
         this.clientRoles = this.user.clientRoles;
         this.attributes = this.user.attributes.map(({key, values}) => {
-          return {key: key, values: values.join(", "), deleted: false};
+          return {key: key, values: values.join(", "), deleted: false, saved: true};
         });
       }
     }
@@ -348,7 +358,7 @@ export default {
       this.realmRoles = this.user.realmRoles;
       this.clientRoles = this.user.clientRoles;
       this.attributes = this.user.attributes.map(({key, values}) => {
-        return {key: key, values: values.join(", "), deleted: false};
+        return {key: key, values: values.join(", "), deleted: false, saved: true};
       });
     }
   }
