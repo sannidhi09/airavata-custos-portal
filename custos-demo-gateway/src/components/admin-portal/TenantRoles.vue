@@ -25,7 +25,7 @@
           <b-tr v-for="role in clientRoles" :key="role.tenantRoleId">
             <b-td>{{ role.name }}</b-td>
             <b-td>{{ role.description }}</b-td>
-            <b-td>{{ role.composite }}</b-td>
+            <!--            <b-td>{{ role.composite }}</b-td>-->
             <b-td>CLIENT</b-td>
           </b-tr>
         </b-tbody>
