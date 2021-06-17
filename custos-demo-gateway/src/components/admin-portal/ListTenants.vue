@@ -89,7 +89,8 @@
               <img :src="svgNotFound" style="width: 70px;margin-bottom: 30px;"/><br/>
               You have no tenants. Start by clicking on Create New Tenant Button.
               Visit
-              <b-link href="#">documentation</b-link>
+              <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Home" target="_blank">documentation
+              </b-link>
               more information.
             </p>
           </div>

@@ -171,7 +171,8 @@
                       :disabled="true">
                   </b-form-checkbox-group>
                   <b-form-text id="scope-help-block">
-                    <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm">Information on scopes</b-link>
+                    <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm" target="_blank">Information on scopes
+                    </b-link>
                   </b-form-text>
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>

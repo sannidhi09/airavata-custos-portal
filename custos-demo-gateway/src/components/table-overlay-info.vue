@@ -8,7 +8,7 @@
           <img src="../assets/not-found-icon.svg" style="width: 70px;margin-bottom: 30px;"/><br/>
           {{ emptyLabel }}.
           Visit
-          <b-link href="#">documentation</b-link>
+          <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Home" target="_blank">documentation</b-link>
           more information.
         </p>
       </div>
