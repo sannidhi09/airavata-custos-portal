@@ -77,11 +77,11 @@
               <b-link @click="navigate" :href="href">Entities</b-link>
             </router-link>
           </li>
-          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">
-            <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href">Secrets</b-link>
-            </router-link>
-          </li>
+          <!--          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">-->
+          <!--            <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">-->
+          <!--              <b-link @click="navigate" :href="href">Secrets</b-link>-->
+          <!--            </router-link>-->
+          <!--          </li>-->
           <!--          <ul>-->
           <!--            <li>-->
           <!--              <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">-->
