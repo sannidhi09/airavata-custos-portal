@@ -45,7 +45,8 @@
               </b-overlay>
               <b-overlay :show="processingDisableUser[user.username]" v-if="user.status === 'ACTIVE'"
                          rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                <b-button variant="outline-primary" size="sm" v-on:click="disableUser(user)">
+                <b-button variant="outline-primary" size="sm" v-on:click="disableUser(user)"
+                          :disabled="user.username === tenant.adminUsername">
                   Disable
                 </b-button>
               </b-overlay>

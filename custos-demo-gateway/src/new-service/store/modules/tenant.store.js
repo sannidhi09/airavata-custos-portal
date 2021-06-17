@@ -53,7 +53,9 @@ const actions = {
                 name: client_name,
                 domain,
                 clientId: client_id,
-                type, hasAdminPrivileges
+                type,
+                hasAdminPrivileges,
+                adminUsername: admin_username
             });
 
             return tenant_id;
@@ -100,7 +102,8 @@ const actions = {
             tenantId: tenant_id, status: tenant_status, name: client_name, domain, clientId,
             redirectUris: redirect_uris, scope: scope, clientUri: client_uri,
             logoUri: logo_uri, comment: comment, applicationType: application_type,
-            type, hasAdminPrivileges
+            type, hasAdminPrivileges,
+            adminUsername: admin_username
         });
     },
     async createTenantRole({commit}, {clientId, name, description, composite = false, clientLevel = false}) {
@@ -203,7 +206,7 @@ const mutations = {
         username = null, firstName = null, lastName = null, email = null,
         tenantId, status, name, domain, clientId, redirectUris = null, scope = null,
         clientUri = null, logoUri = null, comment = null, applicationType = null,
-        type, hasAdminPrivileges
+        type, hasAdminPrivileges, adminUsername
     }) {
         state.tenantsMap = {
             ...state.tenantsMap,
@@ -212,7 +215,7 @@ const mutations = {
                 username, firstName, lastName, email,
                 tenantId, status, name, domain, clientId,
                 redirectUris, scope, clientUri, logoUri, comment, applicationType,
-                type, hasAdminPrivileges
+                type, hasAdminPrivileges, adminUsername
             }
         };
         state.clientIdToTenantIdMap = {
