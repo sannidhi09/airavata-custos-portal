@@ -96,6 +96,7 @@ export default {
       this.processingAddNewUsers = true;
       await Promise.all(newUsers.map(newUser => {
         return this.$store.dispatch("group/addUserToGroup", {
+          clientId: this.clientId,
           groupId: this.groupId,
           username: newUser.username,
           membershipType: "MEMBER"
@@ -113,7 +114,11 @@ export default {
     async onRemoveUser({username}) {
       this.processingRemoveUser = {...this.processingRemoveUser, [username]: true};
       try {
-        await this.$store.dispatch("group/removeUserFromGroup", {groupId: this.groupId, username});
+        await this.$store.dispatch("group/removeUserFromGroup", {
+          clientId: this.clientId,
+          groupId: this.groupId,
+          username
+        });
       } catch (error) {
         this.errors.push({
           title: `Unknown error when removing the user '${username}'`,
@@ -124,8 +129,8 @@ export default {
       this.processingRemoveUser = {...this.processingRemoveUser, [username]: false};
     },
     refreshData() {
-      this.$store.dispatch("user/fetchUsers", {groupId: this.groupId, clientId: this.clientId});
-      this.$store.dispatch("group/fetchGroup", {groupId: this.groupId});
+      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: this.groupId});
+      this.$store.dispatch("group/fetchGroup", {clientId: this.clientId, groupId: this.groupId});
     }
   },
   beforeMount() {

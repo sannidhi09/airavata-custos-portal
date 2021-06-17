@@ -65,19 +65,19 @@ const actions = {
         commit('SET_GROUP_DELETED', {groupId});
     },
 
-    async fetchGroup({commit}, {groupId}) {
+    async fetchGroup({commit}, {clientId, groupId}) {
         const {
             name, description, ownerId, realm_roles, client_roles, attributes, sub_groups
-        } = await custosService.groups.findGroup({groupId});
+        } = await custosService.groups.findGroup({clientId, groupId});
         commit('SET_GROUP', {groupId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups});
     },
 
-    async addUserToGroup(obj, {groupId, username, membershipType}) {
-        await custosService.groups.addUserToGroup({groupId, username, membershipType});
+    async addUserToGroup(obj, {clientId, groupId, username, membershipType}) {
+        await custosService.groups.addUserToGroup({clientId, groupId, username, membershipType});
     },
 
-    async removeUserFromGroup(obj, {groupId, username}) {
-        let response = await custosService.groups.removeUserFromGroup({groupId, username})
+    async removeUserFromGroup(obj, {clientId, groupId, username}) {
+        let response = await custosService.groups.removeUserFromGroup({clientId, groupId, username})
         return response.data
     },
 
