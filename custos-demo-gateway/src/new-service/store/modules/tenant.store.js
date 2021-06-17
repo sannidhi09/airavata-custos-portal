@@ -31,7 +31,7 @@ const actions = {
         // const requesterEmail = rootGetters["user/getUser"]({username}).email;
 
         let {tenant, total_num_of_tenants} = await custosService.tenants.fetchTenants(params);
-        const tenantIds = tenant.map(({tenant_id, tenant_status, client_name, domain, client_id, parent_tenant_id, admin_username}) => {
+        const tenantIds = tenant.map(({tenant_id, tenant_status, client_name, domain, client_id, parent_tenant_id, admin_username, requester_email}) => {
             let type = "CHILD_TENANT";
             let hasAdminPrivileges = false;
             let currentUsername = rootGetters["auth/currentUsername"];
@@ -55,7 +55,8 @@ const actions = {
                 clientId: client_id,
                 type,
                 hasAdminPrivileges,
-                adminUsername: admin_username
+                adminUsername: admin_username,
+                requesterEmail: requester_email
             });
 
             return tenant_id;
@@ -79,7 +80,7 @@ const actions = {
             admin_username, admin_first_name, admin_last_name, admin_email,
             tenant_id, tenant_status, client_name, domain,
             redirect_uris, scope, client_uri, logo_uri, comment, application_type,
-            parent_tenant_id
+            parent_tenant_id, requester_email
         } = tenant;
 
         let type = "CHILD_TENANT";
@@ -103,7 +104,7 @@ const actions = {
             redirectUris: redirect_uris, scope: scope, clientUri: client_uri,
             logoUri: logo_uri, comment: comment, applicationType: application_type,
             type, hasAdminPrivileges,
-            adminUsername: admin_username
+            adminUsername: admin_username, requesterEmail: requester_email
         });
     },
     async createTenantRole({commit}, {clientId, name, description, composite = false, clientLevel = false}) {
@@ -206,7 +207,7 @@ const mutations = {
         username = null, firstName = null, lastName = null, email = null,
         tenantId, status, name, domain, clientId, redirectUris = null, scope = null,
         clientUri = null, logoUri = null, comment = null, applicationType = null,
-        type, hasAdminPrivileges, adminUsername
+        type, hasAdminPrivileges, adminUsername, requesterEmail
     }) {
         state.tenantsMap = {
             ...state.tenantsMap,
@@ -215,7 +216,7 @@ const mutations = {
                 username, firstName, lastName, email,
                 tenantId, status, name, domain, clientId,
                 redirectUris, scope, clientUri, logoUri, comment, applicationType,
-                type, hasAdminPrivileges, adminUsername
+                type, hasAdminPrivileges, adminUsername, requesterEmail
             }
         };
         state.clientIdToTenantIdMap = {

@@ -328,12 +328,6 @@ export default {
       }
 
       return _isFormValid;
-    },
-    requesterEmail() {
-      return this.$store.getters["user/getUser"]({
-        clientId: this.clientId,
-        username: this.$store.getters["auth/currentUsername"]
-      }).email;
     }
   },
   watch: {
@@ -387,7 +381,7 @@ export default {
             comment: this.comment,
             applicationType: this.applicationType,
 
-            requesterEmail: this.requesterEmail
+            requesterEmail: this.tenant.requesterEmail
           });
         } catch (error) {
           this.errors.push({
