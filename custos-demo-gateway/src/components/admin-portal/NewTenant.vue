@@ -167,7 +167,8 @@
                       id="scope"
                       trim
                       size="sm"
-                      aria-describedby="scope-help-block">
+                      aria-describedby="scope-help-block"
+                      :disabled="true">
                   </b-form-checkbox-group>
                   <b-form-text id="scope-help-block">
                     <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm">Information on scopes</b-link>
