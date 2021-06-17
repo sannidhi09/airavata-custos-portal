@@ -68,8 +68,8 @@ export default class CustosGroups {
      * @param {number} groupId
      * @return {Promise<AxiosResponse<any>>}
      */
-    async deleteGroup({groupId}) {
-        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization();
+    async deleteGroup({clientId, groupId}) {
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.delete(
             `${CustosService.ENDPOINTS.GROUPS}/group/${groupId}`
         );

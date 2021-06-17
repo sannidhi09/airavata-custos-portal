@@ -60,8 +60,8 @@ const actions = {
         commit('SET_GROUP', {groupId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups});
     },
 
-    async deleteGroup({commit}, {groupId}) {
-        await custosService.groups.deleteGroup({groupId});
+    async deleteGroup({commit}, {clientId, groupId}) {
+        await custosService.groups.deleteGroup({clientId, groupId});
         commit('SET_GROUP_DELETED', {groupId});
     },
 
