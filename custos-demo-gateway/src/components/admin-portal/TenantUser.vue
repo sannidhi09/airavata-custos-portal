@@ -44,33 +44,7 @@
             </b-form-invalid-feedback>
           </div>
 
-          <!--          <div class="pt-3">-->
-          <!--            <label class="form-label" for="email">Email</label>-->
-          <!--            <b-form-input-->
-          <!--                v-model="email"-->
-          <!--                :state="inputState.email"-->
-          <!--                id="email"-->
-          <!--                trim-->
-          <!--                size="sm">-->
-          <!--            </b-form-input>-->
-          <!--            <b-form-invalid-feedback>-->
-          <!--            </b-form-invalid-feedback>-->
-          <!--          </div>-->
-
-          <!--          <div class="pt-3">-->
-          <!--            <label class="form-label" for="username">Username</label>-->
-          <!--            <b-form-input-->
-          <!--                v-model="username"-->
-          <!--                :state="inputState.username"-->
-          <!--                id="username"-->
-          <!--                trim-->
-          <!--                size="sm">-->
-          <!--            </b-form-input>-->
-          <!--            <b-form-invalid-feedback>-->
-          <!--            </b-form-invalid-feedback>-->
-          <!--          </div>-->
-
-          <div class="pt-3">
+          <div class="pt-3" v-if="tenant.hasAdminPrivileges">
             <label class="form-label" for="realm-roles">Tenant Roles</label>
             <b-form-checkbox-group
                 v-model="realmRoles"
@@ -79,34 +53,13 @@
                 id="realm-roles"
                 trim
                 size="sm"
-                aria-describedby="scope-help-block"
-                :disabled="!tenant.hasAdminPrivileges">
+                aria-describedby="scope-help-block">
             </b-form-checkbox-group>
             <b-form-text id="scope-help-block"></b-form-text>
             <b-form-invalid-feedback></b-form-invalid-feedback>
-            <!--            <b-form-tags input-id="realm-roles" v-model="realmRoles">-->
-            <!--              <template v-slot="{ tags, disabled, addTag, removeTag }">-->
-            <!--                <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">-->
-            <!--                  <li v-for="tag in tags" :key="tag" class="list-inline-item">-->
-            <!--                    <b-form-tag-->
-            <!--                        @remove="removeTag(tag)"-->
-            <!--                        :title="tag"-->
-            <!--                        :disabled="disabled"-->
-            <!--                        variant="info"-->
-            <!--                    >{{ tag }}-->
-            <!--                    </b-form-tag>-->
-            <!--                  </li>-->
-            <!--                </ul>-->
-            <!--                <vue-typeahead-bootstrap-->
-            <!--                    :data="availableTenantRoles"-->
-            <!--                    @hit="addTag" :min-matching-chars="0"-->
-            <!--                >-->
-            <!--                </vue-typeahead-bootstrap>-->
-            <!--              </template>-->
-            <!--            </b-form-tags>-->
           </div>
 
-          <div class="pt-3">
+          <div class="pt-3" v-if="tenant.hasAdminPrivileges">
             <label class="form-label" for="client-roles">Client Roles</label>
             <b-form-checkbox-group
                 v-model="clientRoles"
@@ -115,8 +68,7 @@
                 id="client-roles"
                 trim
                 size="sm"
-                aria-describedby="scope-help-block"
-                :disabled="!tenant.hasAdminPrivileges">
+                aria-describedby="scope-help-block">
             </b-form-checkbox-group>
             <b-form-text id="scope-help-block"></b-form-text>
             <b-form-invalid-feedback></b-form-invalid-feedback>
@@ -131,8 +83,7 @@
             <table-overlay-info :rows="5" :columns="2" :data="attributes" empty-label="No attributes.">
               <template #empty>
                 No attributes to show.
-                <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})"
-                          v-if="tenant.hasAdminPrivileges">
+                <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})">
                   Create an attribute
                 </b-button>
               </template>
@@ -145,15 +96,14 @@
                   </b-tr>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(attribute, attributesIndex) in attributes" :key="attributesIndex">
+                  <b-tr v-for="(attribute, attributesIndex) in availableAttributes" :key="attributesIndex">
                     <b-td>#{{ attributesIndex + 1 }}</b-td>
                     <b-td>
                       <label :for="`attribute-key-${attributesIndex + 1}`"
                              style="visibility: hidden; position: fixed; top: -100px;">
                         Attribute #{{ attributesIndex + 1 }} key
                       </label>
-                      <b-form-input :id="`attributes-key-${attributesIndex + 1}`" v-model="attribute.key" size="sm"
-                                    :disabled="!tenant.hasAdminPrivileges"/>
+                      <b-form-input :id="`attributes-key-${attributesIndex + 1}`" v-model="attribute.key" size="sm"/>
                     </b-td>
                     <b-td>
                       <label :for="`attribute-values-${attributesIndex + 1}`"
@@ -161,13 +111,17 @@
                         Attribute #{{ attributesIndex + 1 }} values
                       </label>
                       <b-form-input :id="`attributes-values-${attributesIndex + 1}`" v-model="attribute.values"
-                                    size="sm" :disabled="!tenant.hasAdminPrivileges"/>
+                                    size="sm"/>
+                    </b-td>
+                    <b-td>
+                      <b-button variant="link" v-on:click="attribute.deleted = true;">
+                        <b-icon icon="x"></b-icon>
+                      </b-button>
                     </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
-              <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})"
-                        v-if="tenant.hasAdminPrivileges">
+              <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: '', deleted:false})">
                 Add new attribute
               </b-button>
               <!--              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">-->
@@ -286,6 +240,9 @@ export default {
 
       return _breadcrumbLinks;
     },
+    availableAttributes() {
+      return this.attributes ? this.attributes.filter(({deleted}) => !deleted) : this.attributes;
+    },
     availableClientRoles() {
       const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: true});
       if (_roles) {
@@ -335,7 +292,7 @@ export default {
               email: this.email,
               realmRoles: this.realmRoles,
               clientRoles: this.clientRoles,
-              attributes: this.attributes.map(({key, values}) => {
+              attributes: this.availableAttributes.map(({key, values}) => {
                 return {key: key, values: values.split(",").map(value => value.trim())};
               }).filter(({key}) => key.length > 0)
             });
@@ -345,7 +302,10 @@ export default {
               username: this.username,
               firstName: this.firstName,
               lastName: this.lastName,
-              email: this.email
+              email: this.email,
+              attributes: this.availableAttributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0)
             });
           }
         } catch (error) {
@@ -369,7 +329,7 @@ export default {
         this.realmRoles = this.user.realmRoles;
         this.clientRoles = this.user.clientRoles;
         this.attributes = this.user.attributes.map(({key, values}) => {
-          return {key: key, values: values.join(", ")};
+          return {key: key, values: values.join(", "), deleted: false};
         });
       }
     }
@@ -388,7 +348,7 @@ export default {
       this.realmRoles = this.user.realmRoles;
       this.clientRoles = this.user.clientRoles;
       this.attributes = this.user.attributes.map(({key, values}) => {
-        return {key: key, values: values.join(", ")};
+        return {key: key, values: values.join(", "), deleted: false};
       });
     }
   }
