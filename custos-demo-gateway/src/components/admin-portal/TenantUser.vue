@@ -44,7 +44,7 @@
             </b-form-invalid-feedback>
           </div>
 
-          <div class="pt-3" v-if="tenant.hasAdminPrivileges">
+          <div class="pt-3" v-if="tenant && tenant.hasAdminPrivileges">
             <label class="form-label" for="realm-roles">Tenant Roles</label>
             <b-form-checkbox-group
                 v-model="realmRoles"
@@ -59,7 +59,7 @@
             <b-form-invalid-feedback></b-form-invalid-feedback>
           </div>
 
-          <div class="pt-3" v-if="tenant.hasAdminPrivileges">
+          <div class="pt-3" v-if="tenant && tenant.hasAdminPrivileges">
             <label class="form-label" for="client-roles">Client Roles</label>
             <b-form-checkbox-group
                 v-model="clientRoles"
@@ -229,7 +229,7 @@ export default {
         });
       }
 
-      if (this.user) {
+      if (this.user && this.tenant) {
         // alert("this.tenant.hasAdminPrivileges " + this.tenant.hasAdminPrivileges)
         _breadcrumbLinks.push({
           to: `/tenants/${this.clientId}/users/${this.username}`,
