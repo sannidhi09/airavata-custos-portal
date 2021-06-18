@@ -45,6 +45,14 @@ const actions = {
         await custosService.users.disableUser({clientId, username});
         commit("SET_USER_STATUS", {clientId, username, status: "CONFIRMED"});
     },
+    async addRolesToUser(obj, {clientId, username, realmRoles, clientLevel}) {
+        await custosService.users.addRolesToUser({
+            clientId,
+            roles: realmRoles,
+            usernames: [username],
+            clientLevel: clientLevel
+        });
+    },
     async updateUser({commit}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes, deletedAttributes}) {
         if (deletedAttributes && deletedAttributes.length > 0) {
             await custosService.users.deleteUserAttributes({
