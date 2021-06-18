@@ -44,7 +44,7 @@
             </b-form-invalid-feedback>
           </div>
 
-          <div class="pt-3" v-if="tenant && tenant.hasAdminPrivileges">
+          <div class="pt-3">
             <label class="form-label" for="realm-roles">Tenant Roles</label>
             <b-form-checkbox-group
                 v-model="realmRoles"
@@ -256,14 +256,20 @@ export default {
       }
     },
     availableTenantRoles() {
-      const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
+      let _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
       if (_roles) {
-        return _roles.map(({name}) => {
+        _roles = _roles.map(({name}) => {
           return {value: name, text: name, disabled: this.rolesToBeDisabled.indexOf(name) >= 0}
         });
       } else {
-        return [];
+        _roles = [];
       }
+
+      if (!this.tenant.hasAdminPrivileges) {
+        _roles = _roles.filter(({text}) => ["Tenant Requester"].indexOf(text) >= 0);
+      }
+
+      return _roles;
     },
     isFormValid() {
       let _isFormValid = true;
