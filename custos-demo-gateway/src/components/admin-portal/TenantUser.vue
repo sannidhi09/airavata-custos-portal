@@ -172,7 +172,7 @@ export default {
       clientRoles: [],
       attributes: null, // [{key: "a", values: ["1", "2", "3"]}, {key: "b", values: ["fhfhf"]}]
 
-      rolesToBeDisabled: ["uma_authorization", "offline_access"],
+      rolesToBeDisabled: ["uma_authorization", "offline_access", "admin"],
 
       inputFieldsList: ["firstName", "lastName", "email", "realmRoles", "clientRoles", "attributes"]
     }
@@ -250,7 +250,13 @@ export default {
     availableClientRoles() {
       const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: true});
       if (_roles) {
-        return _roles.map(({name}) => name);
+        return _roles.map(({name}) => {
+          return {
+            value: name,
+            text: name,
+            disabled: !this.tenant.hasAdminPrivileges
+          }
+        });
       } else {
         return [];
       }
@@ -259,7 +265,11 @@ export default {
       let _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
       if (_roles) {
         _roles = _roles.map(({name}) => {
-          return {value: name, text: name, disabled: this.rolesToBeDisabled.indexOf(name) >= 0}
+          return {
+            value: name,
+            text: name,
+            disabled: !this.tenant.hasAdminPrivileges || this.rolesToBeDisabled.indexOf(name) >= 0
+          }
         });
       } else {
         _roles = [];
