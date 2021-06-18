@@ -3,7 +3,7 @@
     <input-select-users-or-groups :client-id="clientId" v-on:change="onSelect"/>
     <b-overlay :show="processing">
       <b-skeleton-table v-if="processing" :rows="4" :columns="3"/>
-      <ul v-else>
+      <ul v-else style="list-style: none;">
         <li v-for="(owner, ownerIndex) in notDroppedOwners" :key="ownerIndex">
           <div style="display: flex; flex-direction: row;line-height: 38px;">
             <div style="flex: 1;">
