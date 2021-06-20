@@ -2,7 +2,7 @@
   <div class="w-100">
     <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">
       <div style="flex: 1;">
-        <div style="font-size: 1.4rem;" v-if="tenant">{{ tenant.name }}</div>
+        <!--        <div style="font-size: 1.4rem;" v-if="tenant">{{ tenant.name }}</div>-->
         <Breadcrumb :links="commonBreadcrumbLinks.concat(breadcrumbLinks)"/>
       </div>
       <!--      <div>-->
@@ -45,6 +45,12 @@
           <!--              <b-link @click="navigate" :href="href">User Management</b-link>-->
           <!--            </router-link>-->
           <!--            <ul>&lt;!&ndash;&ndash;&gt;-->
+
+          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">
+            <router-link :to="`/tenants/${clientId}/entities`" v-slot="{ href, route, navigate}" tag="">
+              <b-link @click="navigate" :href="href">Home</b-link>
+            </router-link>
+          </li>
           <li v-if="tenant.hasAdminPrivileges  && tenant.status === 'ACTIVE'">
             <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}"
                          tag="">
@@ -72,11 +78,7 @@
           <!--            </router-link>-->
           <!--          </li>-->
 
-          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">
-            <router-link :to="`/tenants/${clientId}/entities`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href">Appointments</b-link>
-            </router-link>
-          </li>
+
           <!--          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">-->
           <!--            <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">-->
           <!--              <b-link @click="navigate" :href="href">Secrets</b-link>-->
@@ -150,15 +152,17 @@ export default {
   },
   computed: {
     commonBreadcrumbLinks() {
-      const _breadcrumbLinks = [];
+      const _breadcrumbLinks = [
+        {to: `/tenants/${this.appTenant.clientId}/entities`, name: "Home"}
+      ];
 
-      if (this.appTenant) {
-        _breadcrumbLinks.push({to: `/tenants/${this.appTenant.clientId}`, name: this.appTenant.name});
-      }
-
-      if (this.clientId !== custosService.clientId && this.tenant) {
-        _breadcrumbLinks.push({to: `/tenants/${this.clientId}`, name: this.tenant.name})
-      }
+      // if (this.appTenant) {
+      //   _breadcrumbLinks.push({to: `/tenants/${this.appTenant.clientId}`, name: this.appTenant.name});
+      // }
+      //
+      // if (this.clientId !== custosService.clientId && this.tenant) {
+      //   _breadcrumbLinks.push({to: `/tenants/${this.clientId}`, name: this.tenant.name})
+      // }
 
       return _breadcrumbLinks;
     },
