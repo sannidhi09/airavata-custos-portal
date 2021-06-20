@@ -25,7 +25,7 @@ export default class CustosEntities {
         return this._secrets;
     }
 
-    async createEntity({clientId, entityId, name, description, type, ownerId}) {
+    async createEntity({clientId, entityId, name, description, type, ownerId, fullText}) {
         if (type === "SECRET") {
             entityId = await this.custosService.entities.secrets.createSecret({clientId, description, ownerId})
         }
@@ -40,13 +40,14 @@ export default class CustosEntities {
                     "name": name,
                     "description": description,
                     "type": type,
-                    "owner_id": ownerId
+                    "owner_id": ownerId,
+                    "full_text": fullText
                 }
             }
         ).then(({data: {types}}) => types);
     }
 
-    async updateEntity({clientId, entityId, name, description, type, ownerId}) {
+    async updateEntity({clientId, entityId, name, description, type, ownerId, fullText}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
         return axiosInstance.put(
             `${CustosService.ENDPOINTS.SHARING}/entity`,
@@ -57,7 +58,8 @@ export default class CustosEntities {
                     "name": name,
                     "description": description,
                     "type": type,
-                    "owner_id": ownerId
+                    "owner_id": ownerId,
+                    "full_text": fullText
                 }
             }
         ).then(({data: {types}}) => types);
