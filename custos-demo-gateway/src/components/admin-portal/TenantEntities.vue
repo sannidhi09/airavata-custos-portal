@@ -34,13 +34,20 @@
                 <strong>Doctor :</strong>
                 {{ appointment.fullTextJson.doctorId }}
               </div>
-              <div class="text-right">
-                <small>
+              <div style="display: flex; flex-direction: row;">
+                <small class="text-left" style="flex: 1;">
                   {{ appointment.createdAt }} by
                   <router-link :to="`/tenants/${clientId}/users/${appointment.ownerId}`" v-slot="{href, navigate}">
                     <b-link :href="href" v-on:click="navigate">{{ appointment.ownerId }}</b-link>
                   </router-link>
                 </small>
+                <div>
+                  <b-button variant="link" size="sm" v-b-modal="`modal-appointment-share-${appointment.entityId}`">
+                    <b-icon icon="share"/>
+                  </b-button>
+                  <modal-share-entity :entity-id="appointment.entityId" :client-id="clientId"
+                                      :modal-id="`modal-appointment-share-${appointment.entityId}`"/>
+                </div>
               </div>
             </b-td>
             <b-td v-if="hasDoctorRole || hasNurseRole">
@@ -63,13 +70,21 @@
                       <strong>Random Blood Sugar :</strong>
                       {{ history.fullTextJson.randomBloodSugar }}
                     </div>
-                    <div class="text-right">
-                      <small>
+                    <div style="display: flex; flex-direction: row;">
+                      <small class="text-left" style="flex: 1;">
                         {{ history.createdAt }} by
                         <router-link :to="`/tenants/${clientId}/users/${history.ownerId}`" v-slot="{href, navigate}">
                           <b-link :href="href" v-on:click="navigate">{{ history.ownerId }}</b-link>
                         </router-link>
                       </small>
+                      <div>
+                        <b-button variant="link" size="sm"
+                                  v-b-modal="`modal-history-share-${history.entityId}`">
+                          <b-icon icon="share"/>
+                        </b-button>
+                        <modal-share-entity :entity-id="history.entityId" :client-id="clientId"
+                                            :modal-id="`modal-history-share-${history.entityId}`"/>
+                      </div>
                     </div>
                   </div>
                   <div v-else>
@@ -128,14 +143,22 @@
                       </ul>
                     </div>
 
-                    <div class="text-right">
-                      <small>
+                    <div style="display: flex; flex-direction: row;">
+                      <small class="text-left" style="flex: 1;">
                         {{ prescription.createdAt }} by
                         <router-link :to="`/tenants/${clientId}/users/${prescription.ownerId}`"
                                      v-slot="{href, navigate}">
                           <b-link :href="href" v-on:click="navigate">{{ prescription.ownerId }}</b-link>
                         </router-link>
                       </small>
+                      <div>
+                        <b-button variant="link" size="sm"
+                                  v-b-modal="`modal-prescription-share-${prescription.entityId}`">
+                          <b-icon icon="share"/>
+                        </b-button>
+                        <modal-share-entity :entity-id="prescription.entityId" :client-id="clientId"
+                                            :modal-id="`modal-prescription-share-${prescription.entityId}`"/>
+                      </div>
                     </div>
                   </div>
                   <div v-else>
@@ -190,6 +213,7 @@ import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import config from "@/config";
+import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
 // import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
 // import ButtonOverlay from "@/components/button-overlay";
 
@@ -207,7 +231,7 @@ const groupIdDoctor = config.value('groupIdDoctor');
 export default {
   name: "TenantEntities",
   store: store,
-  components: {TableOverlayInfo, TenantHome},
+  components: {ModalShareEntity, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

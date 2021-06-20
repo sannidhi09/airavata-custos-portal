@@ -46,7 +46,7 @@
           <!--            </router-link>-->
           <!--            <ul>&lt;!&ndash;&ndash;&gt;-->
 
-          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">
+          <li v-if="tenant.status === 'ACTIVE'">
             <router-link :to="`/tenants/${clientId}/entities`" v-slot="{ href, route, navigate}" tag="">
               <b-link @click="navigate" :href="href">Home</b-link>
             </router-link>
