@@ -46,7 +46,8 @@
                     <b-icon icon="share"/>
                   </b-button>
                   <modal-share-entity :entity-id="appointment.entityId" :client-id="clientId"
-                                      :modal-id="`modal-appointment-share-${appointment.entityId}`"/>
+                                      :modal-id="`modal-appointment-share-${appointment.entityId}`"
+                                      title="Share the appointment"/>
                 </div>
               </div>
             </b-td>
@@ -83,7 +84,8 @@
                           <b-icon icon="share"/>
                         </b-button>
                         <modal-share-entity :entity-id="history.entityId" :client-id="clientId"
-                                            :modal-id="`modal-history-share-${history.entityId}`"/>
+                                            :modal-id="`modal-history-share-${history.entityId}`"
+                                            title="Share Patient's History"/>
                       </div>
                     </div>
                   </div>
@@ -157,7 +159,8 @@
                           <b-icon icon="share"/>
                         </b-button>
                         <modal-share-entity :entity-id="prescription.entityId" :client-id="clientId"
-                                            :modal-id="`modal-prescription-share-${prescription.entityId}`"/>
+                                            :modal-id="`modal-prescription-share-${prescription.entityId}`"
+                                            title="Share Prescription"/>
                       </div>
                     </div>
                   </div>
