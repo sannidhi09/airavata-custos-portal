@@ -13,6 +13,7 @@
           <b-tr>
             <b-th>Name</b-th>
             <b-th>Email</b-th>
+            <b-th>Membership</b-th>
             <b-th></b-th>
           </b-tr>
         </b-thead>
@@ -20,10 +21,12 @@
           <b-tr v-for="user in users" :key="user.username">
             <b-td>{{ user.username }}</b-td>
             <b-td>{{ user.email }}</b-td>
+            <b-td>{{ user.membershipType }}</b-td>
             <b-td>
               <b-overlay :show="processingRemoveUser[user.username]"
                          rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)">
+                <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)"
+                          :disabled="user.membershipType === 'OWNER'">
                   <b-icon icon="trash"/>
                 </b-button>
               </b-overlay>
@@ -96,6 +99,7 @@ export default {
       this.processingAddNewUsers = true;
       await Promise.all(newUsers.map(newUser => {
         return this.$store.dispatch("group/addUserToGroup", {
+          clientId: this.clientId,
           groupId: this.groupId,
           username: newUser.username,
           membershipType: "MEMBER"
@@ -113,7 +117,11 @@ export default {
     async onRemoveUser({username}) {
       this.processingRemoveUser = {...this.processingRemoveUser, [username]: true};
       try {
-        await this.$store.dispatch("group/removeUserFromGroup", {groupId: this.groupId, username});
+        await this.$store.dispatch("group/removeUserFromGroup", {
+          clientId: this.clientId,
+          groupId: this.groupId,
+          username
+        });
       } catch (error) {
         this.errors.push({
           title: `Unknown error when removing the user '${username}'`,
@@ -124,8 +132,8 @@ export default {
       this.processingRemoveUser = {...this.processingRemoveUser, [username]: false};
     },
     refreshData() {
-      this.$store.dispatch("user/fetchUsers", {groupId: this.groupId, clientId: this.clientId});
-      this.$store.dispatch("group/fetchGroup", {groupId: this.groupId});
+      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: this.groupId});
+      this.$store.dispatch("group/fetchGroup", {clientId: this.clientId, groupId: this.groupId});
     }
   },
   beforeMount() {

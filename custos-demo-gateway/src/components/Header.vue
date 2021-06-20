@@ -25,10 +25,10 @@
         </template>
       </b-dropdown>
       <div v-else right>
-<!--        <router-link to="/register" v-slot="{ href, route, navigate, isActive,isExactActive }" tag="">-->
-<!--          <b-button v-if="!isActive || !isExactActive" v-on:click="navigate" variant="outline-primary">Sign Up-->
-<!--          </b-button>-->
-<!--        </router-link>-->
+        <!--        <router-link to="/register" v-slot="{ href, route, navigate, isActive,isExactActive }" tag="">-->
+        <!--          <b-button v-if="!isActive || !isExactActive" v-on:click="navigate" variant="outline-primary">Sign Up-->
+        <!--          </b-button>-->
+        <!--        </router-link>-->
         <router-link to="/" v-slot="{ href, route, navigate, isActive,isExactActive }" tag="">
           <b-button v-if="!isActive || !isExactActive" v-on:click="navigate" variant="primary" class="ml-3">Login
           </b-button>
@@ -59,7 +59,7 @@ export default {
       return this.$store.getters["auth/currentUsername"]
     },
     user() {
-      return this.$store.getters["user/getUser"]({username: this.currentUsername});
+      return this.$store.getters["user/getUser"]({clientId: custosService.clientId, username: this.currentUsername});
     },
     profileLink() {
       return `/tenants/${custosService.clientId}/users/${this.currentUsername}`;

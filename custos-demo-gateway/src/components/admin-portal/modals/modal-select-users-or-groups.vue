@@ -1,6 +1,7 @@
 <template>
   <b-modal :id="modalId" :title="title" v-on:show="reset">
-    <input-select-users-or-groups :client-id="clientId" v-on:change="onSelect"/>
+    <input-select-users-or-groups :client-id="clientId" v-on:change="onSelect" :allow-groups="false"
+                                  :allow-users="true"/>
     <ul class="list-inline d-inline-block mb-2 p-4">
       <li v-for="user in selectedUsers" :key="user.username" class="list-inline-item">
         <b-form-tag
@@ -50,7 +51,7 @@ export default {
       const _selectedUsers = [];
       for (let username in this.selectedUsersMap) {
         if (this.selectedUsersMap[username]) {
-          _selectedUsers.push(this.$store.getters["user/getUser"]({username}));
+          _selectedUsers.push(this.$store.getters["user/getUser"]({clientId: this.clientId, username}));
         }
       }
 

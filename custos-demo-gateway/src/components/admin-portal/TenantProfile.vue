@@ -142,10 +142,12 @@
                 id="scope"
                 trim
                 size="sm"
-                aria-describedby="scope-help-block">
+                aria-describedby="scope-help-block"
+                :disabled="true">
             </b-form-checkbox-group>
             <b-form-text id="scope-help-block">
-              <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm">Information on scopes</b-link>
+              <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm" target="_blank">Information on scopes
+              </b-link>
             </b-form-text>
             <b-form-invalid-feedback>
             </b-form-invalid-feedback>
@@ -326,9 +328,6 @@ export default {
       }
 
       return _isFormValid;
-    },
-    requesterEmail() {
-      return this.$store.getters["user/getUser"]({username: this.$store.getters["auth/currentUsername"]}).email;
     }
   },
   watch: {
@@ -382,7 +381,7 @@ export default {
             comment: this.comment,
             applicationType: this.applicationType,
 
-            requesterEmail: this.requesterEmail
+            requesterEmail: this.tenant.requesterEmail
           });
         } catch (error) {
           this.errors.push({

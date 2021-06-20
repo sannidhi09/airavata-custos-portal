@@ -41,15 +41,15 @@
                 size="sm">
             </b-form-radio-group>
           </div>
-          <div class="pt-3">
-            <b-form-checkbox
-                v-model="composite"
-                id="composite"
-                trim
-                size="sm">
-              <label class="form-label" for="composite">Composite</label>
-            </b-form-checkbox>
-          </div>
+          <!--          <div class="pt-3">-->
+          <!--            <b-form-checkbox-->
+          <!--                v-model="composite"-->
+          <!--                id="composite"-->
+          <!--                trim-->
+          <!--                size="sm">-->
+          <!--              <label class="form-label" for="composite">Composite</label>-->
+          <!--            </b-form-checkbox>-->
+          <!--          </div>-->
         </div>
       </div>
     </b-overlay>

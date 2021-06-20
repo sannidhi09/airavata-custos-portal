@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Groups" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome title="Groups" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <router-link :to="`/tenants/${clientId}/groups/new`" v-slot="{href, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Create New Group</b-button>
@@ -11,6 +11,7 @@
           <b-tr>
             <b-th>Name</b-th>
             <b-th>Description</b-th>
+            <b-th></b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
@@ -21,6 +22,13 @@
               </router-link>
             </b-td>
             <b-td>{{ group.description }}</b-td>
+            <b-td>
+              <button-overlay :show="processingDelete[group.groupId]">
+                <b-button variant="link" v-on:click="onDeleteClick(group)">
+                  <b-icon icon="trash"></b-icon>
+                </b-button>
+              </button-overlay>
+            </b-td>
           </b-tr>
         </b-tbody>
       </b-table-simple>
@@ -42,11 +50,18 @@
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
+import ButtonOverlay from "@/components/button-overlay";
 
 export default {
   name: "TenantGroups",
   store: store,
-  components: {TableOverlayInfo, TenantHome},
+  components: {ButtonOverlay, TableOverlayInfo, TenantHome},
+  data() {
+    return {
+      processingDelete: {},
+      errors: []
+    }
+  },
   computed: {
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
@@ -59,8 +74,31 @@ export default {
       return [{to: `/tenants/${this.clientId}/groups`, name: "Groups"}];
     }
   },
+  methods: {
+    refreshData() {
+      this.$store.dispatch("group/fetchGroups", {clientId: this.clientId});
+    },
+    async onDeleteClick({groupId, name}) {
+      this.processingDelete = {...this.processingDelete, [groupId]: true};
+
+      try {
+        await this.$store.dispatch("group/deleteGroup", {
+          clientId: this.clientId,
+          groupId: groupId
+        });
+        this.refreshData();
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when deleting the group ${name}.`,
+          source: error, variant: "danger"
+        });
+      }
+
+      this.processingDelete = {...this.processingDelete, [groupId]: false};
+    }
+  },
   mounted() {
-    this.$store.dispatch("group/fetchGroups", {clientId: this.clientId});
+    this.refreshData();
   }
 }
 </script>

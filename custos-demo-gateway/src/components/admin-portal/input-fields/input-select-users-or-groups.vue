@@ -22,7 +22,9 @@ export default {
   name: "input-select-users-or-groups",
   store: store,
   props: {
-    clientId: {}
+    clientId: {},
+    allowUsers: {default: true},
+    allowGroups: {default: true}
   },
   data() {
     return {
@@ -55,20 +57,28 @@ export default {
     //   };
     // },
     users() {
-      return this.$store.getters["user/getUsers"]({
-        clientId: this.clientId,
-        limit: 5,
-        offset: 0,
-        username: this.usernameSearch
-      });
+      if (this.allowUsers) {
+        return this.$store.getters["user/getUsers"]({
+          clientId: this.clientId,
+          limit: 5,
+          offset: 0,
+          username: this.usernameSearch
+        });
+      } else {
+        return [];
+      }
     },
     groups() {
-      return this.$store.getters["group/getGroups"]({
-        clientId: this.clientId,
-        limit: 5,
-        offset: 0,
-        groupId: this.groupId
-      });
+      if (this.allowGroups) {
+        return this.$store.getters["group/getGroups"]({
+          clientId: this.clientId,
+          limit: 5,
+          offset: 0,
+          groupId: this.groupId
+        });
+      } else {
+        return [];
+      }
     }
   },
   watch: {
@@ -86,18 +96,25 @@ export default {
     },
     refreshList() {
       if (this.usernameSearch.length > -1) {
-        this.$store.dispatch("user/fetchUsers", {
-          clientId: this.clientId,
-          limit: 5,
-          offset: 0,
-          username: this.usernameSearch
-        });
-        this.$store.dispatch("group/fetchGroups", {
-          clientId: this.clientId,
-          limit: 5,
-          offset: 0,
-          groupId: this.groupId
-        });
+
+        if (this.allowUsers) {
+          this.$store.dispatch("user/fetchUsers", {
+            clientId: this.clientId,
+            limit: 5,
+            offset: 0,
+            username: this.usernameSearch
+          });
+        }
+
+        if (this.allowGroups) {
+          this.$store.dispatch("group/fetchGroups", {
+            clientId: this.clientId,
+            limit: 5,
+            offset: 0,
+            groupId: this.groupId
+          });
+        }
+
       }
     }
   },

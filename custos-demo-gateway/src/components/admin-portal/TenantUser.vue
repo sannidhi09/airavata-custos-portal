@@ -44,32 +44,6 @@
             </b-form-invalid-feedback>
           </div>
 
-          <!--          <div class="pt-3">-->
-          <!--            <label class="form-label" for="email">Email</label>-->
-          <!--            <b-form-input-->
-          <!--                v-model="email"-->
-          <!--                :state="inputState.email"-->
-          <!--                id="email"-->
-          <!--                trim-->
-          <!--                size="sm">-->
-          <!--            </b-form-input>-->
-          <!--            <b-form-invalid-feedback>-->
-          <!--            </b-form-invalid-feedback>-->
-          <!--          </div>-->
-
-          <!--          <div class="pt-3">-->
-          <!--            <label class="form-label" for="username">Username</label>-->
-          <!--            <b-form-input-->
-          <!--                v-model="username"-->
-          <!--                :state="inputState.username"-->
-          <!--                id="username"-->
-          <!--                trim-->
-          <!--                size="sm">-->
-          <!--            </b-form-input>-->
-          <!--            <b-form-invalid-feedback>-->
-          <!--            </b-form-invalid-feedback>-->
-          <!--          </div>-->
-
           <div class="pt-3">
             <label class="form-label" for="realm-roles">Tenant Roles</label>
             <b-form-checkbox-group
@@ -83,29 +57,9 @@
             </b-form-checkbox-group>
             <b-form-text id="scope-help-block"></b-form-text>
             <b-form-invalid-feedback></b-form-invalid-feedback>
-            <!--            <b-form-tags input-id="realm-roles" v-model="realmRoles">-->
-            <!--              <template v-slot="{ tags, disabled, addTag, removeTag }">-->
-            <!--                <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">-->
-            <!--                  <li v-for="tag in tags" :key="tag" class="list-inline-item">-->
-            <!--                    <b-form-tag-->
-            <!--                        @remove="removeTag(tag)"-->
-            <!--                        :title="tag"-->
-            <!--                        :disabled="disabled"-->
-            <!--                        variant="info"-->
-            <!--                    >{{ tag }}-->
-            <!--                    </b-form-tag>-->
-            <!--                  </li>-->
-            <!--                </ul>-->
-            <!--                <vue-typeahead-bootstrap-->
-            <!--                    :data="availableTenantRoles"-->
-            <!--                    @hit="addTag" :min-matching-chars="0"-->
-            <!--                >-->
-            <!--                </vue-typeahead-bootstrap>-->
-            <!--              </template>-->
-            <!--            </b-form-tags>-->
           </div>
 
-          <div class="pt-3">
+          <div class="pt-3" v-if="tenant && tenant.hasAdminPrivileges">
             <label class="form-label" for="client-roles">Client Roles</label>
             <b-form-checkbox-group
                 v-model="clientRoles"
@@ -142,7 +96,7 @@
                   </b-tr>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="(attribute, attributesIndex) in attributes" :key="attributesIndex">
+                  <b-tr v-for="(attribute, attributesIndex) in availableAttributes" :key="attributesIndex">
                     <b-td>#{{ attributesIndex + 1 }}</b-td>
                     <b-td>
                       <label :for="`attribute-key-${attributesIndex + 1}`"
@@ -159,10 +113,16 @@
                       <b-form-input :id="`attributes-values-${attributesIndex + 1}`" v-model="attribute.values"
                                     size="sm"/>
                     </b-td>
+                    <b-td>
+                      <b-button variant="link" v-on:click="attribute.deleted = true;">
+                        <b-icon icon="x"></b-icon>
+                      </b-button>
+                    </b-td>
                   </b-tr>
                 </b-tbody>
               </b-table-simple>
-              <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})">
+              <b-button variant="link" size="sm"
+                        v-on:click="attributes.push({key: '', values: '', deleted:false, saved: false})">
                 Add new attribute
               </b-button>
               <!--              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">-->
@@ -212,7 +172,7 @@ export default {
       clientRoles: [],
       attributes: null, // [{key: "a", values: ["1", "2", "3"]}, {key: "b", values: ["fhfhf"]}]
 
-      rolesToBeDisabled: ["uma_authorization", "offline_access"],
+      rolesToBeDisabled: ["uma_authorization", "offline_access", "admin"],
 
       inputFieldsList: ["firstName", "lastName", "email", "realmRoles", "clientRoles", "attributes"]
     }
@@ -270,7 +230,7 @@ export default {
         });
       }
 
-      if (this.user) {
+      if (this.user && this.tenant) {
         // alert("this.tenant.hasAdminPrivileges " + this.tenant.hasAdminPrivileges)
         _breadcrumbLinks.push({
           to: `/tenants/${this.clientId}/users/${this.username}`,
@@ -281,23 +241,45 @@ export default {
 
       return _breadcrumbLinks;
     },
+    deletedAttributes() {
+      return this.attributes ? this.attributes.filter(({saved, deleted}) => saved && deleted) : this.attributes;
+    },
+    availableAttributes() {
+      return this.attributes ? this.attributes.filter(({deleted}) => !deleted) : this.attributes;
+    },
     availableClientRoles() {
       const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: true});
       if (_roles) {
-        return _roles.map(({name}) => name);
+        return _roles.map(({name}) => {
+          return {
+            value: name,
+            text: name,
+            disabled: !this.tenant.hasAdminPrivileges
+          }
+        });
       } else {
         return [];
       }
     },
     availableTenantRoles() {
-      const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
+      let _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
       if (_roles) {
-        return _roles.map(({name}) => {
-          return {value: name, text: name, disabled: this.rolesToBeDisabled.indexOf(name) >= 0}
+        _roles = _roles.map(({name}) => {
+          return {
+            value: name,
+            text: name,
+            disabled: !this.tenant.hasAdminPrivileges || this.rolesToBeDisabled.indexOf(name) >= 0
+          }
         });
       } else {
-        return [];
+        _roles = [];
       }
+
+      if (!this.tenant.hasAdminPrivileges) {
+        _roles = _roles.filter(({text}) => ["Tenant Requester"].indexOf(text) >= 0);
+      }
+
+      return _roles;
     },
     isFormValid() {
       let _isFormValid = true;
@@ -321,18 +303,37 @@ export default {
         this.processing = true;
 
         try {
-          await this.$store.dispatch("user/updateUser", {
-            clientId: this.clientId,
-            username: this.username,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            realmRoles: this.realmRoles,
-            clientRoles: this.clientRoles,
-            attributes: this.attributes.map(({key, values}) => {
-              return {key: key, values: values.split(",").map(value => value.trim())};
-            }).filter(({key}) => key.length > 0)
-          });
+          if (this.tenant.hasAdminPrivileges) {
+            await this.$store.dispatch("user/updateUser", {
+              clientId: this.clientId,
+              username: this.username,
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email,
+              realmRoles: this.realmRoles,
+              clientRoles: this.clientRoles,
+              attributes: this.availableAttributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0),
+              deletedAttributes: this.deletedAttributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0)
+            });
+          } else {
+            await this.$store.dispatch("user/updateUser", {
+              clientId: this.clientId,
+              username: this.username,
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email,
+              attributes: this.availableAttributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0),
+              deletedAttributes: this.deletedAttributes.map(({key, values}) => {
+                return {key: key, values: values.split(",").map(value => value.trim())};
+              }).filter(({key}) => key.length > 0)
+            });
+          }
         } catch (error) {
           this.errors.push({
             title: "Unknown error when updating the user profile.",
@@ -354,7 +355,7 @@ export default {
         this.realmRoles = this.user.realmRoles;
         this.clientRoles = this.user.clientRoles;
         this.attributes = this.user.attributes.map(({key, values}) => {
-          return {key: key, values: values.join(", ")};
+          return {key: key, values: values.join(", "), deleted: false, saved: true};
         });
       }
     }
@@ -373,7 +374,7 @@ export default {
       this.realmRoles = this.user.realmRoles;
       this.clientRoles = this.user.clientRoles;
       this.attributes = this.user.attributes.map(({key, values}) => {
-        return {key: key, values: values.join(", ")};
+        return {key: key, values: values.join(", "), deleted: false, saved: true};
       });
     }
   }

@@ -76,7 +76,8 @@
                     type="email"
                     id="email"
                     trim
-                    size="sm">
+                    size="sm"
+                    readonly>
                 </b-form-input>
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
@@ -166,10 +167,12 @@
                       id="scope"
                       trim
                       size="sm"
-                      aria-describedby="scope-help-block">
+                      aria-describedby="scope-help-block"
+                      :disabled="true">
                   </b-form-checkbox-group>
                   <b-form-text id="scope-help-block">
-                    <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm">Information on scopes</b-link>
+                    <b-link href="https://www.cilogon.org/oidc#h.p_PEQXL8QUjsQm" target="_blank">Information on scopes
+                    </b-link>
                   </b-form-text>
                   <b-form-invalid-feedback>
                   </b-form-invalid-feedback>
@@ -485,7 +488,7 @@ export default {
   },
   async mounted() {
     const username = await this.$store.getters["auth/currentUsername"];
-    const user = await this.$store.getters["user/getUser"]({username});
+    const user = await this.$store.getters["user/getUser"]({clientId: this.clientId, username});
     if (user) {
       this.username = user.username;
       this.firstName = user.firstName;

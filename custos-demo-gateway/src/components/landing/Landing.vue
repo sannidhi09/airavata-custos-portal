@@ -16,23 +16,28 @@
       </b-col>
       <b-col style="max-width: 350px;min-width: 300px;" align-h="center">
         <div class="w-100">
-          <div class="p-2">
+          <div class="p-2 text-center">
             <h3>Login</h3>
             <!--            <div>-->
             <!--              New to Custos?-->
             <!--              <router-link to="/register">Sign Up</router-link>-->
             <!--            </div>-->
 
-            <div class="mt-4">
-              <label class="form-input-label" for="form-input-institution">Choose your Institution Identity</label>
-              <b-select id="form-input-institution" size="sm">
-                <b-select-option v-for="ciLogonInstitution in ciLogonInstitutions" :key="ciLogonInstitution.entityId"
-                                 :value="ciLogonInstitution.entityId">
-                  {{ ciLogonInstitution.displayName }}
-                </b-select-option>
-              </b-select>
-            </div>
-            <b-button variant="primary" class="mt-3" v-on:click="this.loadAuthURL"> Login</b-button>
+            <!--            <div class="mt-4">-->
+            <!--              <label class="form-input-label" for="form-input-institution">Choose your Institution Identity</label>-->
+            <!--              <b-select id="form-input-institution" size="sm" v-model="ciLogonInstitutionEntityId">-->
+            <!--                <b-select-option v-for="ciLogonInstitution in ciLogonInstitutions" :key="ciLogonInstitution.entityId"-->
+            <!--                                 :value="ciLogonInstitution.entityId">-->
+            <!--                  {{ ciLogonInstitution.displayName }}-->
+            <!--                </b-select-option>-->
+            <!--              </b-select>-->
+            <!--            </div>-->
+            <!--            <div>-->
+            <!--              HTRC uses CILogon to enable you to log in with your institutional credentials. By clicking Continue, you-->
+            <!--              agree to the CILogon privacy policy you agree to share your institutional username, email address, and-->
+            <!--              affiliation with CILogon.-->
+            <!--            </div>-->
+            <b-button variant="primary" class="mt-3" v-on:click="this.loadAuthURL">Institution Login</b-button>
           </div>
         </div>
         <div style="display: flex; flex-direction: row;" class="mt-3 mb-3">
@@ -84,6 +89,7 @@ export default {
   },
   data: function () {
     return {
+      ciLogonInstitutionEntityId: null,
       username: "",
       password: "",
       loginDisabled: false,
@@ -98,10 +104,14 @@ export default {
     async login() {
       this.loginDisabled = true
       if (this.username != null && this.username != '' && this.password != null && this.password != '') {
-        await this.$store.dispatch("auth/authenticateLocally", {
-          username: this.username,
-          password: this.password
-        });
+        try {
+          await this.$store.dispatch("auth/authenticateLocally", {
+            username: this.username,
+            password: this.password
+          });
+        } catch (error) {
+          this.loginError = true;
+        }
       } else {
         this.loginError = true
       }
@@ -110,7 +120,11 @@ export default {
     async callDismissed() {
       this.loginError = false
     },
-    loadAuthURL: () => store.dispatch("auth/fetchAuthorizationEndpoint"),
+    loadAuthURL() {
+      store.dispatch("auth/fetchAuthorizationEndpoint", {
+        ciLogonInstitutionEntityId: this.ciLogonInstitutionEntityId
+      });
+    },
     redirectIfAuthenticated() {
       if (this.authenticated === true) {
         this.$router.push('/tenants/default');

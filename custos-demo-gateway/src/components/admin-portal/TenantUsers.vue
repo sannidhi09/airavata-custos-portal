@@ -45,7 +45,8 @@
               </b-overlay>
               <b-overlay :show="processingDisableUser[user.username]" v-if="user.status === 'ACTIVE'"
                          rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                <b-button variant="outline-primary" size="sm" v-on:click="disableUser(user)">
+                <b-button variant="outline-primary" size="sm" v-on:click="disableUser(user)"
+                          :disabled="user.username === tenant.adminUsername">
                   Disable
                 </b-button>
               </b-overlay>
@@ -79,7 +80,11 @@ export default {
     return {
       processingEnableUser: {},
       processingDisableUser: {},
-      errors: []
+      errors: [],
+
+      // TODO fix once the pagination is fixed.
+      // https://github.com/apache/airavata-custos/issues/174
+      limit: 100000
     }
   },
   computed: {
@@ -87,8 +92,11 @@ export default {
       console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
     },
+    tenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
+    },
     users() {
-      return this.$store.getters["user/getUsers"]({clientId: this.clientId})
+      return this.$store.getters["user/getUsers"]({clientId: this.clientId, limit: this.limit})
     },
     breadcrumbLinks() {
       return [{to: `/tenants/${this.clientId}/users`, name: "Users"}];
@@ -98,7 +106,7 @@ export default {
     async enableUser({username}) {
       this.processingEnableUser = {...this.processingEnableUser, [username]: true};
       try {
-        await this.$store.dispatch("user/enableUser", {username});
+        await this.$store.dispatch("user/enableUser", {clientId: this.clientId, username});
       } catch (error) {
         this.errors.push({
           title: `Unknown error when enabling the user '${username}'`,
@@ -110,7 +118,7 @@ export default {
     async disableUser({username}) {
       this.processingDisableUser = {...this.processingDisableUser, [username]: true};
       try {
-        await this.$store.dispatch("user/disableUser", {username});
+        await this.$store.dispatch("user/disableUser", {clientId: this.clientId, username});
       } catch (error) {
         this.errors.push({
           title: `Unknown error when disabling the user '${username}'`,
@@ -121,7 +129,7 @@ export default {
     }
   },
   beforeMount() {
-    this.$store.dispatch("user/fetchUsers", {clientId: this.clientId});
+    this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, limit: this.limit});
   }
 }
 </script>
