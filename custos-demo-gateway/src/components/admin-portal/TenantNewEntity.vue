@@ -29,6 +29,7 @@
                 size="sm">
             </b-form-input>
           </div>
+
           <div class="pt-3">
             <label class="form-label" for="entityTypeId">Entity Type</label>
             <button-overlay :show="!entityTypes" class="w-100">
@@ -50,6 +51,18 @@
               </b-form-select>
             </button-overlay>
           </div>
+
+          <div class="pt-3" v-if="entityTypeId === 'SECRET'">
+            <label class="form-label" for="secretType">Secret Type</label>
+            <b-form-radio-group
+                v-model="secretType"
+                :options="availableSecretTypes"
+                id="secretType"
+                trim
+                size="sm">
+            </b-form-radio-group>
+          </div>
+
         </div>
       </div>
     </b-overlay>
@@ -73,6 +86,9 @@ export default {
       name: null,
       description: null,
       entityTypeId: null,
+      secretType: "SSH",
+
+      availableSecretTypes: ["SSH"],
 
       inputFieldsList: ["name", "description", "entityTypeId"]
     };

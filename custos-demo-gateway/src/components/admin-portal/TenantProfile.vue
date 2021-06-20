@@ -229,7 +229,12 @@
 import store from "../../new-service/store";
 import TenantHome from "@/components/admin-portal/TenantHome";
 import {custosService} from "@/new-service/store/util/custos.util";
-import {VALIDATION_REGEX_DOMAIN, VALIDATION_REGEX_EMAIL, VALIDATION_REGEX_URI} from "@/components/validation-regex";
+import {
+  VALIDATION_REGEX_DOMAIN,
+  VALIDATION_REGEX_EMAIL,
+  VALIDATION_REGEX_FIRST_NAME, VALIDATION_REGEX_LAST_NAME,
+  VALIDATION_REGEX_URI
+} from "@/components/validation-regex";
 
 export default {
   name: "TenantProfile",
@@ -299,8 +304,8 @@ export default {
     isValid() {
       return {
         username: !!this.username && this.username.length >= 3,
-        firstName: !!this.firstName && this.firstName.length > 0,
-        lastName: !!this.lastName && this.lastName.length > 0,
+        firstName: !!this.firstName && VALIDATION_REGEX_FIRST_NAME.test(this.firstName),
+        lastName: !!this.lastName && VALIDATION_REGEX_LAST_NAME.test(this.lastName),
         email: !!this.email && VALIDATION_REGEX_EMAIL.test(this.email),
 
         tenantName: !!this.tenantName && this.tenantName.length > 0,

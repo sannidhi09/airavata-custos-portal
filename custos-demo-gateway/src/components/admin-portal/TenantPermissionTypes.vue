@@ -22,7 +22,8 @@
             <b-td>{{ permissionType.description }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[permissionType.id]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(permissionType)">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(permissionType)"
+                          :disabled="disabledPermissionType[permissionType.id]">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>
@@ -47,7 +48,11 @@ export default {
   data() {
     return {
       processingDelete: {},
-      errors: []
+      errors: [],
+
+      disabledPermissionType: {
+        "OWNER": true
+      }
     }
   },
   computed: {

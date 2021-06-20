@@ -1,12 +1,17 @@
 <template>
-  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks">
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
-      <div style="font-size: 14px; font-weight: 500;">
-        <b-icon icon="envelope"></b-icon>
-        {{ email }}
-        <br/>
-        <b-icon icon="person"></b-icon>
-        {{ username }}
+      <div style="display: flex; flex-direction: row;">
+        <div style="font-size: 14px; font-weight: 500;padding-right: 20px;">
+          <b-icon icon="envelope"></b-icon>
+          {{ email }}
+          <br/>
+          <b-icon icon="person"></b-icon>
+          {{ username }}
+        </div>
+        <div>
+          <b-button variant="primary" v-on:click="onClickSave">Save</b-button>
+        </div>
       </div>
     </template>
 
@@ -176,10 +181,6 @@
         </div>
 
       </div>
-      <div class="p-2 pt-4">
-        <b-button variant="primary" size="sm" v-on:click="onClickSave">Save</b-button>
-        <b-button variant="secondary" size="sm" class="ml-3">Cancel</b-button>
-      </div>
     </b-overlay>
   </TenantHome>
 </template>
@@ -188,7 +189,11 @@
 import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
-import {VALIDATION_REGEX_EMAIL} from "@/components/validation-regex";
+import {
+  VALIDATION_REGEX_EMAIL,
+  VALIDATION_REGEX_FIRST_NAME,
+  VALIDATION_REGEX_LAST_NAME
+} from "@/components/validation-regex";
 // import TableOverlayInfo from "@/components/table-overlay-info";
 
 export default {
@@ -206,6 +211,8 @@ export default {
       realmRoles: [],
       clientRoles: [],
       attributes: null, // [{key: "a", values: ["1", "2", "3"]}, {key: "b", values: ["fhfhf"]}]
+
+      rolesToBeDisabled: ["uma_authorization", "offline_access"],
 
       inputFieldsList: ["firstName", "lastName", "email", "realmRoles", "clientRoles", "attributes"]
     }
@@ -225,8 +232,8 @@ export default {
     isValid() {
       return {
         username: !!this.username && this.username.length > 0,
-        firstName: !!this.firstName && this.firstName.length > 0,
-        lastName: !!this.lastName && this.lastName.length > 0,
+        firstName: !!this.firstName && VALIDATION_REGEX_FIRST_NAME.test(this.firstName),
+        lastName: !!this.lastName && VALIDATION_REGEX_LAST_NAME.test(this.lastName),
         email: !!this.email && VALIDATION_REGEX_EMAIL.test(this.email),
         realmRoles: true,
         clientRoles: true,
@@ -249,12 +256,26 @@ export default {
     user() {
       return this.$store.getters["user/getUser"]({clientId: this.clientId, username: this.username})
     },
+    tenant() {
+      return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
+    },
     breadcrumbLinks() {
-      const _breadcrumbLinks = [{to: `/tenants/${this.clientId}/users`, name: "Users"}];
+      const _breadcrumbLinks = [];
+
+      if (this.tenant) {
+        _breadcrumbLinks.push({
+          to: `/tenants/${this.clientId}/users`,
+          name: "Users",
+          disabled: !this.tenant.hasAdminPrivileges
+        });
+      }
+
       if (this.user) {
+        // alert("this.tenant.hasAdminPrivileges " + this.tenant.hasAdminPrivileges)
         _breadcrumbLinks.push({
           to: `/tenants/${this.clientId}/users/${this.username}`,
-          name: this.title
+          name: this.title,
+          disabled: !this.tenant.hasAdminPrivileges
         });
       }
 
@@ -271,7 +292,9 @@ export default {
     availableTenantRoles() {
       const _roles = this.$store.getters["tenant/getTenantRoles"]({clientId: this.clientId, clientLevel: false});
       if (_roles) {
-        return _roles.map(({name}) => name);
+        return _roles.map(({name}) => {
+          return {value: name, text: name, disabled: this.rolesToBeDisabled.indexOf(name) >= 0}
+        });
       } else {
         return [];
       }

@@ -21,7 +21,7 @@
           </p>
           <br/>
           <router-link :to="`/tenants/${clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">
-            <b-button variant="secondary" @click="navigate">Back to Clients</b-button>
+            <b-button variant="secondary" @click="navigate">Back to Tenants</b-button>
           </router-link>
         </div>
         <div v-else class="w-100 text-left" style="width: 600px;max-width: 600px;display: inline-block;">
@@ -250,7 +250,12 @@
 import store from "../../new-service/store";
 import {custosService} from "@/new-service/store/util/custos.util";
 import TenantHome from "@/components/admin-portal/TenantHome";
-import {VALIDATION_REGEX_DOMAIN, VALIDATION_REGEX_EMAIL, VALIDATION_REGEX_URI} from "@/components/validation-regex";
+import {
+  VALIDATION_REGEX_DOMAIN,
+  VALIDATION_REGEX_EMAIL,
+  VALIDATION_REGEX_FIRST_NAME, VALIDATION_REGEX_LAST_NAME,
+  VALIDATION_REGEX_URI
+} from "@/components/validation-regex";
 
 export default {
   components: {TenantHome},
@@ -328,8 +333,8 @@ export default {
     isValid() {
       return {
         username: !!this.username && this.username.length >= 3,
-        firstName: !!this.firstName && this.firstName.length > 0,
-        lastName: !!this.lastName && this.lastName.length > 0,
+        firstName: !!this.firstName && VALIDATION_REGEX_FIRST_NAME.test(this.firstName),
+        lastName: !!this.lastName && VALIDATION_REGEX_LAST_NAME.test(this.lastName),
         email: !!this.email && VALIDATION_REGEX_EMAIL.test(this.email),
         password: !!this.password && /[a-z]/.test(this.password) && // checks for a-z
             /[0-9]/.test(this.password) && // checks for 0-9
