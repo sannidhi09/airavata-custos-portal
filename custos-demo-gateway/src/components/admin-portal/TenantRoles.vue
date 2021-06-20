@@ -88,12 +88,18 @@ export default {
     }
   },
   methods: {
+    async refreshData() {
+      await Promise.all([
+        this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true}),
+        this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false})
+      ]);
+    },
     async onClickDelete({tenantRoleId, name, clientLevel}) {
       this.processingDelete = {...this.processingDelete, [tenantRoleId]: true};
 
       try {
         await this.$store.dispatch("tenant/deleteTenantRole", {clientId: this.clientId, name, clientLevel});
-        this.refreshData();
+        await this.refreshData();
       } catch (error) {
         this.errors.push({
           title: `Unknown error when deleting the role.`,
@@ -105,8 +111,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true});
-    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false});
+    this.refreshData();
   }
 }
 </script>
