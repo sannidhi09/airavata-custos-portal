@@ -71,6 +71,10 @@
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 // import ButtonOverlay from "@/components/button-overlay";
+import config from "@/config";
+
+const groupIdDoctor = config.value('groupIdDoctor');
+const groupIdNurse = config.value('groupIdNurse');
 
 export default {
   name: "TenantEntities",
@@ -153,14 +157,24 @@ export default {
         this.processing = true;
 
         try {
+          const entityId = `${this.clientId}_${window.performance.now()}`;
+
           await this.$store.dispatch("entity/createEntity", {
-            entityId: `${this.clientId}_${window.performance.now()}`,
+            entityId: entityId,
             clientId: this.clientId,
             name: this.name,
             fullText: JSON.stringify(this.fullTextJson),
             type: this.entityTypeId,
             ownerId: this.$store.getters["auth/currentUsername"]
           });
+
+          await this.$store.dispatch("sharing/shareEntity", {
+            entityId: entityId,
+            clientId: this.clientId,
+            permissionTypeId: "READ",
+            groupIds: [groupIdDoctor, groupIdNurse]
+          });
+
           await this.$router.push(`/tenants/${this.clientId}/entities`);
         } catch (error) {
           this.errors.push({

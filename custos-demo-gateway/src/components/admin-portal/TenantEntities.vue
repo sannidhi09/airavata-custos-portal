@@ -9,15 +9,15 @@
       <b-table-simple>
         <b-thead>
           <b-tr>
-            <b-th>Appointment</b-th>
-            <b-th>History Check</b-th>
-            <b-th>Prescriptions</b-th>
+            <b-th v-if="hasDoctorRole || hasNurseRole || hasPatientRole">Appointment</b-th>
+            <b-th v-if="hasDoctorRole || hasNurseRole">History Check</b-th>
+            <b-th v-if="hasDoctorRole || hasPatientRole">Prescriptions</b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
           <b-tr v-for="(appointment, appointmentIndex) in appointments" :key="appointmentIndex">
             <!--          {{appointment}}-->
-            <b-td>
+            <b-td v-if="hasDoctorRole || hasNurseRole || hasPatientRole">
               <div>
                 <strong>Patient :</strong>
                 {{ appointment.fullTextJson.patient }}
@@ -43,7 +43,7 @@
                 </small>
               </div>
             </b-td>
-            <b-td>
+            <b-td v-if="hasDoctorRole || hasNurseRole">
               <ul class="history-ul">
                 <li v-for="(history, historyIndex) in appointment.fullTextJson.histories" :key="historyIndex">
                   <div v-if="history.saved">
@@ -90,7 +90,8 @@
                       <b-form-input size="sm" v-model="history.fullTextJson.randomBloodSugar"/>
                     </div>
                     <div class="mt-3">
-                      <b-button variant="primary" size="sm" v-on:click="saveEntity(history); updateEntity(appointment);">
+                      <b-button variant="primary" size="sm"
+                                v-on:click="saveEntity(appointment, history); updateEntity(appointment);">
                         Save
                       </b-button>
                     </div>
@@ -101,7 +102,7 @@
                 + Create new health check
               </b-button>
             </b-td>
-            <b-td>
+            <b-td v-if="hasDoctorRole || hasPatientRole">
               <ul class="prescriptions-ul">
                 <li v-for="(prescription, prescriptionIndex) in appointment.fullTextJson.prescriptions"
                     :key="prescriptionIndex">
@@ -165,7 +166,9 @@
                       </div>
                     </div>
                     <div class="mt-3">
-                      <b-button variant="primary" size="sm" v-on:click="saveEntity(prescription); updateEntity(appointment);">Save</b-button>
+                      <b-button variant="primary" size="sm"
+                                v-on:click="saveEntity(appointment, prescription); updateEntity(appointment);">Save
+                      </b-button>
                     </div>
                   </div>
                 </li>
@@ -186,8 +189,20 @@
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
+import config from "@/config";
 // import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
 // import ButtonOverlay from "@/components/button-overlay";
+
+
+const entityTypeIdAppointment = config.value('entityTypeIdAppointment');
+const entityTypeIdPatientHistory = config.value('entityTypeIdPatientHistory');
+const entityTypeIdPrescription = config.value('entityTypeIdPrescription');
+const clientRoleDoctor = config.value('clientRoleDoctor');
+const clientRoleNurse = config.value('clientRoleNurse');
+const clientRolePatient = config.value('clientRolePatient');
+const groupIdDoctor = config.value('groupIdDoctor');
+// const groupIdNurse = config.value('groupIdNurse');
+
 
 export default {
   name: "TenantEntities",
@@ -219,7 +234,7 @@ export default {
       // const dumbEntities = [
       //   {
       //     entityId: "0",
-      //     type: "APPOINTMENT",
+      //     type: entityTypeIdAppointment,
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
       //     fullTextJson: `{
@@ -234,7 +249,7 @@ export default {
       //   },
       //   {
       //     entityId: "1",
-      //     type: "APPOINTMENT",
+      //     type: entityTypeIdAppointment,
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
       //     fullTextJson: `{
@@ -249,7 +264,7 @@ export default {
       //   },
       //   {
       //     entityId: "2",
-      //     type: "HISTORY",
+      //     type: entityTypeIdPatientHistory,
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
       //     fullTextJson: `{
@@ -262,7 +277,7 @@ export default {
       //   },
       //   {
       //     entityId: "3",
-      //     type: "PRESCRIPTION",
+      //     type: entityTypeIdPrescription,
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
       //     fullTextJson: `{
@@ -290,10 +305,22 @@ export default {
       return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})
     },
     breadcrumbLinks() {
-      return [{to: `/tenants/${this.clientId}/entities`, name: "Appointments"}];
+      return [];
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"];
+    },
+    currentUser() {
+      return this.$store.getters["user/getUser"]({clientId: this.clientId, username: this.currentUsername})
+    },
+    hasDoctorRole() {
+      return this.currentUser && this.currentUser.realmRoles.indexOf(clientRoleDoctor) >= 0;
+    },
+    hasNurseRole() {
+      return this.currentUser && this.currentUser.realmRoles.indexOf(clientRoleNurse) >= 0;
+    },
+    hasPatientRole() {
+      return this.currentUser && this.currentUser.realmRoles.indexOf(clientRolePatient) >= 0;
     }
   },
   methods: {
@@ -303,7 +330,7 @@ export default {
         ...this.entitiesMap,
         [newHealthCheckEntityId]: {
           entityId: newHealthCheckEntityId,
-          type: "HISTORY",
+          type: entityTypeIdPatientHistory,
           saved: false,
           fullTextJson: {
             "symptoms": "",
@@ -330,7 +357,7 @@ export default {
         ...this.entitiesMap,
         [newPrescriptionEntityId]: {
           entityId: newPrescriptionEntityId,
-          type: "PRESCRIPTION",
+          type: entityTypeIdPrescription,
           saved: false,
           fullTextJson: {
             "medications": [
@@ -354,12 +381,12 @@ export default {
         }
       };
     },
-    async updateEntity({entityId}) {
+    async updateEntity(appointment) {
 
       try {
-        const entity = this.entitiesMap[entityId];
+        const entity = this.entitiesMap[appointment.entityId];
         await this.$store.dispatch("entity/updateEntity", {
-          entityId: entityId,
+          entityId: appointment.entityId,
           clientId: this.clientId,
           name: `custos-health-history-${window.performance.now()}`,
           fullText: JSON.stringify(entity.fullTextJson),
@@ -369,8 +396,8 @@ export default {
 
         this.entitiesMap = {
           ...this.entitiesMap,
-          [entityId]: {
-            ...this.entitiesMap[entityId],
+          [appointment.entityId]: {
+            ...this.entitiesMap[appointment.entityId],
             saved: true
           }
         }
@@ -382,12 +409,12 @@ export default {
       }
 
     },
-    async saveEntity({entityId}) {
+    async saveEntity(appointment, subEntity) {
 
       try {
-        const entity = this.entitiesMap[entityId];
+        const entity = this.entitiesMap[subEntity.entityId];
         await this.$store.dispatch("entity/createEntity", {
-          entityId: entityId,
+          entityId: subEntity.entityId,
           clientId: this.clientId,
           name: `custos-health-history-${window.performance.now()}`,
           fullText: JSON.stringify(entity.fullTextJson),
@@ -397,11 +424,28 @@ export default {
 
         this.entitiesMap = {
           ...this.entitiesMap,
-          [entityId]: {
-            ...this.entitiesMap[entityId],
+          [subEntity.entityId]: {
+            ...this.entitiesMap[subEntity.entityId],
             saved: true
           }
         }
+
+        if (entity.type === entityTypeIdPatientHistory) {
+          await this.$store.dispatch("sharing/shareEntity", {
+            entityId: subEntity.entityId,
+            clientId: this.clientId,
+            permissionTypeId: "READ",
+            groupIds: [groupIdDoctor]
+          });
+        } else if (entity.type === entityTypeIdPrescription) {
+          await this.$store.dispatch("sharing/shareEntity", {
+            entityId: subEntity.entityId,
+            clientId: this.clientId,
+            permissionTypeId: "READ",
+            usernames: [appointment.ownerId]
+          });
+        }
+
       } catch (error) {
         this.errors.push({
           title: "Unknown error when creating the entity.",
@@ -415,7 +459,7 @@ export default {
       if (!entity) {
         alert(entityId)
       }
-      if (entity.type === "APPOINTMENT") {
+      if (entity.type === entityTypeIdAppointment) {
         entity = {
           ...entity,
           fullTextJson: {
@@ -452,7 +496,7 @@ export default {
 
           this.entitiesMap[entity.entityId] = entity;
 
-          if (entity.type === "APPOINTMENT") {
+          if (entity.type === entityTypeIdAppointment) {
             this.appointmentEntityIds.push(entity.entityId);
           }
         }
