@@ -63,6 +63,19 @@ export default class CustosTenants {
         ).then(({data}) => data);
     }
 
+    deleteTenantRole({clientId, name, clientLevel = false}) {
+        return this.custosService.axiosInstanceWithTokenAuthorization.delete(
+            `${CustosService.ENDPOINTS.TENANTS}/role`,
+            {
+                data: {
+                    "roles": [name],
+                    "client_level": clientLevel,
+                    "client_id": clientId
+                }
+            }
+        ).then(({data}) => data);
+    }
+
     /**
      * Fetch tenant roles
      * @return {Promise<AxiosResponse<any>>}

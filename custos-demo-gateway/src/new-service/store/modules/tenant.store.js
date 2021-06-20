@@ -119,6 +119,11 @@ const actions = {
             composite
         });
     },
+    async deleteTenantRole(obj, {clientId, name, clientLevel = false}) {
+        await custosService.tenants.deleteTenantRole({
+            clientId, name, clientLevel
+        });
+    },
     async fetchTenantRoles({commit}, {clientId, clientLevel = false}) {
         const DEFAULT_CUSTOS_ROLES = [
             // "admin-read-only", "admin", "gateway-provider", "gateway-user", "offline_access",

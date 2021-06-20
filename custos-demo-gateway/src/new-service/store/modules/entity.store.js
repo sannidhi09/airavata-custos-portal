@@ -58,6 +58,9 @@ const actions = {
     async createEntity(obj, {clientId, entityId, name, description, type, ownerId}) {
         await custosService.entities.createEntity({clientId, entityId, name, description, type, ownerId});
     },
+    async updateEntity(obj, {clientId, entityId, name, description, type, ownerId}) {
+        await custosService.entities.updateEntity({clientId, entityId, name, description, type, ownerId});
+    },
     async deleteEntity(obj, {clientId, entityId, name, description, type, ownerId}) {
         await custosService.entities.deleteEntity({clientId, entityId, name, description, type, ownerId});
     },
