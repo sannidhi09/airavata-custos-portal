@@ -53,7 +53,7 @@ const actions = {
             clientLevel: clientLevel
         });
     },
-    async updateUser({commit}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes, deletedAttributes}) {
+    async updateUser({commit, getters}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes, deletedAttributes}) {
         if (deletedAttributes && deletedAttributes.length > 0) {
             await custosService.users.deleteUserAttributes({
                 clientId,
@@ -73,12 +73,30 @@ const actions = {
                 usernames: [username],
                 clientLevel: false
             });
+
+            await custosService.users.deleteRolesFromUser({
+                clientId,
+                roles: getters.getUser({
+                    clientId, username
+                }).realmRoles.filter(realmRole => realmRoles.indexOf(realmRole) < 0),
+                usernames: [username],
+                clientLevel: false
+            });
         }
 
         if (clientRoles && clientRoles.length > 0) {
             await custosService.users.addRolesToUser({
                 clientId,
                 roles: clientRoles,
+                usernames: [username],
+                clientLevel: true
+            });
+
+            await custosService.users.deleteRolesFromUser({
+                clientId,
+                roles: getters.getUser({
+                    clientId, username
+                }).clientRoles.filter(clientRole => clientRoles.indexOf(clientRole) < 0),
                 usernames: [username],
                 clientLevel: true
             });
