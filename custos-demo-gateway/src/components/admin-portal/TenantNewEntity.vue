@@ -20,41 +20,41 @@
           <!--            </b-form-invalid-feedback>-->
           <!--          </div>-->
           <div class="pt-3">
-            <label class="form-label" for="description.patient">Patient</label>
+            <label class="form-label" for="fullTextJson.patient">Patient</label>
             <b-form-input
-                v-model="description.patient"
-                id="description.patient"
+                v-model="fullTextJson.patient"
+                id="fullTextJson.patient"
                 trim
                 size="sm">
             </b-form-input>
           </div>
 
           <div class="pt-3">
-            <label class="form-label" for="description.doctorId">Doctor</label>
+            <label class="form-label" for="fullTextJson.doctorId">Doctor</label>
             <b-form-select
-                v-model="description.doctorId"
+                v-model="fullTextJson.doctorId"
                 :options="availableDoctors"
-                id="description.doctorId"
+                id="fullTextJson.doctorId"
                 trim
                 size="sm">
             </b-form-select>
           </div>
 
           <div class="pt-3">
-            <label class="form-label" for="description.reason">Reason</label>
+            <label class="form-label" for="fullTextJson.reason">Reason</label>
             <b-form-input
-                v-model="description.reason"
-                id="description.reason"
+                v-model="fullTextJson.reason"
+                id="fullTextJson.reason"
                 trim
                 size="sm">
             </b-form-input>
           </div>
 
           <div class="pt-3">
-            <label class="form-label" for="description.date">Date</label>
+            <label class="form-label" for="fullTextJson.date">Date</label>
             <b-form-datepicker
-                v-model="description.date"
-                id="description.date"
+                v-model="fullTextJson.date"
+                id="fullTextJson.date"
                 trim
                 size="sm">
             </b-form-datepicker>
@@ -84,7 +84,7 @@ export default {
       availableDoctors: ["Dr. Aruna", "Dr. Ruwan", "Dr. Marlon"],
 
       // name: null,
-      description: {
+      fullTextJson: {
         "patient": "",
         "reason": "",
         "doctorId": "",
@@ -102,7 +102,7 @@ export default {
   },
   computed: {
     name() {
-      return `custos-health-appointment-${this.description.patient}-${this.description.visitDate}`;
+      return `custos-health-appointment-${this.fullTextJson.patient}-${this.fullTextJson.visitDate}`;
     },
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
@@ -157,7 +157,7 @@ export default {
             entityId: `${this.clientId}_${window.performance.now()}`,
             clientId: this.clientId,
             name: this.name,
-            description: JSON.stringify(this.description),
+            fullText: JSON.stringify(this.fullTextJson),
             type: this.entityTypeId,
             ownerId: this.$store.getters["auth/currentUsername"]
           });

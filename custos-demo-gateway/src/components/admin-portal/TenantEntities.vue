@@ -20,19 +20,19 @@
             <b-td>
               <div>
                 <strong>Patient :</strong>
-                {{ appointment.description.patient }}
+                {{ appointment.fullTextJson.patient }}
               </div>
               <div>
                 <strong>Date :</strong>
-                {{ appointment.description.visitDate }}
+                {{ appointment.fullTextJson.visitDate }}
               </div>
               <div>
                 <strong>Reason :</strong>
-                {{ appointment.description.reason }}
+                {{ appointment.fullTextJson.reason }}
               </div>
               <div>
                 <strong>Doctor :</strong>
-                {{ appointment.description.doctorId }}
+                {{ appointment.fullTextJson.doctorId }}
               </div>
               <div class="text-right">
                 <small>
@@ -45,23 +45,23 @@
             </b-td>
             <b-td>
               <ul class="history-ul">
-                <li v-for="(history, historyIndex) in appointment.description.histories" :key="historyIndex">
+                <li v-for="(history, historyIndex) in appointment.fullTextJson.histories" :key="historyIndex">
                   <div v-if="history.saved">
                     <div>
                       <strong>Symptoms :</strong>
-                      {{ history.description.symptoms }}
+                      {{ history.fullTextJson.symptoms }}
                     </div>
                     <div>
                       <strong>Allergies :</strong>
-                      {{ history.description.allergies }}
+                      {{ history.fullTextJson.allergies }}
                     </div>
                     <div>
                       <strong>Blood Pressure :</strong>
-                      {{ history.description.bloodPressure }}
+                      {{ history.fullTextJson.bloodPressure }}
                     </div>
                     <div>
                       <strong>Random Blood Sugar :</strong>
-                      {{ history.description.randomBloodSugar }}
+                      {{ history.fullTextJson.randomBloodSugar }}
                     </div>
                     <div class="text-right">
                       <small>
@@ -75,22 +75,22 @@
                   <div v-else>
                     <div>
                       <label class="form-label">Symptoms</label>
-                      <b-form-input size="sm" v-model="history.description.symptoms"/>
+                      <b-form-input size="sm" v-model="history.fullTextJson.symptoms"/>
                     </div>
                     <div>
                       <label class="form-label">Allergies</label>
-                      <b-form-input size="sm" v-model="history.description.allergies"/>
+                      <b-form-input size="sm" v-model="history.fullTextJson.allergies"/>
                     </div>
                     <div>
                       <label class="form-label">Blood Pressure</label>
-                      <b-form-input size="sm" v-model="history.description.bloodPressure"/>
+                      <b-form-input size="sm" v-model="history.fullTextJson.bloodPressure"/>
                     </div>
                     <div>
                       <label class="form-label">Random Blood Sugar</label>
-                      <b-form-input size="sm" v-model="history.description.randomBloodSugar"/>
+                      <b-form-input size="sm" v-model="history.fullTextJson.randomBloodSugar"/>
                     </div>
                     <div class="mt-3">
-                      <b-button variant="primary" size="sm" v-on:click="saveEntity(history) && updateEntity(appointment)">
+                      <b-button variant="primary" size="sm" v-on:click="saveEntity(history); updateEntity(appointment);">
                         Save
                       </b-button>
                     </div>
@@ -103,13 +103,13 @@
             </b-td>
             <b-td>
               <ul class="prescriptions-ul">
-                <li v-for="(prescription, prescriptionIndex) in appointment.description.prescriptions"
+                <li v-for="(prescription, prescriptionIndex) in appointment.fullTextJson.prescriptions"
                     :key="prescriptionIndex">
                   <div v-if="prescription.saved">
                     <div>
                       <strong>MEDICATIONS</strong>
                       <ul class="prescription-medications-ul">
-                        <li v-for="(medication, medicationIndex) in prescription.description.medications"
+                        <li v-for="(medication, medicationIndex) in prescription.fullTextJson.medications"
                             :key="medicationIndex">
                           <strong>{{ medication.name }} :</strong>
                           {{ medication.dose }}
@@ -120,7 +120,7 @@
                     <div>
                       <strong>RECOMMENDATIONS</strong>
                       <ul class="prescription-recommendations-ul">
-                        <li v-for="(recommendation, recommendationIndex) in prescription.description.recommendations"
+                        <li v-for="(recommendation, recommendationIndex) in prescription.fullTextJson.recommendations"
                             :key="recommendationIndex">
                           {{ recommendation }}
                         </li>
@@ -141,10 +141,10 @@
                     <div>
                       <label class="form-label">MEDICATIONS</label>
                       <b-button variant="link" size="sm"
-                                v-on:click="prescription.description.medications.push({name: '', dose: ''})">
+                                v-on:click="prescription.fullTextJson.medications.push({name: '', dose: ''})">
                         + Add
                       </b-button>
-                      <div v-for="(medication, medicationIndex) in prescription.description.medications"
+                      <div v-for="(medication, medicationIndex) in prescription.fullTextJson.medications"
                            :key="medicationIndex">
                         <div style="display: flex; flex-direction: row;">
                           <b-form-select size="sm" :options="availableMedications" v-model="medication.name"/>
@@ -155,17 +155,17 @@
                     <div>
                       <label class="form-label">RECOMMENDATIONS</label>
                       <b-button variant="link" size="sm"
-                                v-on:click="prescription.description.recommendations.push('')">
+                                v-on:click="prescription.fullTextJson.recommendations.push('')">
                         + Add
                       </b-button>
-                      <div v-for="(recommendation, recommendationIndex) in prescription.description.recommendations"
+                      <div v-for="(recommendation, recommendationIndex) in prescription.fullTextJson.recommendations"
                            :key="recommendationIndex">
                         <b-form-input size="sm"
-                                      v-model="prescription.description.recommendations[recommendationIndex]"/>
+                                      v-model="prescription.fullTextJson.recommendations[recommendationIndex]"/>
                       </div>
                     </div>
                     <div class="mt-3">
-                      <b-button variant="primary" size="sm" v-on:click="saveEntity(prescription) && updateEntity(prescription)">Save</b-button>
+                      <b-button variant="primary" size="sm" v-on:click="saveEntity(prescription); updateEntity(appointment);">Save</b-button>
                     </div>
                   </div>
                 </li>
@@ -222,7 +222,7 @@ export default {
       //     type: "APPOINTMENT",
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
-      //     description: `{
+      //     fullTextJson: `{
       //       "patient": "Isuru Ranawaka",
       //       "reason": "Abdominal Pain",
       //       "doctorId": "Aruna",
@@ -237,7 +237,7 @@ export default {
       //     type: "APPOINTMENT",
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
-      //     description: `{
+      //     fullTextJson: `{
       //       "patient": "Suresh",
       //       "reason": "Chest Pain",
       //       "doctorId": "Saman",
@@ -252,7 +252,7 @@ export default {
       //     type: "HISTORY",
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
-      //     description: `{
+      //     fullTextJson: `{
       //       "symptoms": "Cold and Fever for few days",
       //       "allergies": "None",
       //       "bloodPressure": "120",
@@ -265,7 +265,7 @@ export default {
       //     type: "PRESCRIPTION",
       //     createdAt: new Date(),
       //     updatedAt: new Date(),
-      //     description: `{
+      //     fullTextJson: `{
       //       "medications": [
       //         {"name": "Panadol", "dose": 23},
       //         {"name": "Vitamin C", "dose": 40}
@@ -305,7 +305,7 @@ export default {
           entityId: newHealthCheckEntityId,
           type: "HISTORY",
           saved: false,
-          description: {
+          fullTextJson: {
             "symptoms": "",
             "allergies": "",
             "bloodPressure": "",
@@ -314,10 +314,10 @@ export default {
         },
         [appointment.entityId]: {
           ...this.entitiesMap[appointment.entityId],
-          description: {
-            ...this.entitiesMap[appointment.entityId].description,
+          fullTextJson: {
+            ...this.entitiesMap[appointment.entityId].fullTextJson,
             histories: [
-              ...this.entitiesMap[appointment.entityId].description.histories,
+              ...this.entitiesMap[appointment.entityId].fullTextJson.histories,
               newHealthCheckEntityId
             ]
           }
@@ -332,7 +332,7 @@ export default {
           entityId: newPrescriptionEntityId,
           type: "PRESCRIPTION",
           saved: false,
-          description: {
+          fullTextJson: {
             "medications": [
               // {"name": "Panadol", "dose": 23},
               // {"name": "Vitamin C", "dose": 40}
@@ -344,10 +344,10 @@ export default {
         },
         [appointment.entityId]: {
           ...this.entitiesMap[appointment.entityId],
-          description: {
-            ...this.entitiesMap[appointment.entityId].description,
+          fullTextJson: {
+            ...this.entitiesMap[appointment.entityId].fullTextJson,
             prescriptions: [
-              ...this.entitiesMap[appointment.entityId].description.prescriptions,
+              ...this.entitiesMap[appointment.entityId].fullTextJson.prescriptions,
               newPrescriptionEntityId
             ]
           }
@@ -362,7 +362,7 @@ export default {
           entityId: entityId,
           clientId: this.clientId,
           name: `custos-health-history-${window.performance.now()}`,
-          description: JSON.stringify(entity.description),
+          fullText: JSON.stringify(entity.fullTextJson),
           type: entity.type,
           ownerId: this.$store.getters["auth/currentUsername"]
         });
@@ -390,7 +390,7 @@ export default {
           entityId: entityId,
           clientId: this.clientId,
           name: `custos-health-history-${window.performance.now()}`,
-          description: JSON.stringify(entity.description),
+          fullText: JSON.stringify(entity.fullTextJson),
           type: entity.type,
           ownerId: this.$store.getters["auth/currentUsername"]
         });
@@ -418,10 +418,10 @@ export default {
       if (entity.type === "APPOINTMENT") {
         entity = {
           ...entity,
-          description: {
-            ...entity.description,
-            histories: entity.description.histories.map(entityId => this.getEntity({entityId})),
-            prescriptions: entity.description.prescriptions.map(entityId => this.getEntity({entityId}))
+          fullTextJson: {
+            ...entity.fullTextJson,
+            histories: entity.fullTextJson.histories.map(entityId => this.getEntity({entityId})),
+            prescriptions: entity.fullTextJson.prescriptions.map(entityId => this.getEntity({entityId}))
           }
         }
       } else {
@@ -445,9 +445,9 @@ export default {
           entity.saved = true;
 
           try {
-            entity.description = JSON.parse(entity.description);
+            entity.fullTextJson = JSON.parse(entity.fullText);
           } catch (err) {
-            entity.description = {};
+            entity.fullTextJson = {};
           }
 
           this.entitiesMap[entity.entityId] = entity;
