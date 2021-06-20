@@ -1,5 +1,5 @@
 <template>
-  <TenantHome title="Entities" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+  <TenantHome title="Appointments" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <router-link :to="`/tenants/${clientId}/entities/new`" v-slot="{href, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Make an Appointment</b-button>
@@ -165,7 +165,7 @@
                       </div>
                     </div>
                     <div class="mt-3">
-                      <b-button variant="primary" size="sm" v-on:click="saveEntity(prescription)">Save</b-button>
+                      <b-button variant="primary" size="sm" v-on:click="saveEntity(prescription) && updateEntity(prescription)">Save</b-button>
                     </div>
                   </div>
                 </li>
@@ -290,7 +290,7 @@ export default {
       return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})
     },
     breadcrumbLinks() {
-      return [{to: `/tenants/${this.clientId}/entities`, name: "Entities"}];
+      return [{to: `/tenants/${this.clientId}/entities`, name: "Appointments"}];
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"];
