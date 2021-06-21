@@ -12,7 +12,7 @@
             <b-th>Name</b-th>
             <b-th>Description</b-th>
             <!--            <b-th>Composite</b-th>-->
-            <b-th>Scope</b-th>
+            <!--            <b-th>Scope</b-th>-->
           </b-tr>
         </b-thead>
         <b-tbody>
@@ -20,7 +20,7 @@
             <b-td>{{ role.name }}</b-td>
             <b-td>{{ role.description }}</b-td>
             <!--            <b-td>{{ role.composite }}</b-td>-->
-            <b-td>TENANT</b-td>
+            <!--            <b-td>TENANT</b-td>-->
             <b-td>
               <button-overlay :show="processingDelete[role.tenantRoleId]">
                 <b-button variant="link" size="sm" v-on:click="onClickDelete(role)">
@@ -29,19 +29,19 @@
               </button-overlay>
             </b-td>
           </b-tr>
-          <b-tr v-for="role in clientRoles" :key="role.tenantRoleId">
-            <b-td>{{ role.name }}</b-td>
-            <b-td>{{ role.description }}</b-td>
-            <!--            <b-td>{{ role.composite }}</b-td>-->
-            <b-td>CLIENT</b-td>
-            <b-td>
-              <button-overlay :show="processingDelete[role.tenantRoleId]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)">
-                  <b-icon icon="trash"></b-icon>
-                </b-button>
-              </button-overlay>
-            </b-td>
-          </b-tr>
+          <!--          <b-tr v-for="role in clientRoles" :key="role.tenantRoleId">-->
+          <!--            <b-td>{{ role.name }}</b-td>-->
+          <!--            <b-td>{{ role.description }}</b-td>-->
+          <!--            &lt;!&ndash;            <b-td>{{ role.composite }}</b-td>&ndash;&gt;-->
+          <!--&lt;!&ndash;            <b-td>CLIENT</b-td>&ndash;&gt;-->
+          <!--            <b-td>-->
+          <!--              <button-overlay :show="processingDelete[role.tenantRoleId]">-->
+          <!--                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)">-->
+          <!--                  <b-icon icon="trash"></b-icon>-->
+          <!--                </b-button>-->
+          <!--              </button-overlay>-->
+          <!--            </b-td>-->
+          <!--          </b-tr>-->
         </b-tbody>
       </b-table-simple>
     </table-overlay-info>
@@ -88,12 +88,18 @@ export default {
     }
   },
   methods: {
+    async refreshData() {
+      await Promise.all([
+        this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true}),
+        this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false})
+      ]);
+    },
     async onClickDelete({tenantRoleId, name, clientLevel}) {
       this.processingDelete = {...this.processingDelete, [tenantRoleId]: true};
 
       try {
         await this.$store.dispatch("tenant/deleteTenantRole", {clientId: this.clientId, name, clientLevel});
-        this.refreshData();
+        await this.refreshData();
       } catch (error) {
         this.errors.push({
           title: `Unknown error when deleting the role.`,
@@ -105,8 +111,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: true});
-    this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false});
+    this.refreshData();
   }
 }
 </script>

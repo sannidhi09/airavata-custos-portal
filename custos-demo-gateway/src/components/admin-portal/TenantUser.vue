@@ -45,7 +45,7 @@
           </div>
 
           <div class="pt-3">
-            <label class="form-label" for="realm-roles">Tenant Roles</label>
+            <label class="form-label" for="realm-roles">Roles</label>
             <b-form-checkbox-group
                 v-model="realmRoles"
                 :options="availableTenantRoles"
@@ -59,20 +59,20 @@
             <b-form-invalid-feedback></b-form-invalid-feedback>
           </div>
 
-          <div class="pt-3" v-if="tenant && tenant.hasAdminPrivileges">
-            <label class="form-label" for="client-roles">Client Roles</label>
-            <b-form-checkbox-group
-                v-model="clientRoles"
-                :options="availableClientRoles"
-                :state="inputState.clientRoles"
-                id="client-roles"
-                trim
-                size="sm"
-                aria-describedby="scope-help-block">
-            </b-form-checkbox-group>
-            <b-form-text id="scope-help-block"></b-form-text>
-            <b-form-invalid-feedback></b-form-invalid-feedback>
-          </div>
+          <!--          <div class="pt-3" v-if="tenant && tenant.hasAdminPrivileges">-->
+          <!--            <label class="form-label" for="client-roles">Client Roles</label>-->
+          <!--            <b-form-checkbox-group-->
+          <!--                v-model="clientRoles"-->
+          <!--                :options="availableClientRoles"-->
+          <!--                :state="inputState.clientRoles"-->
+          <!--                id="client-roles"-->
+          <!--                trim-->
+          <!--                size="sm"-->
+          <!--                aria-describedby="scope-help-block">-->
+          <!--            </b-form-checkbox-group>-->
+          <!--            <b-form-text id="scope-help-block"></b-form-text>-->
+          <!--            <b-form-invalid-feedback></b-form-invalid-feedback>-->
+          <!--          </div>-->
 
         </div>
 

@@ -68,7 +68,7 @@ export default class CustosTenants {
             `${CustosService.ENDPOINTS.TENANTS}/role`,
             {
                 data: {
-                    "roles": [name],
+                    "role": {"id": name},
                     "client_level": clientLevel,
                     "client_id": clientId
                 }
