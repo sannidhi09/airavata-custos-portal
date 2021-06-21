@@ -6,66 +6,66 @@
     <b-overlay :show="processing">
       <div class="p-2 text-center">
         <div class="text-left" style="max-width: 600px; display: inline-block;">
-          <div class="pt-3" style="display: flex; flex-direction: row;">
+          <!--          <div class="pt-3" style="display: flex; flex-direction: row;">-->
 
-            <div style="flex: 1;" class="mr-2">
-              <label class="form-label" for="username">Username</label>
-              <b-form-input
-                  v-model="username"
-                  :state="inputState.username"
-                  id="username"
-                  trim
-                  size="sm"
-                  readonly>
-              </b-form-input>
-              <b-form-invalid-feedback>
-                Enter at least 3 letters
-              </b-form-invalid-feedback>
-            </div>
+          <!--            <div style="flex: 1;" class="mr-2">-->
+          <!--              <label class="form-label" for="username">Username</label>-->
+          <!--              <b-form-input-->
+          <!--                  v-model="username"-->
+          <!--                  :state="inputState.username"-->
+          <!--                  id="username"-->
+          <!--                  trim-->
+          <!--                  size="sm"-->
+          <!--                  readonly>-->
+          <!--              </b-form-input>-->
+          <!--              <b-form-invalid-feedback>-->
+          <!--                Enter at least 3 letters-->
+          <!--              </b-form-invalid-feedback>-->
+          <!--            </div>-->
 
-            <div style="flex: 1;" class="mr-2">
-              <label class="form-label" for="first-name">First Name</label>
-              <b-form-input
-                  v-model="firstName"
-                  :state="inputState.firstName"
-                  id="first-name"
-                  trim
-                  size="sm"
-                  readonly>
-              </b-form-input>
-              <b-form-invalid-feedback>
-              </b-form-invalid-feedback>
-            </div>
+          <!--            <div style="flex: 1;" class="mr-2">-->
+          <!--              <label class="form-label" for="first-name">First Name</label>-->
+          <!--              <b-form-input-->
+          <!--                  v-model="firstName"-->
+          <!--                  :state="inputState.firstName"-->
+          <!--                  id="first-name"-->
+          <!--                  trim-->
+          <!--                  size="sm"-->
+          <!--                  readonly>-->
+          <!--              </b-form-input>-->
+          <!--              <b-form-invalid-feedback>-->
+          <!--              </b-form-invalid-feedback>-->
+          <!--            </div>-->
 
-            <div style="flex: 1;" class="ml-2">
-              <label class="form-label" for="last-name">Last Name</label>
-              <b-form-input
-                  v-model="lastName"
-                  :state="inputState.lastName"
-                  id="last-name"
-                  trim
-                  size="sm"
-                  readonly>
-              </b-form-input>
-              <b-form-invalid-feedback>
-              </b-form-invalid-feedback>
-            </div>
-          </div>
+          <!--            <div style="flex: 1;" class="ml-2">-->
+          <!--              <label class="form-label" for="last-name">Last Name</label>-->
+          <!--              <b-form-input-->
+          <!--                  v-model="lastName"-->
+          <!--                  :state="inputState.lastName"-->
+          <!--                  id="last-name"-->
+          <!--                  trim-->
+          <!--                  size="sm"-->
+          <!--                  readonly>-->
+          <!--              </b-form-input>-->
+          <!--              <b-form-invalid-feedback>-->
+          <!--              </b-form-invalid-feedback>-->
+          <!--            </div>-->
+          <!--          </div>-->
 
-          <div class="pt-3">
-            <label class="form-label" for="email">Email</label>
-            <b-form-input
-                v-model="email"
-                :state="inputState.email"
-                type="email"
-                id="email"
-                trim
-                size="sm"
-                readonly>
-            </b-form-input>
-            <b-form-invalid-feedback>
-            </b-form-invalid-feedback>
-          </div>
+          <!--          <div class="pt-3">-->
+          <!--            <label class="form-label" for="email">Email</label>-->
+          <!--            <b-form-input-->
+          <!--                v-model="email"-->
+          <!--                :state="inputState.email"-->
+          <!--                type="email"-->
+          <!--                id="email"-->
+          <!--                trim-->
+          <!--                size="sm"-->
+          <!--                readonly>-->
+          <!--            </b-form-input>-->
+          <!--            <b-form-invalid-feedback>-->
+          <!--            </b-form-invalid-feedback>-->
+          <!--          </div>-->
 
           <div class="pt-3">
             <label class="form-label" for="tenantName">Tenant Name</label>

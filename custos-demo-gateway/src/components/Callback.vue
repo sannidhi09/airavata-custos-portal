@@ -7,6 +7,10 @@
 import store from "../new-service/store";
 import {custosService} from "@/new-service/store/util/custos.util";
 
+import config from "@/config";
+
+const clientRolePatient = config.value('clientRolePatient');
+
 export default {
   name: "Callback",
   store: store,
@@ -18,7 +22,7 @@ export default {
       await this.$store.dispatch("user/addRolesToUser", {
         clientId: custosService.clientId,
         username: this.$store.getters["auth/currentUsername"],
-        realmRoles: ["Tenant Requester"],
+        realmRoles: [clientRolePatient],
         clientLevel: false
       });
     }

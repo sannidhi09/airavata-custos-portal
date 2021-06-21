@@ -1,67 +1,65 @@
 <template>
-  <TenantHome title="New Entity" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+  <TenantHome title="New Appointment" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <b-button variant="primary" v-on:click="create">Create</b-button>
     </template>
     <b-overlay :show="processing">
       <div class="p-2 text-center">
         <div class="w-100 text-left" style="max-width: 600px;display: inline-block;">
+          <!--          <div class="pt-3">-->
+          <!--            <label class="form-label" for="name">Entity Name</label>-->
+          <!--            <b-form-input-->
+          <!--                v-model="name"-->
+          <!--                :state="inputState.name"-->
+          <!--                id="name"-->
+          <!--                trim-->
+          <!--                size="sm">-->
+          <!--            </b-form-input>-->
+          <!--            <b-form-invalid-feedback>-->
+          <!--              Enter at least 2 letters-->
+          <!--            </b-form-invalid-feedback>-->
+          <!--          </div>-->
           <div class="pt-3">
-            <label class="form-label" for="name">Entity Name</label>
+            <label class="form-label" for="fullTextJson.patient">Patient</label>
             <b-form-input
-                v-model="name"
-                :state="inputState.name"
-                id="name"
-                trim
-                size="sm">
-            </b-form-input>
-            <b-form-invalid-feedback>
-              Enter at least 2 letters
-            </b-form-invalid-feedback>
-          </div>
-          <div class="pt-3">
-            <label class="form-label" for="description">Description</label>
-            <b-form-input
-                v-model="description"
-                :state="inputState.description"
-                id="description"
+                v-model="fullTextJson.patient"
+                id="fullTextJson.patient"
                 trim
                 size="sm">
             </b-form-input>
           </div>
 
           <div class="pt-3">
-            <label class="form-label" for="entityTypeId">Entity Type</label>
-            <button-overlay :show="!entityTypes" class="w-100">
-              <p class="w-100" v-if="entityTypes && entityTypes.length === 0">
-                There's no entity types available.
-                <router-link :to="`/tenants/${this.clientId}/entity-types/new`">Create New Entity Type</router-link>
-              </p>
-              <b-form-select
-                  v-model="entityTypeId"
-                  :state="inputState.entityTypeId"
-                  id="entityTypeId"
-                  trim
-                  size="sm"
-                  :disabled="entityTypes && entityTypes.length === 0">
-                <b-form-select-option v-for="(entityType, entityTypeIndex) in entityTypes" :key="entityTypeIndex"
-                                      :value="entityType.id">
-                  {{ entityType.id }} - {{ entityType.name }} - {{ entityType.description }}
-                </b-form-select-option>
-              </b-form-select>
-            </button-overlay>
-          </div>
-
-          <div class="pt-3" v-if="entityTypeId === 'SECRET'">
-            <label class="form-label" for="secretType">Secret Type</label>
-            <b-form-radio-group
-                v-model="secretType"
-                :options="availableSecretTypes"
-                id="secretType"
+            <label class="form-label" for="fullTextJson.doctorId">Doctor</label>
+            <b-form-select
+                v-model="fullTextJson.doctorId"
+                :options="availableDoctors"
+                id="fullTextJson.doctorId"
                 trim
                 size="sm">
-            </b-form-radio-group>
+            </b-form-select>
           </div>
+
+          <div class="pt-3">
+            <label class="form-label" for="fullTextJson.reason">Reason</label>
+            <b-form-input
+                v-model="fullTextJson.reason"
+                id="fullTextJson.reason"
+                trim
+                size="sm">
+            </b-form-input>
+          </div>
+
+          <div class="pt-3">
+            <label class="form-label" for="fullTextJson.date">Date</label>
+            <b-form-datepicker
+                v-model="fullTextJson.date"
+                id="fullTextJson.date"
+                trim
+                size="sm">
+            </b-form-datepicker>
+          </div>
+
 
         </div>
       </div>
@@ -72,28 +70,48 @@
 <script>
 import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
-import ButtonOverlay from "@/components/button-overlay";
+// import ButtonOverlay from "@/components/button-overlay";
+import config from "@/config";
+
+const groupIdDoctor = config.value('groupIdDoctor');
+const groupIdNurse = config.value('groupIdNurse');
+
+const permissionTypeViewer = config.value('permissionTypeViewer');
+const permissionTypeEditor = config.value('permissionTypeEditor');
+const permissionTypeShare = config.value('permissionTypeShare');
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {ButtonOverlay, TenantHome},
+  components: {TenantHome},
   data() {
     return {
       processing: false,
       errors: [],
 
-      name: null,
-      description: null,
-      entityTypeId: null,
+      availableDoctors: ["Dr. Aruna", "Dr. Ruwan", "Dr. Marlon"],
+
+      // name: null,
+      fullTextJson: {
+        "patient": "",
+        "reason": "",
+        "doctorId": "",
+        "visitDate": "",
+        "histories": [],
+        "prescriptions": []
+      },
+      entityTypeId: "APPOINTMENT",
       secretType: "SSH",
 
       availableSecretTypes: ["SSH"],
 
-      inputFieldsList: ["name", "description", "entityTypeId"]
+      inputFieldsList: ["name", "entityTypeId"]
     };
   },
   computed: {
+    name() {
+      return `custos-health-appointment-${this.fullTextJson.patient}-${this.fullTextJson.visitDate}`;
+    },
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
@@ -101,14 +119,14 @@ export default {
     inputState() {
       return {
         name: this.name === null ? null : this.isValid.name,
-        description: this.description === null ? null : this.isValid.description,
+        // description: this.description === null ? null : this.isValid.description,
         entityTypeId: this.entityTypeId === null ? null : this.isValid.entityTypeId,
       }
     },
     isValid() {
       return {
         name: !!this.name && this.name.length >= 2,
-        description: true,
+        // description: true,
         entityTypeId: !!this.entityTypeId
       }
     },
@@ -143,14 +161,25 @@ export default {
         this.processing = true;
 
         try {
+          const entityId = `${this.clientId}_${window.performance.now()}`;
+
           await this.$store.dispatch("entity/createEntity", {
-            entityId: `${this.clientId}_${window.performance.now()}`,
+            entityId: entityId,
             clientId: this.clientId,
             name: this.name,
-            description: this.description,
+            fullText: JSON.stringify(this.fullTextJson),
             type: this.entityTypeId,
             ownerId: this.$store.getters["auth/currentUsername"]
           });
+
+          await Promise.all([permissionTypeViewer, permissionTypeEditor, permissionTypeShare].map(permissionTypeId =>
+              this.$store.dispatch("sharing/shareEntity", {
+                entityId: entityId,
+                clientId: this.clientId,
+                permissionTypeId,
+                groupIds: [groupIdDoctor, groupIdNurse]
+              })));
+
           await this.$router.push(`/tenants/${this.clientId}/entities`);
         } catch (error) {
           this.errors.push({

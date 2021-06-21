@@ -53,7 +53,7 @@ const actions = {
             clientLevel: clientLevel
         });
     },
-    async updateUser({commit}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes, deletedAttributes}) {
+    async updateUser({commit, getters}, {clientId, username, firstName, lastName, email, realmRoles, clientRoles, attributes, deletedAttributes}) {
         if (deletedAttributes && deletedAttributes.length > 0) {
             await custosService.users.deleteUserAttributes({
                 clientId,
@@ -73,6 +73,19 @@ const actions = {
                 usernames: [username],
                 clientLevel: false
             });
+
+            const realmRolesToBeDeleted = getters.getUser({
+                clientId, username
+            }).realmRoles.filter(realmRole => realmRoles.indexOf(realmRole) < 0);
+
+            if (realmRolesToBeDeleted.length > 0) {
+                await custosService.users.deleteRolesFromUser({
+                    clientId,
+                    roles: realmRolesToBeDeleted,
+                    username: username,
+                    clientLevel: false
+                });
+            }
         }
 
         if (clientRoles && clientRoles.length > 0) {
@@ -82,6 +95,19 @@ const actions = {
                 usernames: [username],
                 clientLevel: true
             });
+
+            const clientRolesToBeDeleted = getters.getUser({
+                clientId, username
+            }).clientRoles.filter(clientRole => clientRoles.indexOf(clientRole) < 0);
+
+            if (clientRolesToBeDeleted.length) {
+                await custosService.users.deleteRolesFromUser({
+                    clientId,
+                    roles: clientRolesToBeDeleted,
+                    username: username,
+                    clientLevel: true
+                });
+            }
         }
 
         let updatedUser = await custosService.users.updateProfile({clientId, username, firstName, lastName, email});

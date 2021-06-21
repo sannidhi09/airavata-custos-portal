@@ -22,7 +22,7 @@ const actions = {
                 name,
                 description,
                 parentId: parent_id,
-                ownerIdId: owner_id,
+                ownerId: owner_id,
                 createdAt: new Date(parseInt(created_at)).toLocaleString(),
                 updatedAt: new Date(parseInt(updated_at)).toLocaleString(),
                 sharedCount: shared_count,
@@ -45,7 +45,7 @@ const actions = {
             name: entity.name,
             description: entity.description,
             parentId: entity.parent_id,
-            ownerIdId: entity.owner_id,
+            ownerId: entity.owner_id,
             createdAt: new Date(parseInt(entity.created_at)).toLocaleString(),
             updatedAt: new Date(parseInt(entity.updated_at)).toLocaleString(),
             sharedCount: entity.shared_count,
@@ -55,11 +55,15 @@ const actions = {
             ext: entity.ext
         });
     },
-    async createEntity(obj, {clientId, entityId, name, description, type, ownerId}) {
-        await custosService.entities.createEntity({clientId, entityId, name, description, type, ownerId});
+    async createEntity(obj, {clientId, entityId, name, description, type, ownerId, fullText, binaryData}) {
+        await custosService.entities.createEntity({
+            clientId, entityId, name, description, type, ownerId, fullText, binaryData
+        });
     },
-    async updateEntity(obj, {clientId, entityId, name, description, type, ownerId}) {
-        await custosService.entities.updateEntity({clientId, entityId, name, description, type, ownerId});
+    async updateEntity(obj, {clientId, entityId, name, description, type, ownerId, fullText, binaryData}) {
+        await custosService.entities.updateEntity({
+            clientId, entityId, name, description, type, ownerId, fullText, binaryData
+        });
     },
     async deleteEntity(obj, {clientId, entityId, name, description, type, ownerId}) {
         await custosService.entities.deleteEntity({clientId, entityId, name, description, type, ownerId});

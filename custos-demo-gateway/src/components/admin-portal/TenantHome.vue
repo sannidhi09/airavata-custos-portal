@@ -2,7 +2,7 @@
   <div class="w-100">
     <div class="w-100 bg-light" style="display: flex;padding: 10px 40px;">
       <div style="flex: 1;">
-        <div style="font-size: 1.4rem;" v-if="tenant">{{ tenant.name }}</div>
+        <!--        <div style="font-size: 1.4rem;" v-if="tenant">{{ tenant.name }}</div>-->
         <Breadcrumb :links="commonBreadcrumbLinks.concat(breadcrumbLinks)"/>
       </div>
       <!--      <div>-->
@@ -15,36 +15,42 @@
     <div class="w-100" v-if="tenant" style="display: flex; flex-direction: row;">
       <div style="width: 200px;padding-top: 15px;">
         <ul>
-          <li v-if="tenant.hasAdminPrivileges || appTenant.hasAdminPrivileges">
-            <router-link :to="`/tenants/${clientId}/profile`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href">Profile</b-link>
-            </router-link>
-            <ul v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">
-              <li>
-                <router-link :to="`/tenants/${clientId}/roles`" v-slot="{ href, route, navigate}"
-                             tag="">
-                  <b-link @click="navigate" :href="href">Roles</b-link>
-                </router-link>
-              </li>
-              <li>
-                <router-link :to="`/tenants/${clientId}/permission-types`" v-slot="{ href, route, navigate}"
-                             tag="">
-                  <b-link @click="navigate" :href="href">Permission Types</b-link>
-                </router-link>
-              </li>
-              <li>
-                <router-link :to="`/tenants/${clientId}/entity-types`" v-slot="{ href, route, navigate}"
-                             tag="">
-                  <b-link @click="navigate" :href="href">Entity Types</b-link>
-                </router-link>
-              </li>
-            </ul>
-          </li>
+          <!--          <li v-if="tenant.hasAdminPrivileges || appTenant.hasAdminPrivileges">-->
+          <!--            <router-link :to="`/tenants/${clientId}/profile`" v-slot="{ href, route, navigate}" tag="">-->
+          <!--              <b-link @click="navigate" :href="href">Profile</b-link>-->
+          <!--            </router-link>-->
+          <!--            <ul v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">-->
+          <!--              <li>-->
+          <!--                <router-link :to="`/tenants/${clientId}/roles`" v-slot="{ href, route, navigate}"-->
+          <!--                             tag="">-->
+          <!--                  <b-link @click="navigate" :href="href">Roles</b-link>-->
+          <!--                </router-link>-->
+          <!--              </li>-->
+          <!--              <li>-->
+          <!--                <router-link :to="`/tenants/${clientId}/permission-types`" v-slot="{ href, route, navigate}"-->
+          <!--                             tag="">-->
+          <!--                  <b-link @click="navigate" :href="href">Permission Types</b-link>-->
+          <!--                </router-link>-->
+          <!--              </li>-->
+          <!--              <li>-->
+          <!--                <router-link :to="`/tenants/${clientId}/entity-types`" v-slot="{ href, route, navigate}"-->
+          <!--                             tag="">-->
+          <!--                  <b-link @click="navigate" :href="href">Entity Types</b-link>-->
+          <!--                </router-link>-->
+          <!--              </li>-->
+          <!--            </ul>-->
+          <!--          </li>-->
           <!--          <li>-->
           <!--            <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}" tag="">-->
           <!--              <b-link @click="navigate" :href="href">User Management</b-link>-->
           <!--            </router-link>-->
           <!--            <ul>&lt;!&ndash;&ndash;&gt;-->
+
+          <li v-if="tenant.status === 'ACTIVE'">
+            <router-link :to="`/tenants/${clientId}/entities`" v-slot="{ href, route, navigate}" tag="">
+              <b-link @click="navigate" :href="href">Home</b-link>
+            </router-link>
+          </li>
           <li v-if="tenant.hasAdminPrivileges  && tenant.status === 'ACTIVE'">
             <router-link :to="`/tenants/${clientId}/users`" v-slot="{ href, route, navigate}"
                          tag="">
@@ -72,11 +78,7 @@
           <!--            </router-link>-->
           <!--          </li>-->
 
-          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">
-            <router-link :to="`/tenants/${clientId}/entities`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href">Entities</b-link>
-            </router-link>
-          </li>
+
           <!--          <li v-if="tenant.hasAdminPrivileges && tenant.status === 'ACTIVE'">-->
           <!--            <router-link :to="`/tenants/${clientId}/audits`" v-slot="{ href, route, navigate}" tag="">-->
           <!--              <b-link @click="navigate" :href="href">Secrets</b-link>-->
@@ -95,12 +97,12 @@
           <!--            </li>-->
           <!--          </ul>-->
 
-          <li v-if="tenant.status === 'ACTIVE' && tenant.type !== 'CHILD_TENANT'">
-            <router-link :to="`/tenants/${tenant.clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">
-              <b-link @click="navigate" :href="href" v-if="tenant.type === 'SUPER_TENANT'">Admin Tenants</b-link>
-              <b-link @click="navigate" :href="href" v-if="tenant.type === 'ADMIN_TENANT'">Child Tenants</b-link>
-            </router-link>
-          </li>
+          <!--          <li v-if="tenant.status === 'ACTIVE' && tenant.type !== 'CHILD_TENANT'">-->
+          <!--            <router-link :to="`/tenants/${tenant.clientId}/child-tenants`" v-slot="{ href, route, navigate}" tag="">-->
+          <!--              <b-link @click="navigate" :href="href" v-if="tenant.type === 'SUPER_TENANT'">Admin Tenants</b-link>-->
+          <!--              <b-link @click="navigate" :href="href" v-if="tenant.type === 'ADMIN_TENANT'">Child Tenants</b-link>-->
+          <!--            </router-link>-->
+          <!--          </li>-->
 
         </ul>
       </div>
@@ -150,15 +152,17 @@ export default {
   },
   computed: {
     commonBreadcrumbLinks() {
-      const _breadcrumbLinks = [];
+      const _breadcrumbLinks = [
+        {to: `/tenants/${this.appTenant.clientId}/entities`, name: "Home"}
+      ];
 
-      if (this.appTenant) {
-        _breadcrumbLinks.push({to: `/tenants/${this.appTenant.clientId}`, name: this.appTenant.name});
-      }
-
-      if (this.clientId !== custosService.clientId && this.tenant) {
-        _breadcrumbLinks.push({to: `/tenants/${this.clientId}`, name: this.tenant.name})
-      }
+      // if (this.appTenant) {
+      //   _breadcrumbLinks.push({to: `/tenants/${this.appTenant.clientId}`, name: this.appTenant.name});
+      // }
+      //
+      // if (this.clientId !== custosService.clientId && this.tenant) {
+      //   _breadcrumbLinks.push({to: `/tenants/${this.clientId}`, name: this.tenant.name})
+      // }
 
       return _breadcrumbLinks;
     },

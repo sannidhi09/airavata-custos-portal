@@ -154,13 +154,15 @@ export default class CustosUsers {
      * @param {string} username
      * @return {Promise<AxiosResponse<any>>}
      */
-    deleteRolesFromUser({clientRoles, username}) {
+    deleteRolesFromUser({clientId, roles, username, clientLevel}) {
         return this.custosService.axiosInstanceWithTokenAuthorization.delete(
-            `${CustosService.ENDPOINTS.USERS}/users/roles`,
+            `${CustosService.ENDPOINTS.USERS}/user/roles`,
             {
                 data: {
-                    client_roles: clientRoles,
-                    username: username
+                    client_id: clientId,
+                    roles: roles,
+                    username: username,
+                    client_level: clientLevel
                 }
             }
         );
