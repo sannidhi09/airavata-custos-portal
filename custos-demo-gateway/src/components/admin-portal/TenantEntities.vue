@@ -1,11 +1,12 @@
 <template>
-  <TenantHome title="Appointments" :breadcrumb-links="breadcrumbLinks" :errors="errors">
-    <template #header-right>
+  <TenantHome :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+    <template #header-right v-if="hasPatientRole">
       <router-link :to="`/tenants/${clientId}/entities/new`" v-slot="{href, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Make an Appointment</b-button>
       </router-link>
     </template>
-    <table-overlay-info :rows="5" :columns="1" :data="appointments">
+    <table-overlay-info :rows="5" :columns="1" :data="appointments"
+                        v-if="hasPatientRole || hasNurseRole || hasDoctorRole">
       <b-table-simple>
         <b-thead>
           <b-tr>
@@ -212,6 +213,7 @@
         </b-tbody>
       </b-table-simple>
     </table-overlay-info>
+    <div v-else>Unauthorized. Please contact the system administrator.</div>
   </TenantHome>
 </template>
 
@@ -235,7 +237,7 @@ const groupIdDoctor = config.value('groupIdDoctor');
 // const groupIdNurse = config.value('groupIdNurse');
 const permissionTypeViewer = config.value('permissionTypeViewer');
 const permissionTypeEditor = config.value('permissionTypeEditor');
-const permissionTypeShare = config.value('permissionTypeShare');
+// const permissionTypeShare = config.value('permissionTypeShare');
 
 
 export default {
@@ -255,10 +257,17 @@ export default {
       appointmentEntityIds: [],
 
       permissionTypeEditor,
-      permissionTypeShare
+      // permissionTypeShare
     }
   },
   computed: {
+    title() {
+      if (this.hasPatientRole || this.hasNurseRole || this.hasDoctorRole) {
+        return "Appointments";
+      } else {
+        return "Unauthorized";
+      }
+    },
     clientId() {
       console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
@@ -496,16 +505,15 @@ export default {
     },
     getEntity({entityId}) {
       let entity = this.entitiesMap[entityId];
-      // if (!entity) {
-      //   alert(entityId)
-      // }
-      if (entity.type === entityTypeIdAppointment) {
+      if (!entity) {
+        return null;
+      } else if (entity.type === entityTypeIdAppointment) {
         entity = {
           ...entity,
           fullTextJson: {
             ...entity.fullTextJson,
-            histories: entity.fullTextJson.histories.map(entityId => this.getEntity({entityId})),
-            prescriptions: entity.fullTextJson.prescriptions.map(entityId => this.getEntity({entityId}))
+            histories: entity.fullTextJson.histories.map(entityId => this.getEntity({entityId})).filter(entity => !!entity),
+            prescriptions: entity.fullTextJson.prescriptions.map(entityId => this.getEntity({entityId})).filter(entity => !!entity)
           }
         }
       } else {

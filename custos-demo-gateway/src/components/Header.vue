@@ -2,7 +2,10 @@
   <div>
     <div class="header p-3">
       <div class="custos-logo text-primary">
-        <div style="font-size: 23px; font-weight: 600; font-style: italic;">Custos Health</div>
+        <div style="font-size: 23px; font-weight: 600; font-style: italic;">
+          <b-icon icon="shield-fill-plus"/>
+          IU Health
+        </div>
         <!--        <img src="../assets/custos-logo_custos-logo-color-v1.png" style="width: 140px;">-->
       </div>
       <div class="user-details" v-if="this.authenticated && user">
