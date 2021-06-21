@@ -42,7 +42,7 @@
                   </router-link>
                 </small>
                 <div>
-                  <b-button v-if="hasPermission(appointment, permissionTypeShare)" variant="link" size="sm"
+                  <b-button v-if="hasPermission(appointment, permissionTypeEditor)" variant="link" size="sm"
                             v-b-modal="`modal-appointment-share-${appointment.entityId}`">
                     <b-icon icon="share"/>
                   </b-button>
@@ -80,7 +80,7 @@
                         </router-link>
                       </small>
                       <div>
-                        <b-button variant="link" size="sm" v-if="hasPermission(history, permissionTypeShare)"
+                        <b-button variant="link" size="sm" v-if="hasPermission(history, permissionTypeEditor)"
                                   v-b-modal="`modal-history-share-${history.entityId}`">
                           <b-icon icon="share"/>
                         </b-button>
@@ -156,7 +156,7 @@
                         </router-link>
                       </small>
                       <div>
-                        <b-button variant="link" size="sm" v-if="hasPermission(prescription, permissionTypeShare)"
+                        <b-button variant="link" size="sm" v-if="hasPermission(prescription, permissionTypeEditor)"
                                   v-b-modal="`modal-prescription-share-${prescription.entityId}`">
                           <b-icon icon="share"/>
                         </b-button>
@@ -233,7 +233,7 @@ const clientRoleNurse = config.value('clientRoleNurse');
 const clientRolePatient = config.value('clientRolePatient');
 const groupIdDoctor = config.value('groupIdDoctor');
 // const groupIdNurse = config.value('groupIdNurse');
-// const permissionTypeViewer = config.value('permissionTypeViewer');
+const permissionTypeViewer = config.value('permissionTypeViewer');
 const permissionTypeEditor = config.value('permissionTypeEditor');
 const permissionTypeShare = config.value('permissionTypeShare');
 
@@ -428,7 +428,7 @@ export default {
           name: `custos-health-history-${window.performance.now()}`,
           fullText: JSON.stringify(entity.fullTextJson),
           type: entity.type,
-          ownerId: this.$store.getters["auth/currentUsername"]
+          ownerId: appointment.ownerId
         });
 
         this.entitiesMap = {
@@ -438,6 +438,9 @@ export default {
             saved: true
           }
         }
+
+        this.refreshData();
+
       } catch (error) {
         this.errors.push({
           title: "Unknown error when creating the entity.",
@@ -471,14 +474,14 @@ export default {
           await this.$store.dispatch("sharing/shareEntity", {
             entityId: subEntity.entityId,
             clientId: this.clientId,
-            permissionTypeId: "READ",
+            permissionTypeId: permissionTypeViewer,
             groupIds: [groupIdDoctor]
           });
         } else if (entity.type === entityTypeIdPrescription) {
           await this.$store.dispatch("sharing/shareEntity", {
             entityId: subEntity.entityId,
             clientId: this.clientId,
-            permissionTypeId: "READ",
+            permissionTypeId: permissionTypeViewer,
             usernames: [appointment.ownerId]
           });
         }
@@ -541,13 +544,6 @@ export default {
             clientId: this.clientId,
             entityId: entity.entityId,
             permissionTypeId: permissionTypeEditor,
-            username: this.currentUsername
-          });
-
-          this.$store.dispatch("sharing/userHasAccess", {
-            clientId: this.clientId,
-            entityId: entity.entityId,
-            permissionTypeId: permissionTypeShare,
             username: this.currentUsername
           });
 
