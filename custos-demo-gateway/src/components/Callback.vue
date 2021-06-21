@@ -22,7 +22,7 @@ export default {
       await this.$store.dispatch("user/addRolesToUser", {
         clientId: custosService.clientId,
         username: this.$store.getters["auth/currentUsername"],
-        realmRoles: ["Tenant Requester", clientRolePatient],
+        realmRoles: [clientRolePatient],
         clientLevel: false
       });
     }
