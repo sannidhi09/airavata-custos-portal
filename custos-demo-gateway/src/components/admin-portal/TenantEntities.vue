@@ -10,15 +10,15 @@
       <b-table-simple>
         <b-thead>
           <b-tr>
-            <b-th v-if="hasDoctorRole || hasNurseRole || hasPatientRole">Appointment</b-th>
-            <b-th v-if="hasDoctorRole || hasNurseRole">History Check</b-th>
-            <b-th v-if="hasDoctorRole || hasPatientRole">Prescriptions</b-th>
+            <b-th>Appointment</b-th>
+            <b-th>History Check</b-th>
+            <b-th>Prescriptions</b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
           <b-tr v-for="(appointment, appointmentIndex) in appointments" :key="appointmentIndex">
             <!--          {{appointment}}-->
-            <b-td v-if="hasDoctorRole || hasNurseRole || hasPatientRole">
+            <b-td>
               <div>
                 <strong>Patient :</strong>
                 {{ appointment.fullTextJson.patient }}
@@ -53,7 +53,7 @@
                 </div>
               </div>
             </b-td>
-            <b-td v-if="hasDoctorRole || hasNurseRole">
+            <b-td>
               <ul class="history-ul">
                 <li v-for="(history, historyIndex) in appointment.fullTextJson.histories" :key="historyIndex">
                   <div v-if="history.saved">
@@ -122,7 +122,7 @@
                 + Create new health check
               </b-button>
             </b-td>
-            <b-td v-if="hasDoctorRole || hasPatientRole">
+            <b-td>
               <ul class="prescriptions-ul">
                 <li v-for="(prescription, prescriptionIndex) in appointment.fullTextJson.prescriptions"
                     :key="prescriptionIndex">
