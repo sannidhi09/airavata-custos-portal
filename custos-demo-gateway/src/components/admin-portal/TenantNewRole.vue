@@ -31,16 +31,16 @@
             <b-form-invalid-feedback>
             </b-form-invalid-feedback>
           </div>
-          <div class="pt-3">
-            <label class="form-label" for="scope">Scope</label>
-            <b-form-radio-group
-                v-model="scope"
-                :options="['TENANT', 'CLIENT']"
-                id="scope"
-                trim
-                size="sm">
-            </b-form-radio-group>
-          </div>
+          <!--          <div class="pt-3">-->
+          <!--            <label class="form-label" for="scope">Scope</label>-->
+          <!--            <b-form-radio-group-->
+          <!--                v-model="scope"-->
+          <!--                :options="['TENANT', 'CLIENT']"-->
+          <!--                id="scope"-->
+          <!--                trim-->
+          <!--                size="sm">-->
+          <!--            </b-form-radio-group>-->
+          <!--          </div>-->
           <!--          <div class="pt-3">-->
           <!--            <b-form-checkbox-->
           <!--                v-model="composite"-->
