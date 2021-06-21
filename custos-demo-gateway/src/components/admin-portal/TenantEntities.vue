@@ -42,7 +42,8 @@
                   </router-link>
                 </small>
                 <div>
-                  <b-button variant="link" size="sm" v-b-modal="`modal-appointment-share-${appointment.entityId}`">
+                  <b-button v-if="hasPermission(appointment, permissionTypeShare)" variant="link" size="sm"
+                            v-b-modal="`modal-appointment-share-${appointment.entityId}`">
                     <b-icon icon="share"/>
                   </b-button>
                   <modal-share-entity :entity-id="appointment.entityId" :client-id="clientId"
@@ -79,7 +80,7 @@
                         </router-link>
                       </small>
                       <div>
-                        <b-button variant="link" size="sm"
+                        <b-button variant="link" size="sm" v-if="hasPermission(history, permissionTypeShare)"
                                   v-b-modal="`modal-history-share-${history.entityId}`">
                           <b-icon icon="share"/>
                         </b-button>
@@ -115,7 +116,8 @@
                   </div>
                 </li>
               </ul>
-              <b-button variant="link" size="sm" v-on:click="addNewHealthCheck(appointment)">
+              <b-button v-if="hasPermission(appointment, permissionTypeEditor)" variant="link" size="sm"
+                        v-on:click="addNewHealthCheck(appointment)">
                 + Create new health check
               </b-button>
             </b-td>
@@ -154,7 +156,7 @@
                         </router-link>
                       </small>
                       <div>
-                        <b-button variant="link" size="sm"
+                        <b-button variant="link" size="sm" v-if="hasPermission(prescription, permissionTypeShare)"
                                   v-b-modal="`modal-prescription-share-${prescription.entityId}`">
                           <b-icon icon="share"/>
                         </b-button>
@@ -200,7 +202,8 @@
                 </li>
               </ul>
 
-              <b-button variant="link" size="sm" v-on:click="addNewPrescription(appointment)">
+              <b-button v-if="hasPermission(appointment, permissionTypeEditor)" variant="link" size="sm"
+                        v-on:click="addNewPrescription(appointment)">
                 + Add new prescription
               </b-button>
             </b-td>
@@ -229,6 +232,9 @@ const clientRoleNurse = config.value('clientRoleNurse');
 const clientRolePatient = config.value('clientRolePatient');
 const groupIdDoctor = config.value('groupIdDoctor');
 // const groupIdNurse = config.value('groupIdNurse');
+// const permissionTypeViewer = config.value('permissionTypeViewer');
+const permissionTypeEditor = config.value('permissionTypeEditor');
+const permissionTypeShare = config.value('permissionTypeShare');
 
 
 export default {
@@ -245,7 +251,10 @@ export default {
       ],
 
       entitiesMap: {},
-      appointmentEntityIds: []
+      appointmentEntityIds: [],
+
+      permissionTypeEditor,
+      permissionTypeShare
     }
   },
   computed: {
@@ -483,9 +492,9 @@ export default {
     },
     getEntity({entityId}) {
       let entity = this.entitiesMap[entityId];
-      if (!entity) {
-        alert(entityId)
-      }
+      // if (!entity) {
+      //   alert(entityId)
+      // }
       if (entity.type === entityTypeIdAppointment) {
         entity = {
           ...entity,
@@ -503,6 +512,19 @@ export default {
 
       return entity;
     },
+    hasPermission({entityId}, permissionTypeId) {
+      const status = this.$store.getters["sharing/getUserAccessStatus"]({
+        clientId: this.clientId, entityId, permissionTypeId, username: this.currentUsername
+      });
+
+      console.log(entityId + "  status " + permissionTypeId + " ---- " + status);
+
+      if (status) {
+        return status;
+      } else {
+        return false;
+      }
+    },
     refreshData() {
       this.$store.dispatch("entity/fetchEntities", {clientId: this.clientId, ownerId: this.currentUsername});
     },
@@ -513,6 +535,21 @@ export default {
       if (this.entities) {
         for (let i = 0; i < this.entities.length; i++) {
           const entity = {...this.entities[i]};
+
+          this.$store.dispatch("sharing/userHasAccess", {
+            clientId: this.clientId,
+            entityId: entity.entityId,
+            permissionTypeId: permissionTypeEditor,
+            username: this.currentUsername
+          });
+
+          this.$store.dispatch("sharing/userHasAccess", {
+            clientId: this.clientId,
+            entityId: entity.entityId,
+            permissionTypeId: permissionTypeShare,
+            username: this.currentUsername
+          });
+
           entity.saved = true;
 
           try {

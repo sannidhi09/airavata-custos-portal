@@ -76,6 +76,10 @@ import config from "@/config";
 const groupIdDoctor = config.value('groupIdDoctor');
 const groupIdNurse = config.value('groupIdNurse');
 
+const permissionTypeViewer = config.value('permissionTypeViewer');
+const permissionTypeEditor = config.value('permissionTypeEditor');
+const permissionTypeShare = config.value('permissionTypeShare');
+
 export default {
   name: "TenantEntities",
   store: store,
@@ -168,12 +172,13 @@ export default {
             ownerId: this.$store.getters["auth/currentUsername"]
           });
 
-          await this.$store.dispatch("sharing/shareEntity", {
-            entityId: entityId,
-            clientId: this.clientId,
-            permissionTypeId: "READ",
-            groupIds: [groupIdDoctor, groupIdNurse]
-          });
+          await Promise.all([permissionTypeViewer, permissionTypeEditor, permissionTypeShare].map(permissionTypeId =>
+              this.$store.dispatch("sharing/shareEntity", {
+                entityId: entityId,
+                clientId: this.clientId,
+                permissionTypeId,
+                groupIds: [groupIdDoctor, groupIdNurse]
+              })));
 
           await this.$router.push(`/tenants/${this.clientId}/entities`);
         } catch (error) {
