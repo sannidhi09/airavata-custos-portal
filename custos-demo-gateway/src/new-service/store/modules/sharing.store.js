@@ -6,7 +6,8 @@ const getDefaultState = () => {
         permissionTypesListMap: {},
         entityTypesMap: {},
         entityTypesListMap: {},
-        entitySharedOwnersListMap: {}
+        entitySharedOwnersListMap: {},
+        userHasAccessMap: {}
     }
 };
 
@@ -66,10 +67,21 @@ const actions = {
             return {ownerId: owner_id, ownerType: owner_type, permission: permission};
         });
         commit('SET_ENTITY_SHARED_USERS_LIST_MAP', {entityId, entitySharedUsersList});
+    },
+    async userHasAccess({commit}, {clientId, entityId, permissionTypeId, username}) {
+        const queryString = JSON.stringify({clientId, entityId, permissionTypeId, username});
+        const status = await custosService.sharing.userHasAccess({clientId, entityId, permissionTypeId, username});
+        commit("SET_USER_HAS_ACCESS", {queryString, status});
     }
 }
 
 const mutations = {
+    SET_USER_HAS_ACCESS(state, {queryString, status}) {
+        state.userHasAccessMap = {
+            ...state.userHasAccessMap,
+            [queryString]: status
+        };
+    },
     SET_ENTITY_SHARED_USERS_LIST_MAP(state, {entityId, entitySharedUsersList}) {
         state.entitySharedOwnersListMap = {
             ...state.entitySharedOwnersListMap,
@@ -125,6 +137,16 @@ const mutations = {
 }
 
 const getters = {
+    getUserAccessStatus(state) {
+        return ({clientId, entityId, permissionTypeId, username}) => {
+            const queryString = JSON.stringify({clientId, entityId, permissionTypeId, username});
+            if (state.userHasAccessMap[queryString]) {
+                return state.userHasAccessMap[queryString];
+            } else {
+                return null;
+            }
+        }
+    },
     getEntitySharedOwners(state) {
         return ({entityId}) => {
             if (state.entitySharedOwnersListMap[entityId]) {
