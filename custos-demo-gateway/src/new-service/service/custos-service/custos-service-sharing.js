@@ -171,4 +171,26 @@ export default class CustosSharing {
 
         await Promise.all(promises);
     }
+
+    async userHasAccess({clientId, entityId, permissionTypeId, username}) {
+        // let authHeader = {'Authorization': 'Bearer ' + btoa(data.client_id + ':' + data.client_sec)}
+        // let endpoint = sharingMgtEndpoint + "/entity/user/access"
+        // return api().get(endpoint, {
+        //     params: data.params,
+        //     headers: authHeader
+        // });
+
+        const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
+        return axiosInstance.get(
+            `${CustosService.ENDPOINTS.SHARING}/entity/user/access`,
+            {
+                params: {
+                    "client_id": clientId,
+                    "entity.id": entityId,
+                    "permission_type.id": permissionTypeId,
+                    "owner_id": username
+                }
+            }
+        ).then(({data: {status}}) => status);
+    }
 }
