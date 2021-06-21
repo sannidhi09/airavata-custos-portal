@@ -12,6 +12,10 @@ dotenv.config()
 //
 // VUE_APP_CLIENT_GROUP_ID_DOCTOR="group-1_2ea05c80-bb66-40dc-851f-4c5665402234"
 // VUE_APP_CLIENT_GROUP_ID_NURSE="dfsd_3fb3b140-9693-4e70-9898-e1eafde05d3b"
+//
+// VUE_APP_CLIENT_PERMISSION_TYPE_VIEWER="VIEWER"
+// VUE_APP_CLIENT_PERMISSION_TYPE_EDITOR="EDITOR"
+// VUE_APP_CLIENT_PERMISSION_TYPE_SHARE="SHARE"
 
 export default class Configuration {
     static get CONFIG() {
@@ -27,7 +31,10 @@ export default class Configuration {
             clientRoleNurse: '$VUE_APP_CLIENT_ROLE_NURSE',
             clientRolePatient: '$VUE_APP_CLIENT_ROLE_PATIENT',
             groupIdDoctor: '$VUE_APP_CLIENT_GROUP_ID_DOCTOR',
-            groupIdNurse: '$VUE_APP_CLIENT_GROUP_ID_NURSE'
+            groupIdNurse: '$VUE_APP_CLIENT_GROUP_ID_NURSE',
+            permissionTypeViewer: '$VUE_APP_CLIENT_PERMISSION_TYPE_VIEWER',
+            permissionTypeEditor: '$VUE_APP_CLIENT_PERMISSION_TYPE_EDITOR',
+            permissionTypeShare: '$VUE_APP_CLIENT_PERMISSION_TYPE_SHARE'
         }
     }
 
