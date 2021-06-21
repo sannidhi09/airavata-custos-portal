@@ -10,6 +10,12 @@
       <!--          <b-button variant="secondary" @click="navigate">Back</b-button>-->
       <!--        </router-link>-->
       <!--      </div>-->
+      <div>
+        <strong v-if="hasDoctorRole">Doctor view</strong>
+        <strong v-else-if="hasNurseRole">Nurse view</strong>
+        <strong v-else-if="hasPatientRole">Patient view</strong>
+        <strong v-else>The roles are not assigned.</strong>
+      </div>
     </div>
 
     <div class="w-100" v-if="tenant" style="display: flex; flex-direction: row;">
@@ -129,6 +135,11 @@
 import store from "../../new-service/store"
 import Breadcrumb from "@/components/Breadcrumb";
 import {custosService} from "@/new-service/store/util/custos.util";
+import config from "@/config";
+
+const clientRoleDoctor = config.value('clientRoleDoctor');
+const clientRoleNurse = config.value('clientRoleNurse');
+const clientRolePatient = config.value('clientRolePatient');
 
 export default {
   name: "TenantHome",
@@ -169,6 +180,9 @@ export default {
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
     },
+    currentUser() {
+      return this.$store.getters["user/getUser"]({clientId: this.clientId, username: this.currentUsername})
+    },
     clientId() {
       if (this.$route.params.clientId) {
         return this.$route.params.clientId;
@@ -181,6 +195,15 @@ export default {
     },
     tenant() {
       return this.$store.getters["tenant/getTenant"]({clientId: this.clientId});
+    },
+    hasDoctorRole() {
+      return this.currentUser && this.currentUser.realmRoles.indexOf(clientRoleDoctor) >= 0;
+    },
+    hasNurseRole() {
+      return this.currentUser && this.currentUser.realmRoles.indexOf(clientRoleNurse) >= 0;
+    },
+    hasPatientRole() {
+      return this.currentUser && this.currentUser.realmRoles.indexOf(clientRolePatient) >= 0;
     }
   },
   beforeMount() {

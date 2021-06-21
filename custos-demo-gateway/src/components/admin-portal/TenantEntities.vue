@@ -35,7 +35,7 @@
                 {{ appointment.fullTextJson.doctorId }}
               </div>
               <div style="display: flex; flex-direction: row;">
-                <small class="text-left" style="flex: 1;">
+                <small class="text-left">
                   {{ appointment.createdAt }} by
                   <router-link :to="`/tenants/${clientId}/users/${appointment.ownerId}`" v-slot="{href, navigate}">
                     <b-link :href="href" v-on:click="navigate">{{ appointment.ownerId }}</b-link>
@@ -116,7 +116,7 @@
                   </div>
                 </li>
               </ul>
-              <b-button v-if="hasPermission(appointment, permissionTypeEditor)" variant="link" size="sm"
+              <b-button v-if="hasNurseRole && hasPermission(appointment, permissionTypeEditor)" variant="link" size="sm"
                         v-on:click="addNewHealthCheck(appointment)">
                 + Create new health check
               </b-button>
@@ -202,7 +202,8 @@
                 </li>
               </ul>
 
-              <b-button v-if="hasPermission(appointment, permissionTypeEditor)" variant="link" size="sm"
+              <b-button v-if="hasDoctorRole && hasPermission(appointment, permissionTypeEditor)" variant="link"
+                        size="sm"
                         v-on:click="addNewPrescription(appointment)">
                 + Add new prescription
               </b-button>
