@@ -1,19 +1,19 @@
 <template>
   <b-container style="padding-top: 60px;">
     <b-row align-v="start" align-h="center">
-      <b-col style="min-width: 300px; max-width: 600px;">
-        <h2>Welcome to Custos</h2>
-        <p class="h2-sub">Sign up and start authenticating</p>
-        <!--        <div class="main-links">-->
-        <!--          <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>-->
-        <!--          <b-link class="ml-5"-->
-        <!--                  href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial"-->
-        <!--                  target="_blank">-->
-        <!--            Tutorial Instructions-->
-        <!--          </b-link>-->
-        <!--        </div>-->
-        <img style="width: 70%;" src="../../assets/custos_home.png">
-      </b-col>
+      <!--      <b-col style="min-width: 300px; max-width: 600px;" >-->
+      <!--        <h2>Welcome to Custos</h2>-->
+      <!--        <p class="h2-sub">Sign up and start authenticating</p>-->
+      <!--        &lt;!&ndash;        <div class="main-links">&ndash;&gt;-->
+      <!--        &lt;!&ndash;          <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>&ndash;&gt;-->
+      <!--        &lt;!&ndash;          <b-link class="ml-5"&ndash;&gt;-->
+      <!--        &lt;!&ndash;                  href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial"&ndash;&gt;-->
+      <!--        &lt;!&ndash;                  target="_blank">&ndash;&gt;-->
+      <!--        &lt;!&ndash;            Tutorial Instructions&ndash;&gt;-->
+      <!--        &lt;!&ndash;          </b-link>&ndash;&gt;-->
+      <!--        &lt;!&ndash;        </div>&ndash;&gt;-->
+      <!--        <img style="width: 70%;" src="../../assets/custos_home.png">-->
+      <!--      </b-col>-->
       <b-col style="max-width: 350px;min-width: 300px;" align-h="center">
         <div class="w-100">
           <div class="p-2 text-center">

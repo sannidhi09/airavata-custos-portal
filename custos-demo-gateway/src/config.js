@@ -34,7 +34,7 @@ export default class Configuration {
             groupIdNurse: '$VUE_APP_CLIENT_GROUP_ID_NURSE',
             permissionTypeViewer: '$VUE_APP_CLIENT_PERMISSION_TYPE_VIEWER',
             permissionTypeEditor: '$VUE_APP_CLIENT_PERMISSION_TYPE_EDITOR',
-            permissionTypeShare: '$VUE_APP_CLIENT_PERMISSION_TYPE_SHARE'
+            // permissionTypeShare: '$VUE_APP_CLIENT_PERMISSION_TYPE_SHARE'
         }
     }
 
