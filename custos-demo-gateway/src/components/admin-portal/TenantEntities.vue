@@ -36,7 +36,7 @@
                 {{ appointment.fullTextJson.doctorId }}
               </div>
               <div style="display: flex; flex-direction: row;">
-                <small class="text-left">
+                <small class="text-left" style="padding-top: 14px;color: #495057;">
                   {{ appointment.createdAt }} by
                   <router-link :to="`/tenants/${clientId}/users/${appointment.ownerId}`" v-slot="{href, navigate}">
                     <b-link :href="href" v-on:click="navigate">{{ appointment.ownerId }}</b-link>
@@ -56,7 +56,7 @@
             <b-td>
               <ul class="history-ul">
                 <li v-for="(history, historyIndex) in appointment.fullTextJson.histories" :key="historyIndex">
-                  <div v-if="history.saved">
+                  <div v-if="!history.edit">
                     <div>
                       <strong>Symptoms :</strong>
                       {{ history.fullTextJson.symptoms }}
@@ -74,13 +74,17 @@
                       {{ history.fullTextJson.randomBloodSugar }}
                     </div>
                     <div style="display: flex; flex-direction: row;">
-                      <small class="text-left" style="flex: 1;">
+                      <small class="text-left" style="flex: 1;padding-top: 14px;color: #495057;">
                         {{ history.createdAt }} by
                         <router-link :to="`/tenants/${clientId}/users/${history.ownerId}`" v-slot="{href, navigate}">
                           <b-link :href="href" v-on:click="navigate">{{ history.ownerId }}</b-link>
                         </router-link>
                       </small>
                       <div>
+                        <b-button variant="link" size="sm" v-if="hasPermission(history, permissionTypeEditor)"
+                                  v-on:click="onClickEditEntity(history)">
+                          <b-icon icon="pencil"/>
+                        </b-button>
                         <b-button variant="link" size="sm" v-if="hasPermission(history, permissionTypeEditor)"
                                   v-b-modal="`modal-history-share-${history.entityId}`">
                           <b-icon icon="share"/>
@@ -110,7 +114,7 @@
                     </div>
                     <div class="mt-3">
                       <b-button variant="primary" size="sm"
-                                v-on:click="saveEntity(appointment, history); updateEntity(appointment);">
+                                v-on:click="saveHistory(appointment, history);">
                         Save
                       </b-button>
                     </div>
@@ -126,7 +130,7 @@
               <ul class="prescriptions-ul">
                 <li v-for="(prescription, prescriptionIndex) in appointment.fullTextJson.prescriptions"
                     :key="prescriptionIndex">
-                  <div v-if="prescription.saved">
+                  <div v-if="!prescription.edit">
                     <div>
                       <strong>MEDICATIONS</strong>
                       <ul class="prescription-medications-ul">
@@ -149,7 +153,7 @@
                     </div>
 
                     <div style="display: flex; flex-direction: row;">
-                      <small class="text-left" style="flex: 1;">
+                      <small class="text-left" style="flex: 1;padding-top: 14px;color: #495057;">
                         {{ prescription.createdAt }} by
                         <router-link :to="`/tenants/${clientId}/users/${prescription.ownerId}`"
                                      v-slot="{href, navigate}">
@@ -157,6 +161,10 @@
                         </router-link>
                       </small>
                       <div>
+                        <b-button variant="link" size="sm" v-if="hasPermission(prescription, permissionTypeEditor)"
+                                  v-on:click="onClickEditEntity(prescription)">
+                          <b-icon icon="pencil"/>
+                        </b-button>
                         <b-button variant="link" size="sm" v-if="hasPermission(prescription, permissionTypeEditor)"
                                   v-b-modal="`modal-prescription-share-${prescription.entityId}`">
                           <b-icon icon="share"/>
@@ -196,7 +204,7 @@
                     </div>
                     <div class="mt-3">
                       <b-button variant="primary" size="sm"
-                                v-on:click="saveEntity(appointment, prescription); updateEntity(appointment);">Save
+                                v-on:click="savePrescription(appointment, prescription);">Save
                       </b-button>
                     </div>
                   </div>
@@ -230,11 +238,14 @@ import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entit
 const entityTypeIdAppointment = config.value('entityTypeIdAppointment');
 const entityTypeIdPatientHistory = config.value('entityTypeIdPatientHistory');
 const entityTypeIdPrescription = config.value('entityTypeIdPrescription');
+
 const clientRoleDoctor = config.value('clientRoleDoctor');
 const clientRoleNurse = config.value('clientRoleNurse');
 const clientRolePatient = config.value('clientRolePatient');
+
 const groupIdDoctor = config.value('groupIdDoctor');
 // const groupIdNurse = config.value('groupIdNurse');
+
 const permissionTypeViewer = config.value('permissionTypeViewer');
 const permissionTypeEditor = config.value('permissionTypeEditor');
 // const permissionTypeShare = config.value('permissionTypeShare');
@@ -269,85 +280,12 @@ export default {
       }
     },
     clientId() {
-      console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
     },
     appointments() {
       return this.appointmentEntityIds.map(entityId => this.getEntity({entityId}));
     },
     entities() {
-
-      // const dumbEntities = [
-      //   {
-      //     entityId: "0",
-      //     type: entityTypeIdAppointment,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "patient": "Isuru Ranawaka",
-      //       "reason": "Abdominal Pain",
-      //       "doctorId": "Aruna",
-      //       "visitDate": "01/01/2021",
-      //       "histories": [2],
-      //       "prescriptions": [3]
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //   {
-      //     entityId: "1",
-      //     type: entityTypeIdAppointment,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "patient": "Suresh",
-      //       "reason": "Chest Pain",
-      //       "doctorId": "Saman",
-      //       "visitDate": "01/01/2021",
-      //       "histories": [2],
-      //       "prescriptions": [3, 3]
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //   {
-      //     entityId: "2",
-      //     type: entityTypeIdPatientHistory,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "symptoms": "Cold and Fever for few days",
-      //       "allergies": "None",
-      //       "bloodPressure": "120",
-      //       "randomBloodSugar": "101"
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //   {
-      //     entityId: "3",
-      //     type: entityTypeIdPrescription,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "medications": [
-      //         {"name": "Panadol", "dose": 23},
-      //         {"name": "Vitamin C", "dose": 40}
-      //       ],
-      //       "recommendations": [
-      //         "Bed Rest", "Steam"
-      //       ]
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //
-      // ];
-      //
-      // return dumbEntities;
-
-
-      // return this.dumbEntities.map(({entityId}) => {
-      //   return this.getEntity({entityId});
-      // });
-
-
       return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})
     },
     breadcrumbLinks() {
@@ -378,6 +316,7 @@ export default {
           entityId: newHealthCheckEntityId,
           type: entityTypeIdPatientHistory,
           saved: false,
+          edit: true,
           fullTextJson: {
             "symptoms": "",
             "allergies": "",
@@ -405,6 +344,7 @@ export default {
           entityId: newPrescriptionEntityId,
           type: entityTypeIdPrescription,
           saved: false,
+          edit: true,
           fullTextJson: {
             "medications": [
               // {"name": "Panadol", "dose": 23},
@@ -427,43 +367,78 @@ export default {
         }
       };
     },
-    async updateEntity(appointment) {
+    onClickEditEntity({entityId}) {
+      this.entitiesMap = {
+        ...this.entitiesMap,
+        [entityId]: {
+          ...this.entitiesMap[entityId],
+          edit: true
+        }
+      };
+    },
+    async saveHistory(appointment, history) {
+      if (history.saved) {
+        await this.updateEntity(history);
+      } else {
+        await this.saveEntity(history);
+      }
 
+      await this.updateEntity(appointment);
+      await this.$store.dispatch("sharing/shareEntity", {
+        entityId: history.entityId,
+        clientId: this.clientId,
+        permissionTypeId: permissionTypeViewer,
+        groupIds: [groupIdDoctor]
+      });
+      this.refreshData();
+    },
+    async savePrescription(appointment, prescription) {
+      if (prescription.saved) {
+        await this.updateEntity(prescription);
+      } else {
+        await this.saveEntity(prescription);
+      }
+
+      await this.updateEntity(appointment);
+      await this.$store.dispatch("sharing/shareEntity", {
+        entityId: prescription.entityId,
+        clientId: this.clientId,
+        permissionTypeId: permissionTypeViewer,
+        usernames: [appointment.ownerId]
+      });
+      this.refreshData();
+    },
+    async updateEntity({entityId}) {
       try {
-        const entity = this.entitiesMap[appointment.entityId];
+        const entity = this.entitiesMap[entityId];
         await this.$store.dispatch("entity/updateEntity", {
-          entityId: appointment.entityId,
+          entityId: entity.entityId,
           clientId: this.clientId,
           name: `custos-health-history-${window.performance.now()}`,
           fullText: JSON.stringify(entity.fullTextJson),
           type: entity.type,
-          ownerId: appointment.ownerId
+          ownerId: entity.ownerId
         });
 
         this.entitiesMap = {
           ...this.entitiesMap,
-          [appointment.entityId]: {
-            ...this.entitiesMap[appointment.entityId],
-            saved: true
+          [entity.entityId]: {
+            ...this.entitiesMap[entity.entityId],
+            edit: false
           }
-        }
-
-        this.refreshData();
-
+        };
       } catch (error) {
         this.errors.push({
-          title: "Unknown error when creating the entity.",
+          title: "Unknown error when updating the entity.",
           source: error, variant: "danger"
         });
       }
-
     },
-    async saveEntity(appointment, subEntity) {
-
+    async saveEntity({entityId}) {
       try {
-        const entity = this.entitiesMap[subEntity.entityId];
+        const entity = this.entitiesMap[entityId];
         await this.$store.dispatch("entity/createEntity", {
-          entityId: subEntity.entityId,
+          entityId: entity.entityId,
           clientId: this.clientId,
           name: `custos-health-history-${window.performance.now()}`,
           fullText: JSON.stringify(entity.fullTextJson),
@@ -473,35 +448,17 @@ export default {
 
         this.entitiesMap = {
           ...this.entitiesMap,
-          [subEntity.entityId]: {
-            ...this.entitiesMap[subEntity.entityId],
+          [entity.entityId]: {
+            ...this.entitiesMap[entity.entityId],
             saved: true
           }
         }
-
-        if (entity.type === entityTypeIdPatientHistory) {
-          await this.$store.dispatch("sharing/shareEntity", {
-            entityId: subEntity.entityId,
-            clientId: this.clientId,
-            permissionTypeId: permissionTypeViewer,
-            groupIds: [groupIdDoctor]
-          });
-        } else if (entity.type === entityTypeIdPrescription) {
-          await this.$store.dispatch("sharing/shareEntity", {
-            entityId: subEntity.entityId,
-            clientId: this.clientId,
-            permissionTypeId: permissionTypeViewer,
-            usernames: [appointment.ownerId]
-          });
-        }
-
       } catch (error) {
         this.errors.push({
           title: "Unknown error when creating the entity.",
           source: error, variant: "danger"
         });
       }
-
     },
     getEntity({entityId}) {
       let entity = this.entitiesMap[entityId];
@@ -529,8 +486,6 @@ export default {
         clientId: this.clientId, entityId, permissionTypeId, username: this.currentUsername
       });
 
-      console.log(entityId + "  status " + permissionTypeId + " ---- " + status);
-
       if (status) {
         return status;
       } else {
@@ -556,6 +511,7 @@ export default {
           });
 
           entity.saved = true;
+          entity.edit = false;
 
           try {
             entity.fullTextJson = JSON.parse(entity.fullText);

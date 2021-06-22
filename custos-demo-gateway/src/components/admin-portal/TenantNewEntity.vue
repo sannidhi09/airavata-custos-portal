@@ -31,13 +31,19 @@
 
           <div class="pt-3">
             <label class="form-label" for="fullTextJson.doctorId">Doctor</label>
-            <b-form-select
-                v-model="fullTextJson.doctorId"
-                :options="availableDoctors"
-                id="fullTextJson.doctorId"
-                trim
-                size="sm">
-            </b-form-select>
+            <button-overlay :show="!availableDoctors" class="w-100">
+              <b-form-select
+                  v-if="!availableDoctors || availableDoctors.length > 0"
+                  v-model="fullTextJson.doctorId"
+                  :options="availableDoctors"
+                  id="fullTextJson.doctorId"
+                  trim
+                  size="sm">
+              </b-form-select>
+              <small v-else>There are no doctors available</small>
+            </button-overlay>
+
+
           </div>
 
           <div class="pt-3">
@@ -72,6 +78,15 @@ import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 // import ButtonOverlay from "@/components/button-overlay";
 import config from "@/config";
+import ButtonOverlay from "@/components/button-overlay";
+
+// const entityTypeIdAppointment = config.value('entityTypeIdAppointment');
+// const entityTypeIdPatientHistory = config.value('entityTypeIdPatientHistory');
+// const entityTypeIdPrescription = config.value('entityTypeIdPrescription');
+
+const clientRoleDoctor = config.value('clientRoleDoctor');
+// const clientRoleNurse = config.value('clientRoleNurse');
+// const clientRolePatient = config.value('clientRolePatient');
 
 const groupIdDoctor = config.value('groupIdDoctor');
 const groupIdNurse = config.value('groupIdNurse');
@@ -83,13 +98,13 @@ const permissionTypeEditor = config.value('permissionTypeEditor');
 export default {
   name: "TenantEntities",
   store: store,
-  components: {TenantHome},
+  components: {ButtonOverlay, TenantHome},
   data() {
     return {
       processing: false,
       errors: [],
 
-      availableDoctors: ["Dr. Aruna", "Dr. Ruwan", "Dr. Marlon"],
+      // availableDoctors: ["Dr. Aruna", "Dr. Ruwan", "Dr. Marlon"],
 
       // name: null,
       fullTextJson: {
@@ -146,6 +161,21 @@ export default {
     },
     entityTypes() {
       return this.$store.getters["sharing/getEntityTypes"]({clientId: this.clientId});
+    },
+    users() {
+      return this.$store.getters["user/getUsers"]({clientId: this.clientId})
+    },
+    doctors() {
+      return this.users ? this.users.filter(user => user.realmRoles.indexOf(clientRoleDoctor) >= 0) : this.users;
+    },
+    availableDoctors() {
+      if (this.users) {
+        return this.users.filter(user => user.realmRoles.indexOf(clientRoleDoctor) >= 0).map(({username, firstName, lastName}) => {
+          return {text: `Dr. ${firstName}, ${lastName}`, value: username};
+        })
+      } else {
+        return this.users;
+      }
     }
   },
   methods: {
@@ -192,6 +222,7 @@ export default {
     }
   },
   beforeMount() {
+    this.$store.dispatch("user/fetchUsers", {clientId: this.clientId});
     this.$store.dispatch("sharing/fetchEntityTypes", {clientId: this.clientId});
   }
 }

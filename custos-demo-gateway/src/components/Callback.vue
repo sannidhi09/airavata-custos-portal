@@ -5,11 +5,11 @@
 <script>
 
 import store from "../new-service/store";
-import {custosService} from "@/new-service/store/util/custos.util";
-
-import config from "@/config";
-
-const clientRolePatient = config.value('clientRolePatient');
+// import {custosService} from "@/new-service/store/util/custos.util";
+//
+// import config from "@/config";
+//
+// const clientRolePatient = config.value('clientRolePatient');
 
 export default {
   name: "Callback",
@@ -19,12 +19,12 @@ export default {
       let code = this.$route.query.code
       let params = {code: code};
       await this.$store.dispatch('auth/authenticateUsingCode', params)
-      await this.$store.dispatch("user/addRolesToUser", {
-        clientId: custosService.clientId,
-        username: this.$store.getters["auth/currentUsername"],
-        realmRoles: [clientRolePatient],
-        clientLevel: false
-      });
+      // await this.$store.dispatch("user/addRolesToUser", {
+      //   clientId: custosService.clientId,
+      //   username: this.$store.getters["auth/currentUsername"],
+      //   realmRoles: [clientRolePatient],
+      //   clientLevel: false
+      // });
     }
   },
   async mounted() {
