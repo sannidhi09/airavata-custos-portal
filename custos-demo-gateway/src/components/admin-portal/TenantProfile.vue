@@ -87,22 +87,30 @@
 
           <div class="pt-3">
             <label class="form-label" for="clientId">Client ID</label>
-            <b-form-input
-                v-model="clientId"
-                id="clientId"
-                size="sm"
-                readonly>
-            </b-form-input>
+            <div style="display: flex; flex-direction: row;">
+              <b-form-input
+                  style="flex: 1;"
+                  v-model="clientId"
+                  id="clientId"
+                  size="sm"
+                  readonly>
+              </b-form-input>
+              <button-copy :value="clientId"/>
+            </div>
           </div>
 
           <div class="pt-3">
             <label class="form-label" for="clientSecret">Secret</label>
-            <b-form-input
-                v-model="clientSecret"
-                id="clientSecret"
-                size="sm"
-                readonly>
-            </b-form-input>
+            <div style="display: flex; flex-direction: row;">
+              <b-form-input
+                  style="flex: 1;"
+                  v-model="clientSecret"
+                  id="clientSecret"
+                  size="sm"
+                  readonly>
+              </b-form-input>
+              <button-copy :value="clientSecret"/>
+            </div>
           </div>
 
           <div class="pt-3">
@@ -237,11 +245,12 @@ import {
   VALIDATION_REGEX_FIRST_NAME, VALIDATION_REGEX_LAST_NAME,
   VALIDATION_REGEX_URI
 } from "@/components/validation-regex";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantProfile",
   store: store,
-  components: {TenantHome},
+  components: {ButtonCopy, TenantHome},
   data() {
     return {
       processing: false,

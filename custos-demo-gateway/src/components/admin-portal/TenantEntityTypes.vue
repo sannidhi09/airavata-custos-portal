@@ -17,7 +17,9 @@
         </b-thead>
         <b-tbody>
           <b-tr v-for="entityType in entityTypes" :key="entityType.id">
-            <b-td>{{ entityType.id }}</b-td>
+            <b-td>{{ entityType.id }}
+              <button-copy :value="entityType.id"/>
+            </b-td>
             <b-td>{{ entityType.name }}</b-td>
             <b-td>{{ entityType.description }}</b-td>
             <b-td>
@@ -40,11 +42,12 @@ import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import ButtonOverlay from "@/components/button-overlay";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantEntityTypes",
   store: store,
-  components: {ButtonOverlay, TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, ButtonOverlay, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

@@ -17,7 +17,9 @@
         </b-thead>
         <b-tbody>
           <b-tr v-for="role in tenantRoles" :key="role.tenantRoleId">
-            <b-td>{{ role.name }}</b-td>
+            <b-td>{{ role.name }}
+              <button-copy :value="role.name"/>
+            </b-td>
             <b-td>{{ role.description }}</b-td>
             <!--            <b-td>{{ role.composite }}</b-td>-->
             <!--            <b-td>TENANT</b-td>-->
@@ -54,11 +56,12 @@ import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import ButtonOverlay from "@/components/button-overlay";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantRoles",
   store: store,
-  components: {ButtonOverlay, TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, ButtonOverlay, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

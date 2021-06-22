@@ -32,6 +32,7 @@
                     {{ childTenant.clientId }}
                   </b-link>
                 </router-link>
+                <button-copy :value="childTenant.clientId"/>
               </b-td>
               <b-td>{{ childTenant.name }}</b-td>
               <b-td>{{ childTenant.domain }}</b-td>
@@ -108,11 +109,12 @@ import svgNotFound from "../../assets/not-found-icon.svg"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import {custosService} from "@/new-service/store/util/custos.util";
 import TableOverlayInfo from "@/components/table-overlay-info";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "ListTenants",
   store: store,
-  components: {TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

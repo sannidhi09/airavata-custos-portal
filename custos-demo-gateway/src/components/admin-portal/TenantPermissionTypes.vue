@@ -17,7 +17,9 @@
         </b-thead>
         <b-tbody>
           <b-tr v-for="permissionType in permissionTypes" :key="permissionType.id">
-            <b-td>{{ permissionType.id }}</b-td>
+            <b-td>{{ permissionType.id }}
+              <button-copy :value="permissionType.id"/>
+            </b-td>
             <b-td>{{ permissionType.name }}</b-td>
             <b-td>{{ permissionType.description }}</b-td>
             <b-td>
@@ -40,11 +42,12 @@ import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import ButtonOverlay from "@/components/button-overlay";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantPermissionTypes",
   store: store,
-  components: {ButtonOverlay, TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, ButtonOverlay, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},
