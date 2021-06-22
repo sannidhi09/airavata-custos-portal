@@ -1,7 +1,6 @@
 <template>
-  <b-button variant="outline-secondary" class="ml-2" size="sm" v-on:click="copy"
-            style="font-size: 10px;padding: 4px 5px;">
-    <b-icon icon="clipboard"/>&nbsp;copy
+  <b-button variant="link-secondary" class="ml-2" size="sm" v-on:click="copy" v-b-tooltip.hover title="Copy">
+    <b-icon icon="clipboard"/>
     <input style="position: fixed; top: -1000px;" type="text" :value="value" ref="copyValueRef">
   </b-button>
 </template>
