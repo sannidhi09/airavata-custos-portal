@@ -230,11 +230,14 @@ import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entit
 const entityTypeIdAppointment = config.value('entityTypeIdAppointment');
 const entityTypeIdPatientHistory = config.value('entityTypeIdPatientHistory');
 const entityTypeIdPrescription = config.value('entityTypeIdPrescription');
+
 const clientRoleDoctor = config.value('clientRoleDoctor');
 const clientRoleNurse = config.value('clientRoleNurse');
 const clientRolePatient = config.value('clientRolePatient');
+
 const groupIdDoctor = config.value('groupIdDoctor');
 // const groupIdNurse = config.value('groupIdNurse');
+
 const permissionTypeViewer = config.value('permissionTypeViewer');
 const permissionTypeEditor = config.value('permissionTypeEditor');
 // const permissionTypeShare = config.value('permissionTypeShare');
@@ -276,78 +279,6 @@ export default {
       return this.appointmentEntityIds.map(entityId => this.getEntity({entityId}));
     },
     entities() {
-
-      // const dumbEntities = [
-      //   {
-      //     entityId: "0",
-      //     type: entityTypeIdAppointment,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "patient": "Isuru Ranawaka",
-      //       "reason": "Abdominal Pain",
-      //       "doctorId": "Aruna",
-      //       "visitDate": "01/01/2021",
-      //       "histories": [2],
-      //       "prescriptions": [3]
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //   {
-      //     entityId: "1",
-      //     type: entityTypeIdAppointment,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "patient": "Suresh",
-      //       "reason": "Chest Pain",
-      //       "doctorId": "Saman",
-      //       "visitDate": "01/01/2021",
-      //       "histories": [2],
-      //       "prescriptions": [3, 3]
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //   {
-      //     entityId: "2",
-      //     type: entityTypeIdPatientHistory,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "symptoms": "Cold and Fever for few days",
-      //       "allergies": "None",
-      //       "bloodPressure": "120",
-      //       "randomBloodSugar": "101"
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //   {
-      //     entityId: "3",
-      //     type: entityTypeIdPrescription,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //     fullTextJson: `{
-      //       "medications": [
-      //         {"name": "Panadol", "dose": 23},
-      //         {"name": "Vitamin C", "dose": 40}
-      //       ],
-      //       "recommendations": [
-      //         "Bed Rest", "Steam"
-      //       ]
-      //     }`,
-      //     ownerId: "Dinuka"
-      //   },
-      //
-      // ];
-      //
-      // return dumbEntities;
-
-
-      // return this.dumbEntities.map(({entityId}) => {
-      //   return this.getEntity({entityId});
-      // });
-
-
       return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})
     },
     breadcrumbLinks() {
