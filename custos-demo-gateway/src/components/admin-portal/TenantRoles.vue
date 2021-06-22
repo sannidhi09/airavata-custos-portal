@@ -23,7 +23,8 @@
             <!--            <b-td>TENANT</b-td>-->
             <b-td>
               <button-overlay :show="processingDelete[role.tenantRoleId]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)"
+                          :disabled="rolesToBeDisabled.indexOf(role.name) >= 0">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>
@@ -61,7 +62,9 @@ export default {
   data() {
     return {
       processingDelete: {},
-      errors: []
+      errors: [],
+
+      rolesToBeDisabled: ["uma_authorization", "offline_access", "admin", "tenant-requester"]
     }
   },
   computed: {
