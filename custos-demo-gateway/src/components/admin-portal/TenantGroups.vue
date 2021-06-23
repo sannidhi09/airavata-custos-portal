@@ -29,7 +29,7 @@
             <b-td>{{ group.description }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[group.groupId]">
-                <b-button variant="link" v-on:click="onDeleteClick(group)">
+                <b-button variant="link" v-on:click="onDeleteClick(group)" v-b-tooltip.hover title="Delete">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>

@@ -25,7 +25,7 @@
             <!--            <b-td>TENANT</b-td>-->
             <b-td>
               <button-overlay :show="processingDelete[role.tenantRoleId]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)"
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)" v-b-tooltip.hover title="Delete"
                           :disabled="rolesToBeDisabled.indexOf(role.name) >= 0">
                   <b-icon icon="trash"></b-icon>
                 </b-button>

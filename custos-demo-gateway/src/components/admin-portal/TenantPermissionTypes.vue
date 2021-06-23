@@ -24,8 +24,8 @@
             <b-td>{{ permissionType.description }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[permissionType.id]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(permissionType)"
-                          :disabled="disabledPermissionType[permissionType.id]">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(permissionType)" v-b-tooltip.hover
+                          title="Delete" :disabled="disabledPermissionType[permissionType.id]">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>

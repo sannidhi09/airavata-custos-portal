@@ -31,8 +31,9 @@
             <b-td>{{ entity.createdAt }}</b-td>
             <b-td>{{ entity.updatedAt }}</b-td>
             <b-td>
-              {{ entity.sharedCount }}
-              <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`">
+              <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`"
+                        v-b-tooltip.hover title="Share">
+                <span>{{ entity.sharedCount }}</span>&nbsp;
                 <b-icon icon="share"></b-icon>
               </b-button>
               <modal-share-entity :client-id="clientId" :entity-id="entity.entityId"
@@ -42,7 +43,7 @@
               />
 
               <button-overlay :show="processingDelete[entity.entityId]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(entity)">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(entity)" v-b-tooltip.hover title="Delete">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>

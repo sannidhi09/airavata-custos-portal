@@ -24,8 +24,8 @@
             <b-td>{{ entityType.description }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[entityType.id]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(entityType)"
-                          :disabled="disabledEntityTypes[entityType.id]">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(entityType)" v-b-tooltip.hover
+                          title="Delete" :disabled="disabledEntityTypes[entityType.id]">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>

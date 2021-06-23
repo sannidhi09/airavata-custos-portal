@@ -64,7 +64,8 @@
               <b-td>
                 <b-overlay :show="processingDelete[childTenant.clientId]" v-if="childTenant.status === 'REQUESTED'"
                            rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                  <b-button variant="link" size="sm" v-on:click="deleteTenant(childTenant)">
+                  <b-button variant="link" size="sm" v-on:click="deleteTenant(childTenant)" v-b-tooltip.hover
+                            title="Delete">
                     <b-icon icon="trash"></b-icon>
                   </b-button>
                 </b-overlay>
