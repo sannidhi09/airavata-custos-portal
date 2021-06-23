@@ -11,7 +11,7 @@
       <b-table-simple>
         <b-thead>
           <b-tr>
-            <b-th>Name</b-th>
+            <b-th>Username</b-th>
             <b-th>Email</b-th>
             <b-th>Membership</b-th>
             <b-th></b-th>

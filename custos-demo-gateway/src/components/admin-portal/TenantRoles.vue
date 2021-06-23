@@ -17,13 +17,15 @@
         </b-thead>
         <b-tbody>
           <b-tr v-for="role in tenantRoles" :key="role.tenantRoleId">
-            <b-td>{{ role.name }}</b-td>
+            <b-td>{{ role.name }}
+              <button-copy :value="role.name"/>
+            </b-td>
             <b-td>{{ role.description }}</b-td>
             <!--            <b-td>{{ role.composite }}</b-td>-->
             <!--            <b-td>TENANT</b-td>-->
             <b-td>
               <button-overlay :show="processingDelete[role.tenantRoleId]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)"
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(role)" v-b-tooltip.hover title="Delete"
                           :disabled="rolesToBeDisabled.indexOf(role.name) >= 0">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
@@ -54,11 +56,12 @@ import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import ButtonOverlay from "@/components/button-overlay";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantRoles",
   store: store,
-  components: {ButtonOverlay, TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, ButtonOverlay, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},
