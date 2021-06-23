@@ -32,6 +32,7 @@
                     {{ childTenant.clientId }}
                   </b-link>
                 </router-link>
+                <button-copy :value="childTenant.clientId"/>
               </b-td>
               <b-td>{{ childTenant.name }}</b-td>
               <b-td>{{ childTenant.domain }}</b-td>
@@ -63,7 +64,8 @@
               <b-td>
                 <b-overlay :show="processingDelete[childTenant.clientId]" v-if="childTenant.status === 'REQUESTED'"
                            rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                  <b-button variant="link" size="sm" v-on:click="deleteTenant(childTenant)">
+                  <b-button variant="link" size="sm" v-on:click="deleteTenant(childTenant)" v-b-tooltip.hover
+                            title="Delete">
                     <b-icon icon="trash"></b-icon>
                   </b-button>
                 </b-overlay>
@@ -108,11 +110,12 @@ import svgNotFound from "../../assets/not-found-icon.svg"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import {custosService} from "@/new-service/store/util/custos.util";
 import TableOverlayInfo from "@/components/table-overlay-info";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "ListTenants",
   store: store,
-  components: {TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

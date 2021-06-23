@@ -9,6 +9,7 @@
       <b-table-simple>
         <b-thead>
           <b-tr>
+            <b-th>Entity ID</b-th>
             <b-th>Name</b-th>
             <b-th>Type</b-th>
             <b-th>Description</b-th>
@@ -20,16 +21,19 @@
           <b-tr v-for="(entity, entityIndex) in entities" :key="entity.entityId">
             <b-td>
               <router-link :to="`/tenants/${clientId}/entities/${entity.entityId}`" v-slot="{href, navigate}">
-                <b-link :href="href" v-on:click="navigate">{{ entity.name }}</b-link>
+                <b-link :href="href" v-on:click="navigate">{{ entity.entityId }}</b-link>
               </router-link>
+              <button-copy :value="entity.entityId"/>
             </b-td>
+            <b-td>{{ entity.name }}</b-td>
             <b-td>{{ entity.type }}</b-td>
             <b-td>{{ entity.description }}</b-td>
             <b-td>{{ entity.createdAt }}</b-td>
             <b-td>{{ entity.updatedAt }}</b-td>
             <b-td>
-              {{ entity.sharedCount }}
-              <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`">
+              <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`"
+                        v-b-tooltip.hover title="Share">
+                <span>{{ entity.sharedCount }}</span>&nbsp;
                 <b-icon icon="share"></b-icon>
               </b-button>
               <modal-share-entity :client-id="clientId" :entity-id="entity.entityId"
@@ -39,7 +43,7 @@
               />
 
               <button-overlay :show="processingDelete[entity.entityId]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(entity)">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(entity)" v-b-tooltip.hover title="Delete">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>
@@ -67,11 +71,12 @@ import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import ModalShareEntity from "@/components/admin-portal/modals/modal-share-entity";
 import ButtonOverlay from "@/components/button-overlay";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {ButtonOverlay, ModalShareEntity, TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, ButtonOverlay, ModalShareEntity, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

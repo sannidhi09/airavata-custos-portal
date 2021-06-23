@@ -84,14 +84,28 @@
               </div>
               <div class="pt-3">
                 <label class="form-label" for="new-password">Password</label>
-                <b-form-input
-                    v-model="password"
-                    :state="inputState.password"
-                    id="new-password"
-                    type="password"
-                    size="sm"
-                    aria-describedby="password-help-block">
-                </b-form-input>
+                <button-view>
+                  <template #content-when-hide>
+                    <b-form-input
+                        v-model="password"
+                        :state="inputState.password"
+                        id="new-password"
+                        type="password"
+                        size="sm"
+                        aria-describedby="password-help-block">
+                    </b-form-input>
+                  </template>
+                  <template #content-when-view>
+                    <b-form-input
+                        v-model="password"
+                        :state="inputState.password"
+                        id="new-password"
+                        type="text"
+                        size="sm"
+                        aria-describedby="password-help-block">
+                    </b-form-input>
+                  </template>
+                </button-view>
                 <b-form-text id="password-help-block">
                   Your password must be at least 8 characters long, and must contain letters and
                   numbers, and must at least one special character.
@@ -101,13 +115,26 @@
               </div>
               <div class="pt-3">
                 <label class="form-label" for="confirm-password">Confirm Password</label>
-                <b-form-input
-                    v-model="confirmPassword"
-                    :state="inputState.confirmPassword"
-                    id="confirm-password"
-                    type="password"
-                    size="sm">
-                </b-form-input>
+                <button-view>
+                  <template #content-when-hide>
+                    <b-form-input
+                        v-model="confirmPassword"
+                        :state="inputState.confirmPassword"
+                        id="confirm-password"
+                        type="password"
+                        size="sm">
+                    </b-form-input>
+                  </template>
+                  <template #content-when-view>
+                    <b-form-input
+                        v-model="confirmPassword"
+                        :state="inputState.confirmPassword"
+                        id="confirm-password"
+                        type="text"
+                        size="sm">
+                    </b-form-input>
+                  </template>
+                </button-view>
                 <b-form-invalid-feedback>
                 </b-form-invalid-feedback>
               </div>
@@ -259,9 +286,10 @@ import {
   VALIDATION_REGEX_FIRST_NAME, VALIDATION_REGEX_LAST_NAME,
   VALIDATION_REGEX_URI
 } from "@/components/validation-regex";
+import ButtonView from "@/components/button-view";
 
 export default {
-  components: {TenantHome},
+  components: {ButtonView, TenantHome},
   store: store,
   props: {
     requesterEmail: String,

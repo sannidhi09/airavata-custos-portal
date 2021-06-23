@@ -17,13 +17,15 @@
         </b-thead>
         <b-tbody>
           <b-tr v-for="entityType in entityTypes" :key="entityType.id">
-            <b-td>{{ entityType.id }}</b-td>
+            <b-td>{{ entityType.id }}
+              <button-copy :value="entityType.id"/>
+            </b-td>
             <b-td>{{ entityType.name }}</b-td>
             <b-td>{{ entityType.description }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[entityType.id]">
-                <b-button variant="link" size="sm" v-on:click="onClickDelete(entityType)"
-                          :disabled="disabledEntityTypes[entityType.id]">
+                <b-button variant="link" size="sm" v-on:click="onClickDelete(entityType)" v-b-tooltip.hover
+                          title="Delete" :disabled="disabledEntityTypes[entityType.id]">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>
@@ -40,11 +42,12 @@ import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import ButtonOverlay from "@/components/button-overlay";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantEntityTypes",
   store: store,
-  components: {ButtonOverlay, TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, ButtonOverlay, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

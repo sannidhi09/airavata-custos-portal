@@ -87,22 +87,54 @@
 
           <div class="pt-3">
             <label class="form-label" for="clientId">Client ID</label>
-            <b-form-input
-                v-model="clientId"
-                id="clientId"
-                size="sm"
-                readonly>
-            </b-form-input>
+            <div style="display: flex; flex-direction: row;">
+              <button-view style="flex: 1;">
+                <template #content-when-hide>
+                  <b-form-input
+                      v-model="clientId"
+                      type="password"
+                      id="clientId"
+                      size="sm"
+                      readonly>
+                  </b-form-input>
+                </template>
+                <template #content-when-view>
+                  <b-form-input
+                      v-model="clientId"
+                      id="clientId"
+                      size="sm"
+                      readonly>
+                  </b-form-input>
+                </template>
+              </button-view>
+              <button-copy :value="clientId"/>
+            </div>
           </div>
 
           <div class="pt-3">
             <label class="form-label" for="clientSecret">Secret</label>
-            <b-form-input
-                v-model="clientSecret"
-                id="clientSecret"
-                size="sm"
-                readonly>
-            </b-form-input>
+            <div style="display: flex; flex-direction: row;">
+              <button-view style="flex: 1;">
+                <template #content-when-hide>
+                  <b-form-input
+                      v-model="clientSecret"
+                      type="password"
+                      id="clientId"
+                      size="sm"
+                      readonly>
+                  </b-form-input>
+                </template>
+                <template #content-when-view>
+                  <b-form-input
+                      v-model="clientSecret"
+                      id="clientId"
+                      size="sm"
+                      readonly>
+                  </b-form-input>
+                </template>
+              </button-view>
+              <button-copy :value="clientSecret"/>
+            </div>
           </div>
 
           <div class="pt-3">
@@ -237,11 +269,13 @@ import {
   VALIDATION_REGEX_FIRST_NAME, VALIDATION_REGEX_LAST_NAME,
   VALIDATION_REGEX_URI
 } from "@/components/validation-regex";
+import ButtonCopy from "@/components/button-copy";
+import ButtonView from "@/components/button-view";
 
 export default {
   name: "TenantProfile",
   store: store,
-  components: {TenantHome},
+  components: {ButtonView, ButtonCopy, TenantHome},
   data() {
     return {
       processing: false,
