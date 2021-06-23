@@ -383,15 +383,16 @@ export default {
         await this.updateEntity(history);
       } else {
         await this.saveEntity(history);
+        await this.$store.dispatch("sharing/shareEntity", {
+          entityId: history.entityId,
+          clientId: this.clientId,
+          permissionTypeId: permissionTypeViewer,
+          groupIds: [groupIdDoctor]
+        });
       }
 
       await this.updateEntity(appointment);
-      await this.$store.dispatch("sharing/shareEntity", {
-        entityId: history.entityId,
-        clientId: this.clientId,
-        permissionTypeId: permissionTypeViewer,
-        groupIds: [groupIdDoctor]
-      });
+
       this.refreshData();
     },
     async savePrescription(appointment, prescription) {
@@ -399,15 +400,16 @@ export default {
         await this.updateEntity(prescription);
       } else {
         await this.saveEntity(prescription);
+        await this.$store.dispatch("sharing/shareEntity", {
+          entityId: prescription.entityId,
+          clientId: this.clientId,
+          permissionTypeId: permissionTypeViewer,
+          usernames: [appointment.ownerId]
+        });
       }
 
       await this.updateEntity(appointment);
-      await this.$store.dispatch("sharing/shareEntity", {
-        entityId: prescription.entityId,
-        clientId: this.clientId,
-        permissionTypeId: permissionTypeViewer,
-        usernames: [appointment.ownerId]
-      });
+
       this.refreshData();
     },
     async updateEntity({entityId}) {
