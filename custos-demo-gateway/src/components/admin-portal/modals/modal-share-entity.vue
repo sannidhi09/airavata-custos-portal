@@ -8,7 +8,7 @@
           <div style="display: flex; flex-direction: row;line-height: 38px;">
             <div style="flex: 1;">
               <small v-if="owner.ownerType=== 'group'">GROUP&nbsp;</small>
-              {{ owner.ownerId }}
+              {{ getOwnerName(owner) }}
             </div>
             <div>
               <b-dropdown variant="outline-secondary" size="sm" :id="`dropdown-permission-type-${ownerIndex}`"
@@ -78,6 +78,19 @@ export default {
     }
   },
   methods: {
+    getOwnerName({ownerId, ownerType}) {
+      if (ownerType === "group") {
+        const group = this.$store.getters["group/getGroup"]({clientId: this.clientId, groupId: ownerId});
+        if (group) {
+          return group.name;
+        }
+      } else if (ownerType === "user") {
+        const user = this.$store.getters["user/getUser"]({clientId: this.clientId, username: ownerId});
+        if (user) {
+          return `${user.firstName}, ${user.lastName}`;
+        }
+      }
+    },
     async refreshData() {
       this.processing = true;
 
@@ -86,6 +99,12 @@ export default {
 
       if (this.savedOwners) {
         this.owners = this.savedOwners.map(({ownerId, ownerType, permission}) => {
+          if (ownerType === "group") {
+            this.$store.dispatch("group/fetchGroup", {clientId: this.clientId, groupId: ownerId});
+          } else if (ownerType === "user") {
+            this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, username: ownerId});
+          }
+
           return {ownerId, ownerType, permissionTypeId: permission.id, dropped: false, saved: true};
         });
       }
