@@ -1,7 +1,10 @@
 # Custos Portal
 
 1. Install latest stable nodejs (v14.17) https://nodejs.org/en/download/
-2. Change `.env` file with all new entries of following
+2. `git clone https://github.com/apache/airavata-custos-portal.git`
+3. `git checkout reference-portal`
+4. `cd ./airavata-custos-portal/custos-demo-gateway`
+5. Change `.env` file with all new entries of following
 
 ```
 VUE_APP_CLIENT_ID=""
@@ -24,8 +27,8 @@ VUE_APP_CLIENT_PERMISSION_TYPE_VIEWER="VIEWER"
 VUE_APP_CLIENT_PERMISSION_TYPE_EDITOR="EDITOR"
 ```
 
-3. Create necessary entity types, permission types, roles, groups and update them on .env
-4. `npm install`
-5. `npm run serve`
-6. http://localhost:8080
+6. Create necessary entity types, permission types, roles, groups and update them on .env
+7. `npm install`
+8. `npm run serve`
+9. http://localhost:8080
 
