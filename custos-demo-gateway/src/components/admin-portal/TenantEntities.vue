@@ -44,6 +44,7 @@
                 </small>
                 <div>
                   <b-button v-if="hasPermission(appointment, permissionTypeEditor)" variant="link" size="sm"
+                            v-b-tooltip.hover title="Share"
                             v-b-modal="`modal-appointment-share-${appointment.entityId}`">
                     <b-icon icon="share"/>
                   </b-button>
@@ -82,11 +83,11 @@
                       </small>
                       <div>
                         <b-button variant="link" size="sm" v-if="hasPermission(history, permissionTypeEditor)"
-                                  v-on:click="onClickEditEntity(history)">
+                                  v-on:click="onClickEditEntity(history)" v-b-tooltip.hover title="Edit">
                           <b-icon icon="pencil"/>
                         </b-button>
                         <b-button variant="link" size="sm" v-if="hasPermission(history, permissionTypeEditor)"
-                                  v-b-modal="`modal-history-share-${history.entityId}`">
+                                  v-b-modal="`modal-history-share-${history.entityId}`" v-b-tooltip.hover title="Share">
                           <b-icon icon="share"/>
                         </b-button>
                         <modal-share-entity :entity-id="history.entityId" :client-id="clientId"
@@ -163,10 +164,11 @@
                       <div>
                         <b-button variant="link" size="sm" v-if="hasPermission(prescription, permissionTypeEditor)"
                                   v-on:click="onClickEditEntity(prescription)">
-                          <b-icon icon="pencil"/>
+                          <b-icon icon="pencil" v-b-tooltip.hover title="Edit"/>
                         </b-button>
                         <b-button variant="link" size="sm" v-if="hasPermission(prescription, permissionTypeEditor)"
-                                  v-b-modal="`modal-prescription-share-${prescription.entityId}`">
+                                  v-b-modal="`modal-prescription-share-${prescription.entityId}`" v-b-tooltip.hover
+                                  title="Share">
                           <b-icon icon="share"/>
                         </b-button>
                         <modal-share-entity :entity-id="prescription.entityId" :client-id="clientId"
