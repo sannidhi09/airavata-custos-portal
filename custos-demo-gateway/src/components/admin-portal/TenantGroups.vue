@@ -21,6 +21,7 @@
               <router-link :to="`/tenants/${clientId}/groups/${group.groupId}`" v-slot="{href, navigate}">
                 <b-link :href="href" v-on:click="navigate">{{ group.groupId }}</b-link>
               </router-link>
+              <button-copy :value="group.groupId"/>
             </b-td>
             <b-td>
               {{ group.name }}
@@ -28,7 +29,7 @@
             <b-td>{{ group.description }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[group.groupId]">
-                <b-button variant="link" v-on:click="onDeleteClick(group)">
+                <b-button variant="link" v-on:click="onDeleteClick(group)" v-b-tooltip.hover title="Delete">
                   <b-icon icon="trash"></b-icon>
                 </b-button>
               </button-overlay>
@@ -55,11 +56,12 @@ import store from "../../new-service/store"
 import TenantHome from "@/components/admin-portal/TenantHome";
 import TableOverlayInfo from "@/components/table-overlay-info";
 import ButtonOverlay from "@/components/button-overlay";
+import ButtonCopy from "@/components/button-copy";
 
 export default {
   name: "TenantGroups",
   store: store,
-  components: {ButtonOverlay, TableOverlayInfo, TenantHome},
+  components: {ButtonCopy, ButtonOverlay, TableOverlayInfo, TenantHome},
   data() {
     return {
       processingDelete: {},

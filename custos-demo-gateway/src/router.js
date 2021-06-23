@@ -16,93 +16,6 @@ export default new Router({
             component: Landing
         },
         {
-            path: "/register",
-            name: "account",
-            component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/registration/CreateAccount")
-        },
-        {
-            path: "/tenant/:tenantId/workspace",
-            name: "workspace",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"workspace"*/  "./components/workspace/Workspace")
-        },
-        {
-            path: "/tenant/:tenantId/workspace/groups",
-            name: "groups",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"groups"*/  "./components/workspace/Groups")
-        },
-        {
-            path: "/workspace/profile",
-            name: "profile",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"groups"*/  "./components/workspace/Profile")
-        },
-        {
-            path: "/tenant/:tenantId/workspace/profile",
-            name: "tenantUserProfile",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"groups"*/  "./components/workspace/Profile")
-        },
-        {
-            path: "/tenant/:tenantId/workspace/logs",
-            name: "logs",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"logs"*/  "./components/workspace/Logs")
-        },
-        {
-            path: "/tenant/:tenantId/workspace/secrets",
-            name: "secrets",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"secrets"*/  "./components/workspace/Secrets")
-        },
-        {
-            path: "/tenant/:tenantId/workspace/sharings",
-            name: "sharings",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"sharings"*/  "./components/workspace/Sharing")
-        },
-        {
-            path: "/tenant/:tenantId/workspace/users",
-            name: "users",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"users"*/  "./components/workspace/Users")
-        },
-        {
-            path: "/tenant/:tenantId/workspace/agents",
-            name: "agents",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/workspace/Agents")
-        },
-        {
             path: "/tenants/default",
             name: "tenants-default",
             beforeEnter: async (to, from, next) => {
@@ -296,18 +209,8 @@ export default new Router({
             name: "notFound",
             component: () =>
                 import(/*webpackChunkName:"users"*/  "./components/404")
-        },
-        {
-            path: "/tenant/:tenantId/login",
-            name: "tenantLogin",
-            props: true,
-            component: () =>
-                import(/*webpackChunkName:"users"*/  "./components/landing/TenantLogin")
-        },
-
+        }
     ]
-
-
 })
 
 // async function validate(next) {

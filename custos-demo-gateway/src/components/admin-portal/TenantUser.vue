@@ -44,7 +44,7 @@
             </b-form-invalid-feedback>
           </div>
 
-          <div class="pt-3">
+          <div class="pt-3" v-if="availableTenantRoles && availableTenantRoles.length > 0">
             <label class="form-label" for="realm-roles">Roles</label>
             <b-form-checkbox-group
                 v-model="realmRoles"
