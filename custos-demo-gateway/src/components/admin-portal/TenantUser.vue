@@ -77,114 +77,56 @@
         </div>
 
         <div style="flex: 1;padding-left: 10px;">
-          <!--            <label class="form-label" for="attributes">Attributes</label>-->
-          <table-overlay-info :rows="5" :columns="2" :data="attributes" empty-label="No attributes.">
-            <div class="pt-3 text-left">
-              <label class="form-label" for="age">Age</label>
-              <b-form-input
-                  v-model="age"
-                  id="age"
-                  trim
-                  size="sm">
-              </b-form-input>
-            </div>
+          <div class="pt-3 text-left">
+            <label class="form-label" for="age">Age</label>
+            <b-form-input
+                v-model="age"
+                id="age"
+                trim
+                size="sm">
+            </b-form-input>
+          </div>
 
-            <div class="pt-3 text-left">
-              <label class="form-label" for="gender">Gender</label>
-              <b-form-select
-                  :options="availableGenders"
-                  v-model="gender"
-                  id="gender"
-                  trim
-                  size="sm">
-              </b-form-select>
-            </div>
+          <div class="pt-3 text-left">
+            <label class="form-label" for="gender">Gender</label>
+            <b-form-select
+                :options="availableGenders"
+                v-model="gender"
+                id="gender"
+                trim
+                size="sm">
+            </b-form-select>
+          </div>
 
-            <div class="pt-3 text-left">
-              <label class="form-label" for="dateOfBirth">Date of Birth</label>
-              <b-form-datepicker
-                  v-model="dateOfBirth"
-                  id="dateOfBirth"
-                  trim
-                  size="sm">
-              </b-form-datepicker>
-            </div>
+          <div class="pt-3 text-left">
+            <label class="form-label" for="dateOfBirth">Date of Birth</label>
+            <b-form-datepicker
+                v-model="dateOfBirth"
+                id="dateOfBirth"
+                trim
+                size="sm">
+            </b-form-datepicker>
+          </div>
 
-            <div class="pt-3 text-left">
-              <label class="form-label" for="address">Address</label>
-              <b-form-input
-                  v-model="address"
-                  id="address"
-                  trim
-                  size="sm">
-              </b-form-input>
-            </div>
+          <div class="pt-3 text-left">
+            <label class="form-label" for="address">Address</label>
+            <b-form-input
+                v-model="address"
+                id="address"
+                trim
+                size="sm">
+            </b-form-input>
+          </div>
 
-            <div class="pt-3 text-left">
-              <label class="form-label" for="mobile">Mobile</label>
-              <b-form-input
-                  v-model="mobile"
-                  id="mobile"
-                  trim
-                  size="sm">
-              </b-form-input>
-            </div>
-
-            <!--              <template #empty>-->
-            <!--                No attributes to show.-->
-            <!--                <b-button variant="link" size="sm" v-on:click="attributes.push({key: '', values: ''})">-->
-            <!--                  Create an attribute-->
-            <!--                </b-button>-->
-            <!--              </template>-->
-            <!--              <b-table-simple>-->
-            <!--                <b-thead>-->
-            <!--                  <b-tr>-->
-            <!--                    <b-th></b-th>-->
-            <!--                    <b-th>Key</b-th>-->
-            <!--                    <b-th>Values</b-th>-->
-            <!--                  </b-tr>-->
-            <!--                </b-thead>-->
-            <!--                <b-tbody>-->
-            <!--                  <b-tr v-for="(attribute, attributesIndex) in availableAttributes" :key="attributesIndex">-->
-            <!--                    <b-td>#{{ attributesIndex + 1 }}</b-td>-->
-            <!--                    <b-td>-->
-            <!--                      <label :for="`attribute-key-${attributesIndex + 1}`"-->
-            <!--                             style="visibility: hidden; position: fixed; top: -100px;">-->
-            <!--                        Attribute #{{ attributesIndex + 1 }} key-->
-            <!--                      </label>-->
-            <!--                      <b-form-input :id="`attributes-key-${attributesIndex + 1}`" v-model="attribute.key" size="sm"/>-->
-            <!--                    </b-td>-->
-            <!--                    <b-td>-->
-            <!--                      <label :for="`attribute-values-${attributesIndex + 1}`"-->
-            <!--                             style="visibility: hidden; position: fixed; top: -100px;">-->
-            <!--                        Attribute #{{ attributesIndex + 1 }} values-->
-            <!--                      </label>-->
-            <!--                      <b-form-input :id="`attributes-values-${attributesIndex + 1}`" v-model="attribute.values"-->
-            <!--                                    size="sm"/>-->
-            <!--                    </b-td>-->
-            <!--                    <b-td>-->
-            <!--                      <b-button variant="link" v-on:click="attribute.deleted = true;">-->
-            <!--                        <b-icon icon="x"></b-icon>-->
-            <!--                      </b-button>-->
-            <!--                    </b-td>-->
-            <!--                  </b-tr>-->
-            <!--                </b-tbody>-->
-            <!--              </b-table-simple>-->
-            <!--              <b-button variant="link" size="sm"-->
-            <!--                        v-on:click="attributes.push({key: '', values: '', deleted:false, saved: false})">-->
-            <!--                Add new attribute-->
-            <!--              </b-button>-->
-            <!--              <ul v-if="attributes.length > 0" class="list-inline d-inline-block mb-2">-->
-            <!--                <li v-for="(attribute, attributesIndex) in attributes" :key="attributesIndex" class="list-inline-item">-->
-            <!--                  <b-form-tag variant="primary" :title="`${attribute.key} = ${attribute.values}`">-->
-            <!--                    <div style="display: flex; flex-direction: row;">-->
-            <!--                      <label :for="`attributes-${attributesIndex}`">{{ attribute.key }} =</label>-->
-            <!--                      <b-form-input :id="`attributes-${attributesIndex}`" v-model="attribute.values"/>-->
-            <!--                    </div>-->
-            <!--                  </b-form-tag>-->
-            <!--                </li>-->
-            <!--              </ul>-->
-          </table-overlay-info>
+          <div class="pt-3 text-left">
+            <label class="form-label" for="mobile">Mobile</label>
+            <b-form-input
+                v-model="mobile"
+                id="mobile"
+                trim
+                size="sm">
+            </b-form-input>
+          </div>
         </div>
 
       </div>
@@ -195,17 +137,15 @@
 <script>
 import TenantHome from "@/components/admin-portal/TenantHome";
 import store from "@/new-service/store";
-import TableOverlayInfo from "@/components/table-overlay-info";
 import {
   VALIDATION_REGEX_EMAIL,
   VALIDATION_REGEX_FIRST_NAME,
   VALIDATION_REGEX_LAST_NAME
 } from "@/components/validation-regex";
-// import TableOverlayInfo from "@/components/table-overlay-info";
 
 export default {
   name: "TenantUser",
-  components: {TableOverlayInfo, TenantHome},
+  components: {TenantHome},
   store: store,
   data() {
     return {
