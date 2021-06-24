@@ -76,56 +76,84 @@
 
         </div>
 
-        <div style="flex: 1;padding-left: 10px;">
-          <div class="pt-3 text-left">
-            <label class="form-label" for="age">Age</label>
-            <b-form-input
-                v-model="age"
-                id="age"
-                trim
-                size="sm">
-            </b-form-input>
-          </div>
+        <div style="flex: 1;padding-left: 10px;" v-if="hasPatientRole">
+          <div>
+            <div class="pt-3 text-left">
+              <label class="form-label" for="age">Age</label>
+              <b-form-input
+                  v-model="age"
+                  id="age"
+                  trim
+                  size="sm">
+              </b-form-input>
+            </div>
 
+            <div class="pt-3 text-left">
+              <label class="form-label" for="gender">Gender</label>
+              <b-form-select
+                  :options="availableGenders"
+                  v-model="gender"
+                  id="gender"
+                  trim
+                  size="sm">
+              </b-form-select>
+            </div>
+
+            <div class="pt-3 text-left">
+              <label class="form-label" for="dateOfBirth">Date of Birth</label>
+              <b-form-datepicker
+                  v-model="dateOfBirth"
+                  id="dateOfBirth"
+                  trim
+                  size="sm">
+              </b-form-datepicker>
+            </div>
+
+            <div class="pt-3 text-left">
+              <label class="form-label" for="address">Address</label>
+              <b-form-input
+                  v-model="address"
+                  id="address"
+                  trim
+                  size="sm">
+              </b-form-input>
+            </div>
+
+            <div class="pt-3 text-left">
+              <label class="form-label" for="mobile">Mobile</label>
+              <b-form-input
+                  v-model="mobile"
+                  id="mobile"
+                  trim
+                  size="sm">
+              </b-form-input>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex: 1;padding-left: 10px;" v-if="hasDoctorRole">
           <div class="pt-3 text-left">
-            <label class="form-label" for="gender">Gender</label>
+            <label class="form-label" for="doctorSpecialization">Doctor Specialization</label>
             <b-form-select
-                :options="availableGenders"
-                v-model="gender"
-                id="gender"
+                :options="availableDoctorSpecializations"
+                v-model="doctorSpecialization"
+                id="doctorSpecialization"
                 trim
                 size="sm">
             </b-form-select>
           </div>
+        </div>
 
+        <div style="flex: 1;padding-left: 10px;" v-if="hasNurseRole">
           <div class="pt-3 text-left">
-            <label class="form-label" for="dateOfBirth">Date of Birth</label>
-            <b-form-datepicker
-                v-model="dateOfBirth"
-                id="dateOfBirth"
+            <label class="form-label" for="nursingSpecialization">Nursing Specialization</label>
+            <b-form-select
+                :options="availableNursingSpecializations"
+                v-model="nursingSpecialization"
+                id="nursingSpecialization"
                 trim
                 size="sm">
-            </b-form-datepicker>
-          </div>
-
-          <div class="pt-3 text-left">
-            <label class="form-label" for="address">Address</label>
-            <b-form-input
-                v-model="address"
-                id="address"
-                trim
-                size="sm">
-            </b-form-input>
-          </div>
-
-          <div class="pt-3 text-left">
-            <label class="form-label" for="mobile">Mobile</label>
-            <b-form-input
-                v-model="mobile"
-                id="mobile"
-                trim
-                size="sm">
-            </b-form-input>
+            </b-form-select>
           </div>
         </div>
 
@@ -142,6 +170,11 @@ import {
   VALIDATION_REGEX_FIRST_NAME,
   VALIDATION_REGEX_LAST_NAME
 } from "@/components/validation-regex";
+import config from "@/config";
+
+const clientRoleDoctor = config.value('clientRoleDoctor');
+const clientRoleNurse = config.value('clientRoleNurse');
+const clientRolePatient = config.value('clientRolePatient');
 
 export default {
   name: "TenantUser",
@@ -165,7 +198,12 @@ export default {
       address: "",
       mobile: "",
 
+      doctorSpecialization: "",
+      nursingSpecialization: "",
+
       availableGenders: ["Male", "Female", "Prefer not to mention"],
+      availableDoctorSpecializations: ["Surgery", "Physician", "Cardiology", "Radiology"],
+      availableNursingSpecializations: ["ICU", "Surgical", "Emergency Care"],
 
       rolesToBeDisabled: ["uma_authorization", "offline_access", "admin"],
 
@@ -173,6 +211,15 @@ export default {
     }
   },
   computed: {
+    hasDoctorRole() {
+      return this.user && this.user.realmRoles.indexOf(clientRoleDoctor) >= 0;
+    },
+    hasNurseRole() {
+      return this.user && this.user.realmRoles.indexOf(clientRoleNurse) >= 0;
+    },
+    hasPatientRole() {
+      return this.user && this.user.realmRoles.indexOf(clientRolePatient) >= 0;
+    },
     inputState() {
       return {
         username: this.username === null ? null : this.isValid.username,
@@ -283,6 +330,33 @@ export default {
       }
 
       return _isFormValid;
+    },
+    selectedAttributes() {
+      let _attributes = [];
+
+      if (this.hasPatientRole) {
+        _attributes = _attributes.concat([
+          {"key": "age", "values": [this.age]},
+          {"key": "gender", "values": [this.gender]},
+          {"key": "dateOfBirth", "values": [this.dateOfBirth]},
+          {"key": "address", "values": [this.address]},
+          {"key": "mobile", "values": [this.mobile]}
+        ]);
+      }
+
+      if (this.hasNurseRole) {
+        _attributes = _attributes.concat([
+          {"key": "nursingSpecialization", "values": [this.nursingSpecialization]}
+        ]);
+      }
+
+      if (this.hasDoctorRole) {
+        _attributes = _attributes.concat([
+          {"key": "doctorSpecialization", "values": [this.doctorSpecialization]}
+        ]);
+      }
+
+      return _attributes;
     }
   },
   methods: {
@@ -307,13 +381,7 @@ export default {
               email: this.email,
               realmRoles: this.realmRoles,
               clientRoles: this.clientRoles,
-              attributes: [
-                {"key": "age", "value": [this.age]},
-                {"key": "gender", "value": [this.gender]},
-                {"key": "dateOfBirth", "value": [this.dateOfBirth]},
-                {"key": "address", "value": [this.address]},
-                {"key": "mobile", "value": [this.mobile]}
-              ],
+              attributes: this.selectedAttributes,
               // attributes: this.availableAttributes.map(({key, values}) => {
               //   return {key: key, values: values.split(",").map(value => value.trim())};
               // }).filter(({key}) => key.length > 0),
@@ -328,13 +396,7 @@ export default {
               firstName: this.firstName,
               lastName: this.lastName,
               email: this.email,
-              attributes: [
-                {"key": "age", "values": [this.age]},
-                {"key": "gender", "values": [this.gender]},
-                {"key": "dateOfBirth", "values": [this.dateOfBirth]},
-                {"key": "address", "values": [this.address]},
-                {"key": "mobile", "values": [this.mobile]}
-              ],
+              attributes: this.selectedAttributes,
               // attributes: this.availableAttributes.map(({key, values}) => {
               //   return {key: key, values: values.split(",").map(value => value.trim())};
               // }).filter(({key}) => key.length > 0),
@@ -379,6 +441,10 @@ export default {
             this.address = values
           } else if (key === "mobile") {
             this.mobile = values
+          } else if (key === "nursingSpecialization") {
+            this.nursingSpecialization = values
+          } else if (key === "doctorSpecialization") {
+            this.doctorSpecialization = values
           }
         }
       }
