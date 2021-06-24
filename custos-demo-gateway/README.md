@@ -3,8 +3,8 @@
 1. Install latest stable nodejs (v14.17) https://nodejs.org/en/download/
 2. Install yarn `npm install --global yarn`
 3. `git clone https://github.com/apache/airavata-custos-portal.git`
-4. `git checkout reference-portal`
-5. `cd ./airavata-custos-portal/custos-demo-gateway`
+4. `cd ./airavata-custos-portal/custos-demo-gateway`
+5. `git checkout reference-portal`
 6. Change `.env` file with all new entries of following
 
 ```
