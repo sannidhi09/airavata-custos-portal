@@ -4,10 +4,10 @@
       <b-table-simple>
         <b-thead>
           <b-tr>
-            <b-th>Name</b-th>
+            <b-th>Username</b-th>
             <b-th>Email</b-th>
-            <b-th>Client Roles</b-th>
-            <b-th>Tenant Roles</b-th>
+            <!--            <b-th>Client Roles</b-th>-->
+            <b-th>Roles</b-th>
             <b-th>Status</b-th>
             <b-th>Actions</b-th>
           </b-tr>
@@ -20,11 +20,11 @@
               </router-link>
             </b-td>
             <b-td>{{ user.email }}</b-td>
-            <b-td>
-              {{ user.clientRoles.join(", ") }}
-              <!--              <b-form-tags v-model="user.clientRoles" separator=" " no-tag-remove no-outer-focus-->
-              <!--                           ignore-input-focus-selector=""></b-form-tags>-->
-            </b-td>
+            <!--            <b-td>-->
+            <!--              {{ user.clientRoles.join(", ") }}-->
+            <!--              &lt;!&ndash;              <b-form-tags v-model="user.clientRoles" separator=" " no-tag-remove no-outer-focus&ndash;&gt;-->
+            <!--              &lt;!&ndash;                           ignore-input-focus-selector=""></b-form-tags>&ndash;&gt;-->
+            <!--            </b-td>-->
             <b-td>
               {{ user.realmRoles.join(", ") }}
               <!--              <b-button variant="link-secondary" size="sm" v-for="role in user.realmRoles" :key="role" href="#">-->
