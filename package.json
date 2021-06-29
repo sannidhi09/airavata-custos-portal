@@ -2,7 +2,7 @@
   "name": "custos-demo-gateway",
   "version": "0.1.0",
   "private": true,
-  "main": "./src/lib/index.js",
+  "main": "src/lib/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

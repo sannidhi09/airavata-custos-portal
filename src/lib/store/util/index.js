@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import {custosService} from "../util/custos.util";
+import {custosService} from "./custos.util";
 import auth from "../modules/auth.store";
 import user from "../modules/user.store";
 import group from "../modules/group.store";

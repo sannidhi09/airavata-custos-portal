@@ -279,7 +279,7 @@
 <script>
 import store from "../../store";
 import {custosService} from "../../store/util/custos.util";
-import TenantHome from "../pages/TenantHome";
+import TenantHome from "./TenantHome";
 import {
   VALIDATION_REGEX_DOMAIN,
   VALIDATION_REGEX_EMAIL,

@@ -11,8 +11,8 @@
 <script>
 import store from "../../../store";
 import TableOverlayInfo from "../../overlay/table-overlay-info";
-import EntityViewDefault from "../../block/entity-view/entity-view-default";
-import EntityViewSecret from "../../block/entity-view/entity-view-secret";
+import EntityViewDefault from "./entity-view-default";
+import EntityViewSecret from "./entity-view-secret";
 
 export default {
   name: "entity-view",
