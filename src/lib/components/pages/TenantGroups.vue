@@ -12,6 +12,7 @@
             <b-th>Group ID</b-th>
             <b-th>Name</b-th>
             <b-th>Description</b-th>
+            <b-th>Owner</b-th>
             <b-th></b-th>
           </b-tr>
         </b-thead>
@@ -27,6 +28,7 @@
               {{ group.name }}
             </b-td>
             <b-td>{{ group.description }}</b-td>
+            <b-td>{{ group.ownerId }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[group.groupId]">
                 <b-button variant="link" v-on:click="onDeleteClick(group)" v-b-tooltip.hover title="Delete">
@@ -74,7 +76,10 @@ export default {
       return this.$route.params.clientId;
     },
     groups() {
-      return this.$store.getters["group/getGroups"]({clientId: this.clientId})
+      return this.$store.getters["group/getGroups"]({clientId: this.clientId, username: this.currentUsername})
+    },
+    currentUsername() {
+      return this.$store.getters["auth/currentUsername"];
     },
     breadcrumbLinks() {
       return [{to: `/tenants/${this.clientId}/groups`, name: "Groups"}];
@@ -82,7 +87,7 @@ export default {
   },
   methods: {
     refreshData() {
-      this.$store.dispatch("group/fetchGroups", {clientId: this.clientId});
+      this.$store.dispatch("group/fetchGroups", {clientId: this.clientId, username: this.currentUsername});
     },
     async onDeleteClick({groupId, name}) {
       this.processingDelete = {...this.processingDelete, [groupId]: true};
