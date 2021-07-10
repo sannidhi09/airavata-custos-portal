@@ -17,12 +17,18 @@
             <b-th>Last Updated</b-th>
           </b-tr>
         </b-thead>
-        <b-tbody v-for="(entity, entityIndex) in entities" :key="entity.entityId">
+        <template v-for="(entity, entityIndex) in entities">
+          <table-overlay-body :key="entity.entityId" :entity="entity" :entityIndex="entityIndex" @refresh-data="refreshData"></table-overlay-body>
+        </template>
+        <table-overlay-body :entities="entities" @refresh-data="refreshData"></table-overlay-body>
+        <!-- <b-tbody v-for="(entity, entityIndex) in entities" :key="entity.entityId">
             <b-tr>
               <b-td>
-                <b-button variant="link" size="sm" v-on:click="onClickExpand(entity.entityId)" v-b-tooltip.hover :title="expandEntities[entity.entityId]?'Colapse':'Expand'">
-                  <b-icon :icon="expandEntities[entity.entityId]?'chevron-up':'chevron-down'"></b-icon>
-                </b-button>
+                <template :if="childEntities(entity.entityId).length>0">
+                  <b-button variant="link" size="sm" v-on:click="onClickExpand(entity.entityId)" v-b-tooltip.hover :title="expandEntities[entity.entityId]?'Colapse':'Expand'">
+                    <b-icon :icon="expandEntities[entity.entityId]?'chevron-up':'chevron-down'"></b-icon>
+                  </b-button>
+                </template>
                 <router-link :to="`/tenants/${clientId}/entities/${entity.entityId}`" v-slot="{href, navigate}">
                   <b-link :href="href" v-on:click="navigate">{{ entity.entityId }}</b-link>
                 </router-link>
@@ -89,7 +95,7 @@
               </b-td>
             </b-tr>
           </template>
-        </b-tbody>
+        </b-tbody> -->
       </b-table-simple>
 
       <!--    <b-pagination-->
@@ -109,14 +115,17 @@
 import store from "../../store"
 import TenantHome from "./TenantHome";
 import TableOverlayInfo from "../overlay/table-overlay-info";
-import ModalShareEntity from "../modals/modal-share-entity";
-import ButtonOverlay from "../overlay/button-overlay";
-import ButtonCopy from "../button/button-copy";
+// import ModalShareEntity from "../modals/modal-share-entity";
+// import ButtonOverlay from "../overlay/button-overlay";
+// import ButtonCopy from "../button/button-copy";
+import TableOverlayBody from "../overlay/table-overlay-body";
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {ButtonCopy, ButtonOverlay, ModalShareEntity, TableOverlayInfo, TenantHome},
+  components: {
+    // ButtonCopy, ButtonOverlay, ModalShareEntity, 
+    TableOverlayInfo, TenantHome, TableOverlayBody},
   data() {
     return {
       processingDelete: {},
