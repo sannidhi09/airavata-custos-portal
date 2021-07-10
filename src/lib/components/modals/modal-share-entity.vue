@@ -1,5 +1,6 @@
 <template>
   <b-modal :id="modalId" :title="title" v-on:show="reset" size="md">
+    currentUsername : {{currentUsername}}
     <input-select-users-or-groups :client-id="clientId" v-on:change="onSelect"/>
     <b-overlay :show="processing">
       <b-skeleton-table v-if="processing" :rows="4" :columns="3"/>
@@ -78,6 +79,9 @@ export default {
     },
     notDroppedOwners() {
       return this.owners.filter(({dropped}) => !dropped);
+    },
+    currentUsername() {
+      return this.$store.getters["auth/currentUsername"];
     }
   },
   methods: {
@@ -179,7 +183,8 @@ export default {
             entityId: this.entityId,
             permissionTypeId: owner.permissionTypeId,
             groupIds: owner.ownerType === "group" ? [owner.ownerId] : [],
-            usernames: owner.ownerType === "user" ? [owner.ownerId] : []
+            usernames: owner.ownerType === "user" ? [owner.ownerId] : [],
+            sharedBy: this.currentUsername
           });
         } else if (!owner.saved && owner.permissionTypeId) {
           this.$store.dispatch("sharing/shareEntity", {
@@ -187,7 +192,8 @@ export default {
             entityId: this.entityId,
             permissionTypeId: owner.permissionTypeId,
             groupIds: owner.ownerType === "group" ? [owner.ownerId] : [],
-            usernames: owner.ownerType === "user" ? [owner.ownerId] : []
+            usernames: owner.ownerType === "user" ? [owner.ownerId] : [],
+            sharedBy: this.currentUsername
           });
         }
       }
