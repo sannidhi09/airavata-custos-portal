@@ -28,7 +28,7 @@
       <!-- Create Child Entity Button -->
       <router-link :to="`/tenants/${clientId}/${entity.entityId}/new`" v-slot="{href, navigate}" tag="">
         <b-button variant="link" size="sm" v-on:click="navigate" v-b-tooltip.hover title="Create Child Entity">
-          <b-icon icon="file"></b-icon>
+          <b-icon icon="folder-plus"></b-icon>
           <!-- <v-icon>mdi-pl?us</v-icon> -->
         </b-button>
       </router-link>
@@ -140,5 +140,7 @@ export default {
 </script>
 
 <style scoped>
-
+.hidden_header{
+  display: none;
+}
 </style>
