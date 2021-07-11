@@ -31,7 +31,7 @@ export default class CustosEntities {
         }
 
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
-        return axiosInstance.post(
+        await axiosInstance.post(
             `${CustosService.ENDPOINTS.SHARING}/entity`,
             {
                 "client_id": clientId,
@@ -46,7 +46,9 @@ export default class CustosEntities {
                     "binary_data": binaryData
                 }
             }
-        ).then(({data: {types}}) => types);
+        );
+
+        return entityId;
     }
 
     async updateEntity({clientId, entityId, name, description, type, ownerId, fullText, binaryData}) {

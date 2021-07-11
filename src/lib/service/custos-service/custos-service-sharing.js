@@ -100,7 +100,7 @@ export default class CustosSharing {
         return res;
     }
 
-    async shareEntity({clientId, entityId, permissionTypeId, groupIds = [], usernames = []}) {
+    async shareEntity({clientId, entityId, permissionTypeId, groupIds = [], usernames = [], sharedBy}) {
         const axiosInstance = await this.custosService.getAxiosInstanceWithClientAuthorization({clientId});
 
         let promises = [];
@@ -113,7 +113,8 @@ export default class CustosSharing {
                     "entity": {"id": entityId},
                     "permission_type": {"id": permissionTypeId},
                     "owner_id": [groupId],
-                    "cascade": true
+                    "cascade": true,
+                    "shared_by": sharedBy
                 }
             );
         }));
@@ -126,7 +127,8 @@ export default class CustosSharing {
                     "entity": {"id": entityId},
                     "permission_type": {"id": permissionTypeId},
                     "owner_id": [username],
-                    "cascade": true
+                    "cascade": true,
+                    "shared_by": sharedBy
                 }
             );
         }));
