@@ -55,9 +55,12 @@
   <!-- Child Entities -->
   <template v-if="expandChild">
     <b-tr><b-td colspan="100%">
-    <template v-for="(childEntity, childEntityIndex) in childEntities">
-      <table-overlay-body :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" @refresh-data="refreshData"></table-overlay-body>
-    </template>
+      <template v-if="!childEntities || !childEntities.length" >
+        No child entities to show.
+      </template>
+      <template v-else v-for="(childEntity, childEntityIndex) in childEntities">
+        <table-overlay-body :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" @refresh-data="refreshData"></table-overlay-body>
+      </template>
     </b-td></b-tr>
   </template>
   
@@ -129,12 +132,6 @@ export default {
 
       this.processingDelete = {...this.processingDelete, [entityId]: false};
     }
-  },
-  mounted() {
-    console.log("Hello");
-    console.log(this.entity);
-    console.log(this.clientId);
-    console.log(this.entityIndex);
   }
 }
 </script>
