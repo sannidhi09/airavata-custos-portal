@@ -175,16 +175,7 @@ export default new Router({
         },
         {
             path: "/tenants/:clientId/entities/new",
-            name: "tenants",
-            beforeEnter: async (to, from, next) => {
-                await _validateAuthenticationBeforeEnter(to, from, next)
-            },
-            component: () =>
-                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantNewEntity")
-        },
-        {
-            path: "/tenants/:clientId/:entityId/new",
-            name: "tenants",
+            name: "create_entity",
             beforeEnter: async (to, from, next) => {
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
