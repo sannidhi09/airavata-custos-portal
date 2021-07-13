@@ -10,6 +10,5 @@ services:
     environment:
       VUE_APP_CLIENT_ID: ''
       VUE_APP_CLIENT_SEC: ''
-
       VUE_APP_REDIRECT_URI: 'http://localhost:8080/callback'
 
