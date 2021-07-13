@@ -18,9 +18,8 @@
           </b-tr>
         </b-thead>
         <template v-for="(entity, entityIndex) in entities">
-          <table-overlay-body :key="entity.entityId" :entity="entity" :entityIndex="entityIndex" @refresh-data="refreshData"></table-overlay-body>
+          <entity-table-body :key="entity.entityId" :entity="entity" :entityIndex="entityIndex" @refresh-data="refreshData"></entity-table-body>
         </template>
-        <table-overlay-body :entities="entities" @refresh-data="refreshData"></table-overlay-body>
       </b-table-simple>
 
       <!--    <b-pagination-->
@@ -43,14 +42,14 @@ import TableOverlayInfo from "../overlay/table-overlay-info";
 // import ModalShareEntity from "../modals/modal-share-entity";
 // import ButtonOverlay from "../overlay/button-overlay";
 // import ButtonCopy from "../button/button-copy";
-import TableOverlayBody from "../overlay/table-overlay-body";
+import EntityTableBody from "../block/entity-view/entity-table-body";
 
 export default {
   name: "TenantEntities",
   store: store,
   components: {
     // ButtonCopy, ButtonOverlay, ModalShareEntity, 
-    TableOverlayInfo, TenantHome, TableOverlayBody},
+    TableOverlayInfo, TenantHome, EntityTableBody},
   data() {
     return {
       processingDelete: {},

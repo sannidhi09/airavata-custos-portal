@@ -59,7 +59,7 @@
         No child entities to show.
       </template>
       <template v-else v-for="(childEntity, childEntityIndex) in childEntities">
-        <table-overlay-body :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" @refresh-data="refreshData"></table-overlay-body>
+        <entity-table-body :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" @refresh-data="refreshData"></entity-table-body>
       </template>
     </b-td></b-tr>
   </template>
@@ -68,14 +68,14 @@
 </template>
 
 <script>
-import store from "../../store"
-import ModalShareEntity from "../modals/modal-share-entity";
-import ButtonOverlay from "../overlay/button-overlay";
-import ButtonCopy from "../button/button-copy";
+import store from "../../../store"
+import ModalShareEntity from "../../modals/modal-share-entity";
+import ButtonOverlay from "../../overlay/button-overlay";
+import ButtonCopy from "../../button/button-copy";
 
 
 export default {
-  name: 'table-overlay-body',
+  name: 'entity-table-body',
   store: store,
   components: {ButtonCopy, ButtonOverlay, ModalShareEntity},
   props: {

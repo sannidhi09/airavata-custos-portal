@@ -110,11 +110,7 @@ export default {
       return this.$route.params.clientId;
     },
     parentId(){
-      console.log("this.$route.params: ", this.$route.params);
-      if(this.$route.params.entityId !== undefined){
-        return this.$route.params.entityId;
-      }
-      return undefined; 
+      return this.$route.params.entityId;
     },
     inputState() {
       return {
