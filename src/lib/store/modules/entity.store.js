@@ -56,7 +56,7 @@ const actions = {
         });
     },
     async createEntity(obj, {clientId, entityId, parentId, name, description, type, ownerId, fullText, binaryData}) {
-        await custosService.entities.createEntity({
+        return await custosService.entities.createEntity({
             clientId, entityId, parentId, name, description, type, ownerId, fullText, binaryData
         });
     },
