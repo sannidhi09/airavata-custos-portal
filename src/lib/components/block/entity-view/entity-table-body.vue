@@ -59,7 +59,7 @@
         No child entities to show.
       </template>
       <template v-else v-for="(childEntity, childEntityIndex) in childEntities">
-        <entity-table-body :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" @refresh-data="refreshData"></entity-table-body>
+        <entity-table-body v-on:refresh-data="refreshData" :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" :allEntities="allEntities"></entity-table-body>
       </template>
     </b-td></b-tr>
   </template>
@@ -80,7 +80,8 @@ export default {
   components: {ButtonCopy, ButtonOverlay, ModalShareEntity},
   props: {
     entity: Object,
-    entityIndex: [Number, String]
+    entityIndex: [Number, String],
+    allEntities: Array
   },
   data() {
     return {
@@ -93,14 +94,9 @@ export default {
     clientId() {
       return this.$route.params.clientId;
     },
-    currentUsername() {
-      return this.$store.getters["auth/currentUsername"];
-    },
     childEntities() {
-      return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})==undefined?
-        []:
-        this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})
-          .filter((entity)=>{return entity.parentId==this.entity.entityId;});
+      return this.allEntities==undefined?this.allEntities:
+        this.allEntities.filter((entity)=>{return entity.parentId==this.entity.entityId;});
     }
   },
   methods: {
@@ -108,7 +104,7 @@ export default {
       this.expandChild = !this.expandChild
     },
     refreshData() {
-      this.$store.dispatch("entity/fetchEntities", {clientId: this.clientId, ownerId: this.currentUsername});
+      this.$emit('refresh-data');
     },
     async onClickDelete({entityId, name, description, type, ownerId}) {
       this.processingDelete = {...this.processingDelete, [entityId]: true};

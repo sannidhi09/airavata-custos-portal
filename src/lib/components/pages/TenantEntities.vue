@@ -5,7 +5,7 @@
         <b-button variant="primary" @click="navigate">Create New Entity</b-button>
       </router-link>
     </template>
-    <table-overlay-info :rows="5" :columns="1" :data="entities">
+    <table-overlay-info :rows="5" :columns="1" :data="rootEntities">
       <b-table-simple>
         <b-thead>
           <b-tr>
@@ -17,8 +17,8 @@
             <b-th>Last Updated</b-th>
           </b-tr>
         </b-thead>
-        <template v-for="(entity, entityIndex) in entities">
-          <entity-table-body :key="entity.entityId" :entity="entity" :entityIndex="entityIndex" @refresh-data="refreshData"></entity-table-body>
+        <template v-for="(entity, entityIndex) in rootEntities">
+          <entity-table-body v-on:refresh-data="refreshData" :key="entity.entityId" :entity="entity" :entityIndex="entityIndex" :allEntities="allEntities"></entity-table-body>
         </template>
       </b-table-simple>
 
@@ -39,17 +39,12 @@
 import store from "../../store"
 import TenantHome from "./TenantHome";
 import TableOverlayInfo from "../overlay/table-overlay-info";
-// import ModalShareEntity from "../modals/modal-share-entity";
-// import ButtonOverlay from "../overlay/button-overlay";
-// import ButtonCopy from "../button/button-copy";
 import EntityTableBody from "../block/entity-view/entity-table-body";
 
 export default {
   name: "TenantEntities",
   store: store,
-  components: {
-    // ButtonCopy, ButtonOverlay, ModalShareEntity, 
-    TableOverlayInfo, TenantHome, EntityTableBody},
+  components: {TableOverlayInfo, TenantHome, EntityTableBody},
   data() {
     return {
       processingDelete: {},
@@ -62,13 +57,11 @@ export default {
       console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
     },
-    entities() {
-      return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})==undefined?
-        this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername}):
-        (this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})).filter((entity)=>{return !entity.parentId;});
-    },
     allEntities() {
       return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername});
+    },
+    rootEntities() {
+      return this.allEntities==undefined?this.allEntities:this.allEntities.filter((entity)=>{return !entity.parentId;});
     },
     breadcrumbLinks() {
       return [{to: `/tenants/${this.clientId}/entities`, name: "Entities"}];
@@ -78,38 +71,8 @@ export default {
     }
   },
   methods: {
-    childEntities(entityId){
-      return this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername})==undefined?
-        this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername}):
-        this.$store.getters["entity/getEntities"]({clientId: this.clientId, ownerId: this.currentUsername}).filter((entity)=>{return entity.parentId==entityId;});
-    },
     refreshData() {
       this.$store.dispatch("entity/fetchEntities", {clientId: this.clientId, ownerId: this.currentUsername});
-    },
-    onClickExpand(entityId) {
-      this.expandEntities = { ...this.expandEntities, [entityId]: this.expandEntities[entityId]?false:true};
-    },
-    async onClickDelete({entityId, name, description, type, ownerId}) {
-      this.processingDelete = {...this.processingDelete, [entityId]: true};
-
-      try {
-        await this.$store.dispatch("entity/deleteEntity", {
-          clientId: this.clientId,
-          entityId,
-          name,
-          description,
-          type,
-          ownerId
-        });
-        this.refreshData();
-      } catch (error) {
-        this.errors.push({
-          title: `Unknown error when deleting the entity '${entityId}'.`,
-          source: error, variant: "danger"
-        });
-      }
-
-      this.processingDelete = {...this.processingDelete, [entityId]: false};
     }
   },
   mounted() {
