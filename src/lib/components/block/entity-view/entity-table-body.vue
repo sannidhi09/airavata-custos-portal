@@ -26,7 +26,7 @@
     <!-- Column Seven -->
     <b-td>
       <!-- Create Child Entity Button -->
-      <router-link :to="{name:'create_entity', params:{ clientId: `${clientId}`, entityId:`${entity.entityId}`}}" v-slot="{href, navigate}" tag="">
+      <router-link :to="{name:'create_entity', query:{ entityId:`${entity.entityId}`}}" v-slot="{href, navigate}" tag="">
         <b-button variant="link" size="sm" v-on:click="navigate" v-b-tooltip.hover title="Create Child Entity">
           <b-icon icon="folder-plus"></b-icon>
           <!-- <v-icon>mdi-pl?us</v-icon> -->
@@ -56,14 +56,27 @@
   <template v-if="expandChild">
     <b-tr><b-td colspan="100%">
       <template v-if="!childEntities || !childEntities.length" >
-        No child entities to show.
+        <span style="display: block; text-align: center;">No child entities to show.</span>
       </template>
-      <template v-else v-for="(childEntity, childEntityIndex) in childEntities">
-        <entity-table-body v-on:refresh-data="refreshData" :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" :allEntities="allEntities"></entity-table-body>
+      <template v-else>
+        <b-table-simple>      
+          <b-thead style="display:none">
+            <b-tr>
+              <b-th>Entity ID</b-th>
+              <b-th>Name</b-th>
+              <b-th>Type</b-th>
+              <b-th>Description</b-th>
+              <b-th>Created</b-th>
+              <b-th>Last Updated</b-th>
+            </b-tr>
+          </b-thead>
+          <template  v-for="(childEntity, childEntityIndex) in childEntities">
+              <entity-table-body v-on:refresh-data="refreshData" :key="childEntity.entityId" :entity="childEntity" :entityIndex="entityIndex.toString()+'-'+childEntityIndex.toString()" :allEntities="allEntities"></entity-table-body>
+          </template>
+        </b-table-simple>
       </template>
     </b-td></b-tr>
   </template>
-  
 </b-tbody>
 </template>
 
