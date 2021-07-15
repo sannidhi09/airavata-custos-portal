@@ -14,6 +14,7 @@
             <b-th>Type</b-th>
             <b-th>Description</b-th>
             <b-th>Created</b-th>
+            <b-th>Owner</b-th>
             <b-th>Last Updated</b-th>
           </b-tr>
         </b-thead>
@@ -29,6 +30,7 @@
             <b-td>{{ entity.type }}</b-td>
             <b-td>{{ entity.description }}</b-td>
             <b-td>{{ entity.createdAt }}</b-td>
+            <b-td>{{ entity.ownerId }}</b-td>
             <b-td>{{ entity.updatedAt }}</b-td>
             <b-td>
               <b-button variant="link" size="sm" v-b-modal="`modal-select-users-or-groups-${entityIndex}`"
