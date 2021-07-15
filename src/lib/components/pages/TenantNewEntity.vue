@@ -137,8 +137,7 @@ export default {
     breadcrumbLinks() {
       return [
         {to: `/tenants/${this.clientId}/entities`, name: "Entities"},
-        {to: `/tenants/${this.clientId}/entities/new`, name: "New"},
-        {to: `/tenants/${this.clientId}/${this.parentId}/new`, name: "New Child Entity"}
+        {to: `/tenants/${this.clientId}/entities/new`, name: "New"}
       ];
     },
     entityTypes() {
