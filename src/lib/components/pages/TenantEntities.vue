@@ -14,6 +14,7 @@
             <b-th>Type</b-th>
             <b-th>Description</b-th>
             <b-th>Created</b-th>
+            <b-th>Owner</b-th>
             <b-th>Last Updated</b-th>
           </b-tr>
         </b-thead>
